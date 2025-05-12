@@ -22,11 +22,11 @@ def tela_inicial(screen):
             # Verifica se foi fechado.
             if event.type == pygame.QUIT:
                 state = QUIT
-                running = False
+                rodando = False
 
             if event.type == pygame.KEYUP:
                 state = JOGANDO
-                running = False
+                rodando = False
 
         # A cada loop, redesenha o fundo e os sprites
         screen.fill(PRETO)
