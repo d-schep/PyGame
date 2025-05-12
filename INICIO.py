@@ -6,7 +6,7 @@ from assets import *
 import random
 import time 
 from Classe_Botoes_inicio import * 
-
+from Classe_Textos import *
 
 def iniciar_jogo():
     global estado
@@ -20,6 +20,7 @@ def tela_inicial(screen):
     botao_inicio = Botao(CENTROx-(LARG_BOT/2),CENTROy-(ALT_BOT/2 + 50),LARG_BOT,ALT_BOT,'INICIAR', ACINZENTADO, BRANCO_ALPHA,assets, iniciar_jogo)
     rodando = True 
     state = INICIO
+    titulo = Texto('Escape Z',CENTROx-(LARG_TIT/2),40,LARG_TIT,ALT_TIT,VERMELHO,assets)
 
 
     while rodando:
@@ -45,6 +46,7 @@ def tela_inicial(screen):
         # A cada loop, redesenha o fundo e os sprites
         screen.fill(PRETO)
         screen.blit(background, background_rect)
+        titulo.desenhar(screen)
         botao_inicio.desenhar(screen)
         # Depois de desenhar tudo, inverte o display.
         pygame.display.update()

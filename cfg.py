@@ -12,7 +12,10 @@ ALTURA = 800
 FPS = 60
 CENTROx = LARGURA/2
 CENTROy = ALTURA/2
-
+# ====  TEXTOS ====
+# --- Tela de inicio ---
+LARG_TIT = 500
+ALT_TIT = 150
 # == TAMANHO BOTES == 
 ALT_BOT = 100
 LARG_BOT = 300
