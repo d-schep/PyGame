@@ -1,6 +1,6 @@
 import pygame
 import random
-from config import *
+from cfg import *
 from assets import * 
 from math import * 
 import os 

@@ -1,6 +1,6 @@
 import pygame
 import os 
-from config import * 
+from cfg import * 
 
 PERSONAGEM = 'personagem'
 TELA_INICIAL = 'tela_inicial'
@@ -63,7 +63,7 @@ def load_assets():
 #    assets[DICA_ESCAPE10] = pygame.transform.scale(assets[''], (, ))
     assets[BARRA_TEMPO] = pygame.image.load(os.path.join(IMG_DIR,'nome do arquivo')).convert()
 #    assets[BARRA_TEMPO] = pygame.transform.scale(assets[''], (, ))
-    assets[PERSONAGEM] = pygame.image.load(os.path.join(IMG_DIR,'nome do arquivo')).convert()
+    assets[PERSONAGEM] = pygame.image.load(os.path.join(IMG_DIR,'gab_de_frente.png')).convert()
 #    assets[PERSONAGEM] = pygame.transform.scale(assets[''], (, ))
 
     #SONS

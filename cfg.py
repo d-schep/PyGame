@@ -24,3 +24,5 @@ CINZA = (40, 40, 40)
 
 # ==== ESTADOS DO JOGO ====
 INICIO = 0
+JOGANDO = 1 
+QUIT = 2
