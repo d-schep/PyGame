@@ -37,15 +37,15 @@ def tela_inicial(screen):
                 rodando = False
             if state == INICIO:
                 botao_inicio.checar_click(event)
-            botao_inicio.desenhar(screen)
+        
 
         # A cada loop, redesenha o fundo e os sprites
         screen.fill(PRETO)
         screen.blit(background, background_rect)
-        # == Botoes inicio == 
-
+        
+        botao_inicio.desenhar(screen)
         # Depois de desenhar tudo, inverte o display.
-        pygame.display.flip()
+        pygame.display.update()
 
 
     return state

@@ -15,6 +15,7 @@ class Botao_inicio(pygame.sprite.Sprite):
         self.cor_hover = cor_hover
         self.funcao = funcao
         self.fonte = assets[FONTE_BOTAO]
+    
     def desenhar(self, surface):
         mouse_pos = pygame.mouse.get_pos()
         cor_atual = self.cor_hover if self.rect.collidepoint(mouse_pos) else self.cor
