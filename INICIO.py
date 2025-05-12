@@ -17,7 +17,7 @@ def tela_inicial(screen):
     assets = load_assets()
     background = assets[TELA_INICIAL]
     background_rect = background.get_rect()
-    botao_inicio = Botao_inicio(CENTROx,CENTROy,400,100,'INICIAR', CINZA, BRANCO,assets, iniciar_jogo)
+    botao_inicio = Botao(CENTROx,CENTROy,LARG_BOT,ALT_BOT,'INICIAR', ACINZENTADO, BRANCO_ALPHA,assets, iniciar_jogo)
     rodando = True 
     state = INICIO
     while rodando:
@@ -42,7 +42,6 @@ def tela_inicial(screen):
         # A cada loop, redesenha o fundo e os sprites
         screen.fill(PRETO)
         screen.blit(background, background_rect)
-        
         botao_inicio.desenhar(screen)
         # Depois de desenhar tudo, inverte o display.
         pygame.display.update()
