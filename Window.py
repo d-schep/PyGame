@@ -1,27 +1,20 @@
 from Classes import * 
 import pygame
 from os import path
+from config import *
 
 pygame.init()
 
 # Tamanho da tela
-LARGURA = 800
-ALTURA = 600
 tela = pygame.display.set_mode((LARGURA, ALTURA))
 pygame.display.set_caption("Escape 60: O Jogo")
-
-# Cores
-PRETO = (0, 0, 0)
-BRANCO = (255, 255, 255)
-VERDE = (0, 200, 0)
-CINZA = (40, 40, 40)
 
 # Fonte
 fonte_titulo = pygame.font.SysFont("Arial", 64, bold=True)
 fonte_opcao = pygame.font.SysFont("Arial", 36, bold=True)
 
-# Carrega imagem de fundo do menu (certifique-se que o arquivo existe)
-fundo = pygame.image.load("inicio") 
+# Carrega imagem de fundo do menu
+fundo = pygame.image.load("#Imagem de fundo") 
 fundo = pygame.transform.scale(fundo, (LARGURA, ALTURA))
 
 def desenhar_botao(texto, y):
@@ -32,7 +25,7 @@ def desenhar_botao(texto, y):
 
 def desenhar_menu():
     tela.blit(fundo, (0, 0))
-    titulo = fonte_titulo.render("A Última Porta", True, BRANCO)
+    titulo = fonte_titulo.render("#Nome do jogo (tela incial)", True, BRANCO)
     tela.blit(titulo, ((LARGURA - titulo.get_width()) // 2, 100))
 
     rects = []
@@ -48,10 +41,6 @@ def sala():
     clock = pygame.time.Clock()
     contador_luz = 0
     luz_acesa = True
-
-    # Som de fundo (opcional - adicione um arquivo 'terror.wav' na pasta)
-    # pygame.mixer.music.load("terror.wav")
-    # pygame.mixer.music.play(-1)
 
     while rodando:
         for evento in pygame.event.get():

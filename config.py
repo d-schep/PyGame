@@ -1,8 +1,8 @@
 from os import path
 
-# ===TAMANHOS===
-LARGTELA = 1000
-ALTTELA = 1000
+# Tamanho da tela
+LARGURA = 800
+ALTURA = 600
 # ==FPS==
 FPS = 60
 
