@@ -9,8 +9,8 @@ import time
 class Botao(pygame.sprite.Sprite):
     def __init__(self,x,y,largura,altura,texto, cor, cor_hover,assets, funcao=None):
         pygame.sprite.Sprite.__init__(self)
-        self.x = x
-        self.y = y
+        self.centerx = largura/2
+        self.centery = altura/2
         self.rect = pygame.Rect(x, y, largura, altura)
         self.texto = texto
         self.cor = cor
@@ -30,7 +30,7 @@ class Botao(pygame.sprite.Sprite):
         texto_rect = texto_render.get_rect(center=self.rect.center)
         surface.blit(superficie, self.rect.topleft)
         surface.blit(texto_render, texto_rect)
-        
+
     def checar_click(self, evento):
         if evento.type == pygame.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(evento.pos):

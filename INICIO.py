@@ -17,9 +17,11 @@ def tela_inicial(screen):
     assets = load_assets()
     background = assets[TELA_INICIAL]
     background_rect = background.get_rect()
-    botao_inicio = Botao(CENTROx,CENTROy,LARG_BOT,ALT_BOT,'INICIAR', ACINZENTADO, BRANCO_ALPHA,assets, iniciar_jogo)
+    botao_inicio = Botao(CENTROx-(LARG_BOT/2),CENTROy-(ALT_BOT/2 + 50),LARG_BOT,ALT_BOT,'INICIAR', ACINZENTADO, BRANCO_ALPHA,assets, iniciar_jogo)
     rodando = True 
     state = INICIO
+
+
     while rodando:
 
         # Ajusta a velocidade do jogo.
@@ -28,12 +30,13 @@ def tela_inicial(screen):
         # Processa os eventos (mouse, teclado, botão, etc).
         for event in pygame.event.get():
             # Verifica se foi fechado.
+            print(event)
             if event.type == pygame.QUIT:
                 state = QUIT
                 rodando = False
 
-            if event.type == pygame.KEYUP:
-                state = JOGANDO
+            if event.type == pygame.K_ESCAPE:
+                state = QUIT
                 rodando = False
             if state == INICIO:
                 botao_inicio.checar_click(event)
