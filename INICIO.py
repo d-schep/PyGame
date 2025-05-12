@@ -10,6 +10,7 @@ import time
 def tela_inicial(screen):
     clock = pygame.time.Clock()
     background = pygame.image.load(path.join(IMG_DIR,'bckg.png')).convert()
+    background = pygame.transform.scale(background, (LARGURA, ALTURA))
     background_rect = background.get_rect()
     rodando = True 
     while rodando:
