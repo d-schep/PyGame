@@ -38,3 +38,4 @@ class Jogador(pygame.sprite.Sprite):
         if delta_t > self.tick_de_interação:
             self.ultimo_interact = t0
         
+        

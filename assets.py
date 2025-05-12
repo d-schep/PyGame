@@ -25,10 +25,14 @@ SOM_VITORIA = 'som_vitoria'
 SOM_DERROTA = 'som_derrota'
 SOM_ANDANDO = 'som_andando'
 SOM_DICA = 'som_usando_dica'
+FONTE_BOTAO = 'fnt_btao'
+
+
 
 #IMAGENS
 def load_assets():
     assets = {}
+    assets[FONTE_BOTAO] = pygame.font.Font(os.path.join(FONT_DIR, 'PressStart2P.ttf'),28)
     assets[TELA_INICIAL] = pygame.image.load(os.path.join(IMG_DIR,'nome do arquivo')).convert()
 #    assets[TELA_INICIAL] = pygame.transform.scale(assets[''], (, ))
     assets[TELA_VITORIA] = pygame.image.load(os.path.join(IMG_DIR,'nome do arquivo')).convert()
