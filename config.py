@@ -1,5 +1,10 @@
 from os import path
 
+# == DIRETORIO DOS ARQUIVOS == 
+IMG_DIR = path.join(path.dirname(__file__), 'ativos', 'imgs')
+SONS_DIR = path.join(path.dirname(__file__), 'ativos', 'sons')
+FONT_DIR = path.join(path.dirname(__file__), 'ativos', 'font')
+
 # Tamanho da tela
 LARGURA = 800
 ALTURA = 600
