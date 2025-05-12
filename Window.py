@@ -1,13 +1,18 @@
-from Classes import * 
+from Classes_e_sprites import * 
 import pygame
 from os import path
-from config import *
 
 pygame.init()
 
 # Tamanho da tela
 tela = pygame.display.set_mode((LARGURA, ALTURA))
 pygame.display.set_caption("Escape 60: O Jogo")
+
+# Cores
+PRETO = (0, 0, 0)
+BRANCO = (255, 255, 255)
+VERDE = (0, 200, 0)
+CINZA = (40, 40, 40)
 
 # Fonte
 fonte_titulo = pygame.font.SysFont("Arial", 64, bold=True)
