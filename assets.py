@@ -26,12 +26,14 @@ SOM_DERROTA = 'som_derrota'
 SOM_ANDANDO = 'som_andando'
 SOM_DICA = 'som_usando_dica'
 FONTE_BOTAO = 'fnt_btao'
-
-
+TELA_PRETA = 'tela_preta'
+IMG_TITULO = 'img_titulo'
 
 #IMAGENS
 def load_assets():
     assets = {}
+    assets[IMG_TITULO] = pygame.image.load(os.path.join(IMG_DIR, 'titulo.png'))
+    assets[IMG_TITULO] = pygame.transform.scale(assets[IMG_TITULO], (800,400))
     assets[FONTE_BOTAO] = pygame.font.Font(os.path.join(FONT_DIR,'PressStart2P.ttf'),28)
     assets[TELA_INICIAL] = pygame.image.load(os.path.join(IMG_DIR,'bckg.png')).convert()
     assets[TELA_INICIAL] = pygame.transform.scale(assets[TELA_INICIAL], (LARGURA,ALTURA))
