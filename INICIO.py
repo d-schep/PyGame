@@ -16,23 +16,25 @@ def tela_inicial(screen):
     preto_rect = preto.get_rect()
     background = assets[TELA_INICIAL]
     titulo = assets[IMG_TITULO]
-
+    state = INICIO
     def iniciar_jogo():
-        global state
-        state = "jogo"
+        nonlocal state
+        state = JOGANDO
 
     background_rect = background.get_rect()
     botao_inicio = Botao(CENTROx-(LARG_BOT/2),(CENTROy+100-ALT_BOT),LARG_BOT,ALT_BOT,'INICIAR', ACINZENTADO, BRANCO_ALPHA,assets, iniciar_jogo)
-    rodando = True 
-    state = INICIO
+    
+    
     def sair_jogo():
-        global state
+        nonlocal state
+        print('funcao foi chamada')
         state = QUIT
+    
 
     botao_quit = Botao(CENTROx-(LARG_BOT/2),(CENTROy+120),LARG_BOT,ALT_BOT,'QUIT', ACINZENTADO, BRANCO_ALPHA,assets, sair_jogo)
 
 
-    while rodando:
+    while state == INICIO:
 
         # Ajusta a velocidade do jogo.
         clock.tick(FPS)
@@ -43,11 +45,11 @@ def tela_inicial(screen):
             print(event)
             if event.type == pygame.QUIT:
                 state = QUIT
-                rodando = False
+                
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 state = QUIT
-                rodando = False
+                
             if state == INICIO:
                 botao_inicio.checar_click(event)
                 botao_quit.checar_click(event)
