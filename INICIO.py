@@ -20,7 +20,7 @@ def tela_inicial(screen):
     botao_inicio = Botao(CENTROx-(LARG_BOT/2),CENTROy-(ALT_BOT/2 + 50),LARG_BOT,ALT_BOT,'INICIAR', ACINZENTADO, BRANCO_ALPHA,assets, iniciar_jogo)
     rodando = True 
     state = INICIO
-    titulo = Texto('Escape Z',CENTROx-(LARG_TIT/2),40,LARG_TIT,ALT_TIT,VERMELHO,assets)
+    titulo = Texto('Escape Z',CENTROx-(LARG_TIT/2),120,LARG_TIT,ALT_TIT,VERMELHO,assets)
 
 
     while rodando:
