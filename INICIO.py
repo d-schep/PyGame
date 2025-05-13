@@ -8,9 +8,6 @@ import time
 from Classe_Botoes_inicio import * 
 from Classe_Textos import *
 
-def iniciar_jogo():
-    global estado
-    estado = "jogo"
 
 def tela_inicial(screen):
     clock = pygame.time.Clock()
@@ -19,11 +16,20 @@ def tela_inicial(screen):
     preto_rect = preto.get_rect()
     background = assets[TELA_INICIAL]
     titulo = assets[IMG_TITULO]
+
+    def iniciar_jogo():
+        global state
+        state = "jogo"
+
     background_rect = background.get_rect()
     botao_inicio = Botao(CENTROx-(LARG_BOT/2),(CENTROy+100-ALT_BOT),LARG_BOT,ALT_BOT,'INICIAR', ACINZENTADO, BRANCO_ALPHA,assets, iniciar_jogo)
     rodando = True 
     state = INICIO
-    botao_quit = Botao(CENTROx-(LARG_BOT/2),(CENTROy+120),LARG_BOT,ALT_BOT,'QUIT', ACINZENTADO, BRANCO_ALPHA,assets, iniciar_jogo)
+    def sair_jogo():
+        global state
+        state = QUIT
+
+    botao_quit = Botao(CENTROx-(LARG_BOT/2),(CENTROy+120),LARG_BOT,ALT_BOT,'QUIT', ACINZENTADO, BRANCO_ALPHA,assets, sair_jogo)
 
 
     while rodando:
@@ -44,7 +50,7 @@ def tela_inicial(screen):
                 rodando = False
             if state == INICIO:
                 botao_inicio.checar_click(event)
-        
+                botao_quit.checar_click(event)
 
         # A cada loop, redesenha o fundo e os sprites
         screen.fill(PRETO)
