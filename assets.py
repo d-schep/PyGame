@@ -41,8 +41,9 @@ def load_assets():
 # #    assets[TELA_VITORIA] = pygame.transform.scale(assets[''], (, ))
 #     assets[TELA_DERROTA] = pygame.image.load(os.path.join(IMG_DIR,'nome do arquivo')).convert()
 # #    assets[TELA_DERROTA] = pygame.transform.scale(assets[''], (, ))
-#     assets[TELA_DE_FUNDO_ESCAPE_1] = pygame.image.load(os.path.join(IMG_DIR,'nome do arquivo')).convert()
-# #    assets[TELA_DE_FUNDO_ESCAPE_1] = pygame.transform.scale(assets[''], (, ))
+    assets[TELA_DE_FUNDO_ESCAPE_1] = pygame.image.load(os.path.join(IMG_DIR,'Sala_1.png')).convert()
+    assets[TELA_DE_FUNDO_ESCAPE_1] = pygame.transform.scale(assets[TELA_DE_FUNDO_ESCAPE_1], (LARGURA,ALTURA))
+
 #     assets[TELA_DE_FUNDO_ESCAPE_2] = pygame.image.load(os.path.join(IMG_DIR,'nome do arquivo')).convert()
 # #    assets[TELA_DE_FUNDO_ESCAPE_2] = pygame.transform.scale(assets[''], (, ))
 #     assets[TELA_DE_FUNDO_ESCAPE_3] = pygame.image.load(os.path.join(IMG_DIR,'nome do arquivo')).convert()
@@ -69,7 +70,7 @@ def load_assets():
 # #    assets[DICA_ESCAPE10] = pygame.transform.scale(assets[''], (, ))
 #     assets[BARRA_TEMPO] = pygame.image.load(os.path.join(IMG_DIR,'nome do arquivo')).convert()
 # #    assets[BARRA_TEMPO] = pygame.transform.scale(assets[''], (, ))
-#     assets[PERSONAGEM] = pygame.image.load(os.path.join(IMG_DIR,'gab_de_frente.png')).convert()
+    assets[PERSONAGEM] = pygame.image.load(os.path.join(IMG_DIR,'gab_de_frente.png')).convert()
 # #    assets[PERSONAGEM] = pygame.transform.scale(assets[''], (, ))
 
 #     #SONS
