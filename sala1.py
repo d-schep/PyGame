@@ -18,11 +18,15 @@ def sala_1(screen):
     # == GAB ==
 
     grupos = {}
+    zumbi = pygame.Rect((0,0),(250,170))
+    all_death =  pygame.sprite.Group()
     all_sprites = pygame.sprite.Group()
     grupos['TODOS'] = all_sprites
+    grupos['MATAVEIS'] = all_death
     gab_topa_eu = Jogador(assets)
 
     all_sprites.add(gab_topa_eu)
+
 
     keys_down = {}
     while state == JOGANDO:
@@ -75,6 +79,13 @@ def sala_1(screen):
                         gab_topa_eu.speedy += 2
                     if event.key == pygame.K_DOWN:
                         gab_topa_eu.speedy -= 2 
+        if state == JOGANDO:
+            hit = pygame.Rect.colliderect(zumbi,gab_topa_eu)
+            if hit == True:
+                state = QUIT
+                
+
+            
 
 
         screen.fill(PRETO)
