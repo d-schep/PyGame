@@ -27,12 +27,13 @@ class Jogador(pygame.sprite.Sprite):
         self.rect.x += self.speedx
         self.rect.y += self.speedy
         # == HARD LIMITS == 
+
         if self.rect.right > LARGURA:
             self.rect.right = LARGURA
         if self.rect.left < 0:
             self.rect.left = 0
-        if self.rect.top < 0:
-            self.rect.top = 0
+        if self.rect.top < 150:
+            self.rect.top = 150
         if self.rect.bottom > ALTURA:
             self.rect.bottom = ALTURA
         # == TROCA IMAGEM == 
