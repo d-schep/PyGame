@@ -13,7 +13,6 @@ class Texto(pygame.sprite.Sprite):
         self.font =assets[FONTE_BOTAO]
         self.rect = pygame.Rect(x,y,larg,alt)
     def desenhar(self,surface):
-
         texto_render = self.font.render(self.text, True, self.cor)
         texto_rect = texto_render.get_rect(center=self.rect.center)
         surface.blit(texto_render, texto_rect)
