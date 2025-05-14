@@ -44,9 +44,16 @@ def sala_1(screen):
                 if event.key == pygame.K_w:
                     gab_topa_eu.speedy -= 2
                 if event.key == pygame.K_s:
+                    gab_topa_eu.speedy += 2
 
-
-                    gab_topa_eu.speedy += 2 
+                if event.key == pygame.K_LEFT:
+                    gab_topa_eu.speedx -= 2
+                if event.key == pygame.K_RIGHT:
+                    gab_topa_eu.speedx += 2
+                if event.key == pygame.K_UP:
+                    gab_topa_eu.speedy -= 2
+                if event.key == pygame.K_DOWN:
+                    gab_topa_eu.speedy += 2
             # Verifica se soltou alguma tecla.
             if event.type == pygame.KEYUP:
                 # Dependendo da tecla, altera a velocidade.
@@ -58,6 +65,15 @@ def sala_1(screen):
                     if event.key == pygame.K_w:
                         gab_topa_eu.speedy += 2
                     if event.key == pygame.K_s:
+                        gab_topa_eu.speedy -= 2 
+
+                    if event.key == pygame.K_LEFT:
+                        gab_topa_eu.speedx += 2
+                    if event.key == pygame.K_RIGHT:
+                        gab_topa_eu.speedx -= 2
+                    if event.key == pygame.K_UP:
+                        gab_topa_eu.speedy += 2
+                    if event.key == pygame.K_DOWN:
                         gab_topa_eu.speedy -= 2 
 
 
