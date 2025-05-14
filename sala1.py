@@ -15,12 +15,15 @@ def sala_1(screen):
     background = assets[TELA_DE_FUNDO_ESCAPE_1]
     background_rect = background.get_rect()
     state = JOGANDO
-    bol = assets[PERSONAGEM]
+    # == GAB ==
+
     grupos = {}
     all_sprites = pygame.sprite.Group()
     grupos['TODOS'] = all_sprites
-    gab_topa_eu = Jogador(bol)
+    gab_topa_eu = Jogador(assets)
+
     all_sprites.add(gab_topa_eu)
+
     keys_down = {}
     while state == JOGANDO:
         clock.tick(FPS)
@@ -35,34 +38,32 @@ def sala_1(screen):
                 # Dependendo da tecla, altera a velocidade.
                 keys_down[event.key] = True
                 if event.key == pygame.K_a:
-                    print('a')
-                    gab_topa_eu.speedx -= 1
+                    gab_topa_eu.speedx -= 2
                 if event.key == pygame.K_d:
-                    print('d')
-                    gab_topa_eu.speedx += 1
+                    gab_topa_eu.speedx += 2
                 if event.key == pygame.K_w:
-                    print('w')
-                    gab_topa_eu.speedy -= 1
+                    gab_topa_eu.speedy -= 2
                 if event.key == pygame.K_s:
-                    print('s')
-                    gab_topa_eu.speedy += 1 
+
+
+                    gab_topa_eu.speedy += 2 
             # Verifica se soltou alguma tecla.
             if event.type == pygame.KEYUP:
                 # Dependendo da tecla, altera a velocidade.
                 if event.key in keys_down and keys_down[event.key]:
                     if event.key == pygame.K_a:
-                        gab_topa_eu.speedx += 1
+                        gab_topa_eu.speedx += 2
                     if event.key == pygame.K_d:
-                        gab_topa_eu.speedx -= 1
+                        gab_topa_eu.speedx -= 2
                     if event.key == pygame.K_w:
-                        gab_topa_eu.speedy += 1
+                        gab_topa_eu.speedy += 2
                     if event.key == pygame.K_s:
-                        gab_topa_eu.speedy -= 1 
+                        gab_topa_eu.speedy -= 2 
 
-        all_sprites.update()
+
         screen.fill(PRETO)
         screen.blit(background,background_rect)
         all_sprites.draw(screen)
-        gab_topa_eu.update()
+        all_sprites.update()
         pygame.display.update()
 

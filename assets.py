@@ -28,7 +28,7 @@ SOM_DICA = 'som_usando_dica'
 FONTE_BOTAO = 'fnt_btao'
 TELA_PRETA = 'tela_preta'
 IMG_TITULO = 'img_titulo'
-
+GAB_TRAS = 'gbr'
 #IMAGENS
 def load_assets():
     assets = {}
@@ -72,7 +72,8 @@ def load_assets():
 # #    assets[BARRA_TEMPO] = pygame.transform.scale(assets[''], (, ))
     assets[PERSONAGEM] = pygame.image.load(os.path.join(IMG_DIR,'gab_de_frente.png')).convert_alpha()
     assets[PERSONAGEM] = pygame.transform.scale(assets[PERSONAGEM], (ALT_GAB,LARG_GAB))
-
+    assets[GAB_TRAS] = pygame.image.load(os.path.join(IMG_DIR,'COSTAS.png')).convert_alpha()
+    assets[GAB_TRAS] = pygame.transform.scale(assets[GAB_TRAS], (ALT_GAB,LARG_GAB))
 #     #SONS
 
 #     pygame.mixer.music.load(os.path.join(SONS_DIR, 'nome do arquivo'))
