@@ -8,7 +8,8 @@ import time
 
 
 class Jogador(pygame.sprite.Sprite):
-    def __init__(self,group,assets):
+    def __init__(self,assets):
+        assets = load_assets()
         pygame.sprite.Sprite.__init__(self)
         self.image = assets[PERSONAGEM]
         self.mask = pygame.mask.from_surface(self.image)
@@ -17,11 +18,12 @@ class Jogador(pygame.sprite.Sprite):
         self.rect.centery = ALTURA/2
         self.speedx = 0
         self.speedy = 0
-        self.group = group 
+        #self.group = group 
         self.assets = assets 
         self.ultimo_interact = pygame.time.get_ticks()
         self.tick_de_interação = 300
     def update(self):
+        
         # == POSIÇÃO == 
         self.rect.x += self.speedx
         self.rect.y += self.speedy

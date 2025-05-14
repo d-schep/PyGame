@@ -1,7 +1,7 @@
 import pygame
 from Classe_Jogador import *
 from cfg import *
-from groups import * 
+
 from assets import * 
 import random
 import time 

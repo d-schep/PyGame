@@ -4,7 +4,9 @@ from os import path
 IMG_DIR = path.join(path.dirname(__file__), 'ativos', 'imgs')
 SONS_DIR = path.join(path.dirname(__file__), 'ativos', 'sons')
 FONT_DIR = path.join(path.dirname(__file__), 'ativos', 'font')
-
+# == GAB == 
+ALT_GAB = 96
+LARG_GAB = 164
 # Tamanho da tela
 LARGURA = 1200
 ALTURA = 800

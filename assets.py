@@ -70,8 +70,8 @@ def load_assets():
 # #    assets[DICA_ESCAPE10] = pygame.transform.scale(assets[''], (, ))
 #     assets[BARRA_TEMPO] = pygame.image.load(os.path.join(IMG_DIR,'nome do arquivo')).convert()
 # #    assets[BARRA_TEMPO] = pygame.transform.scale(assets[''], (, ))
-    assets[PERSONAGEM] = pygame.image.load(os.path.join(IMG_DIR,'gab_de_frente.png')).convert()
-# #    assets[PERSONAGEM] = pygame.transform.scale(assets[''], (, ))
+    assets[PERSONAGEM] = pygame.image.load(os.path.join(IMG_DIR,'gab_de_frente.png')).convert_alpha()
+    assets[PERSONAGEM] = pygame.transform.scale(assets[PERSONAGEM], (ALT_GAB,LARG_GAB))
 
 #     #SONS
 

@@ -1,7 +1,7 @@
 import pygame
 from Classe_Jogador import *
 from cfg import *
-from groups import * 
+
 from assets import * 
 import random
 import time 
@@ -12,21 +12,57 @@ from Classe_Textos import *
 def sala_1(screen):
     clock = pygame.time.Clock()
     assets = load_assets()
-    grupos = load_grupos()
     background = assets[TELA_DE_FUNDO_ESCAPE_1]
     background_rect = background.get_rect()
     state = JOGANDO
-    #gab_topa_eu = Jogador()
+    bol = assets[PERSONAGEM]
+    grupos = {}
+    all_sprites = pygame.sprite.Group()
+    grupos['TODOS'] = all_sprites
+    gab_topa_eu = Jogador(bol)
+    all_sprites.add(gab_topa_eu)
+    keys_down = {}
     while state == JOGANDO:
         clock.tick(FPS)
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 state = QUIT
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_y:
+                state = QUIT
+            # Verifica se apertou alguma tecla.
+            if event.type == pygame.KEYDOWN:
+                # Dependendo da tecla, altera a velocidade.
+                keys_down[event.key] = True
+                if event.key == pygame.K_a:
+                    print('a')
+                    gab_topa_eu.speedx -= 1
+                if event.key == pygame.K_d:
+                    print('d')
+                    gab_topa_eu.speedx += 1
+                if event.key == pygame.K_w:
+                    print('w')
+                    gab_topa_eu.speedy -= 1
+                if event.key == pygame.K_s:
+                    print('s')
+                    gab_topa_eu.speedy += 1 
+            # Verifica se soltou alguma tecla.
+            if event.type == pygame.KEYUP:
+                # Dependendo da tecla, altera a velocidade.
+                if event.key in keys_down and keys_down[event.key]:
+                    if event.key == pygame.K_a:
+                        gab_topa_eu.speedx += 1
+                    if event.key == pygame.K_d:
+                        gab_topa_eu.speedx -= 1
+                    if event.key == pygame.K_w:
+                        gab_topa_eu.speedy += 1
+                    if event.key == pygame.K_s:
+                        gab_topa_eu.speedy -= 1 
 
+        all_sprites.update()
         screen.fill(PRETO)
         screen.blit(background,background_rect)
-
-
+        all_sprites.draw(screen)
+        gab_topa_eu.update()
         pygame.display.update()
 
