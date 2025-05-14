@@ -29,6 +29,9 @@ FONTE_BOTAO = 'fnt_btao'
 TELA_PRETA = 'tela_preta'
 IMG_TITULO = 'img_titulo'
 GAB_TRAS = 'gbr'
+ESQUERDA = 'sqerd'
+DIREITA = 'drt'
+
 #IMAGENS
 def load_assets():
     assets = {}
@@ -74,6 +77,10 @@ def load_assets():
     assets[PERSONAGEM] = pygame.transform.scale(assets[PERSONAGEM], (ALT_GAB,LARG_GAB))
     assets[GAB_TRAS] = pygame.image.load(os.path.join(IMG_DIR,'COSTAS.png')).convert_alpha()
     assets[GAB_TRAS] = pygame.transform.scale(assets[GAB_TRAS], (ALT_GAB,LARG_GAB))
+    assets[DIREITA] = pygame.image.load(os.path.join(IMG_DIR, 'direita.png')).convert_alpha()
+    assets[ESQUERDA] = pygame.image.load(os.path.join(IMG_DIR, 'esquerda.png')).convert_alpha()
+    assets[DIREITA] = pygame.transform.scale(assets[DIREITA], (ALT_GAB,LARG_GAB-5))
+    assets[ESQUERDA] = pygame.transform.scale(assets[ESQUERDA], (ALT_GAB,LARG_GAB-5))
 #     #SONS
 
 #     pygame.mixer.music.load(os.path.join(SONS_DIR, 'nome do arquivo'))

@@ -46,7 +46,13 @@ class Jogador(pygame.sprite.Sprite):
             self.image = self.assets[PERSONAGEM]
           #  self.image = pygame.Surface((96, 164))
           #  self.image.fill(VERMELHO)
-
+        elif self.speedx < 0:
+            print('esquerda')
+            self.image = self.assets[ESQUERDA]
+        elif self.speedx > 0:
+            print('esquerda')
+            self.image = self.assets[DIREITA]
+            
     def interact(self):
         # == limite de interação por tick == 
         t0 = pygame.time.get_ticks()
