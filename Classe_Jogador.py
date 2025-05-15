@@ -15,7 +15,7 @@ class Jogador(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.centerx = LARGURA/2
-        self.rect.centery = ALTURA/2
+        self.rect.centery = ALTURA
         self.speedx = 0
         self.speedy = 0
         #self.group = group  
