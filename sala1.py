@@ -15,7 +15,7 @@ def sala_1(screen):
 
     Mesa = assets[MESA]
     Mesa_rect = Mesa.get_rect()
-    Mesa_rect.topleft = (450, 300) 
+    Mesa_rect.topleft = (600, 350) 
 
     Estante = assets[ESTANTE]
     Estante_rect = Estante.get_rect()
@@ -23,7 +23,7 @@ def sala_1(screen):
 
     Sofa = assets[SOFA]
     Sofa_rect = Estante.get_rect()
-    Sofa_rect.topleft = (910,10)  
+    Sofa_rect.topleft = (350,20)  
 
     background = assets[TELA_DE_FUNDO_ESCAPE_1]
     background_rect = background.get_rect()
