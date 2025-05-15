@@ -19,7 +19,7 @@ def sala_1(screen):
 
     grupos = {}
     zumbi = pygame.Rect((0,0),(250,170))
-    parede_esquerda = pygame.Rect((0,ALTURA-100),(CENTROx-130,ALTURA-100))
+    parede_esquerda = pygame.Rect((0,ALTURA-115),(CENTROx-130,ALTURA-115))
     all_death =  pygame.sprite.Group()
     all_sprites = pygame.sprite.Group()
     grupos['TODOS'] = all_sprites
@@ -38,6 +38,8 @@ def sala_1(screen):
                 state = QUIT
             if event.type == pygame.KEYDOWN and event.key == pygame.K_y:
                 state = QUIT
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_l:
+                state = MORTO
             # Verifica se apertou alguma tecla.
             if event.type == pygame.KEYDOWN:
                 # Dependendo da tecla, altera a velocidade.
@@ -84,7 +86,7 @@ def sala_1(screen):
             hit_zumbi = pygame.Rect.colliderect(zumbi,gab_topa_eu)
             colide_parede = pygame.Rect.colliderect(parede_esquerda,gab_topa_eu)
             if hit_zumbi == True:
-                state = QUIT
+                state = MORTO
             if colide_parede == True:
                 gab_topa_eu.rect.x -= gab_topa_eu.speedx
                 gab_topa_eu.rect.y -= gab_topa_eu.speedy
@@ -99,4 +101,5 @@ def sala_1(screen):
         all_sprites.draw(screen)
         all_sprites.update()
         pygame.display.update()
+    return state
 
