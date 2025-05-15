@@ -33,6 +33,8 @@ ESQUERDA = 'sqerd'
 DIREITA = 'drt'
 MESA = 'mesa'
 ESTANTE = 'estante'
+SOFA = 'sofa'
+
 #IMAGENS
 def load_assets():
     assets = {}
@@ -55,6 +57,8 @@ def load_assets():
     assets[MESA] = pygame.transform.scale(assets[MESA], (LARGURA_MESA, ALTURA_MESA))
     assets[ESTANTE] = pygame.image.load(os.path.join(IMG_DIR, 'ESTANTE1.png')).convert_alpha()
     assets[ESTANTE] = pygame.transform.scale(assets[ESTANTE], (LARGURA_ESTANTE, ALTURA_ESTANTE))
+    assets[SOFA] = pygame.image.load(os.path.join(IMG_DIR, 'SOFA1.png')).convert_alpha()
+    assets[SOFA] = pygame.transform.scale(assets[SOFA], (LARGURA_SOFA, ALTURA_SOFA))
 
 #     #SONS
 

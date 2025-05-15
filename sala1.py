@@ -21,6 +21,10 @@ def sala_1(screen):
     Estante_rect = Estante.get_rect()
     Estante_rect.topleft = (910,10)   
 
+    Sofa = assets[SOFA]
+    Sofa_rect = Estante.get_rect()
+    Sofa_rect.topleft = (910,10)  
+
     background = assets[TELA_DE_FUNDO_ESCAPE_1]
     background_rect = background.get_rect()
     state = JOGANDO
@@ -108,6 +112,7 @@ def sala_1(screen):
         screen.blit(background,background_rect)
         screen.blit(Mesa, Mesa_rect)
         screen.blit(Estante, Estante_rect)
+        screen.blit(Sofa, Sofa_rect)
 
         all_sprites.draw(screen)
         all_sprites.update()
