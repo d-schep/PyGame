@@ -100,13 +100,15 @@ def sala_1(screen):
         if state == JOGANDO:
             hit_zumbi = pygame.Rect.colliderect(zumbi,gab_topa_eu)
             colide_parede = pygame.Rect.colliderect(parede_esquerda,gab_topa_eu)
+            colide_mesa =  pygame.Rect.colliderect(Mesa_rect,gab_topa_eu)
             if hit_zumbi == True:
                 state = MORTO
-            if colide_parede == True:
+            if colide_parede == True or colide_mesa == True:
                 gab_topa_eu.rect.x -= gab_topa_eu.speedx
                 gab_topa_eu.rect.y -= gab_topa_eu.speedy
                 gab_topa_eu.speedy = gab_topa_eu.speedx = 0
                 keys_down = {}
+
 
         screen.fill(PRETO)
         screen.blit(background,background_rect)
