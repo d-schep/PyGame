@@ -31,7 +31,8 @@ IMG_TITULO = 'img_titulo'
 GAB_TRAS = 'gbr'
 ESQUERDA = 'sqerd'
 DIREITA = 'drt'
-
+MESA = 'mesa'
+ESTANTE = 'estante'
 #IMAGENS
 def load_assets():
     assets = {}
@@ -50,6 +51,11 @@ def load_assets():
     assets[ESQUERDA] = pygame.image.load(os.path.join(IMG_DIR, 'esquerda.png')).convert_alpha()
     assets[DIREITA] = pygame.transform.scale(assets[DIREITA], (ALT_GAB-20,LARG_GAB))
     assets[ESQUERDA] = pygame.transform.scale(assets[ESQUERDA], (ALT_GAB-20,LARG_GAB))
+    assets[MESA] = pygame.image.load(os.path.join(IMG_DIR,'MESA1.png')).convert_alpha()
+    assets[MESA] = pygame.transform.scale(assets[MESA], (LARGURA_MESA, ALTURA_MESA))
+    assets[ESTANTE] = pygame.image.load(os.path.join(IMG_DIR, 'ESTANTE1.png')).convert_alpha()
+    assets[ESTANTE] = pygame.transform.scale(assets[ESTANTE], (LARGURA_ESTANTE, ALTURA_ESTANTE))
+
 #     #SONS
 
 #     pygame.mixer.music.load(os.path.join(SONS_DIR, 'nome do arquivo'))

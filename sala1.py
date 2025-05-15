@@ -12,9 +12,20 @@ from Classe_Textos import *
 def sala_1(screen):
     clock = pygame.time.Clock()
     assets = load_assets()
+
+    Mesa = assets[MESA]
+    Mesa_rect = Mesa.get_rect()
+    Mesa_rect.topleft = (450, 300) 
+
+    Estante = assets[ESTANTE]
+    Estante_rect = Estante.get_rect()
+    Estante_rect.topleft = (910,10)   
+
     background = assets[TELA_DE_FUNDO_ESCAPE_1]
     background_rect = background.get_rect()
     state = JOGANDO
+
+
     # == GAB ==
 
     grupos = {}
@@ -27,8 +38,8 @@ def sala_1(screen):
     gab_topa_eu = Jogador(assets)
 
     all_sprites.add(gab_topa_eu)
-
-
+    
+    
     keys_down = {}
     while state == JOGANDO:
         clock.tick(FPS)
@@ -93,11 +104,11 @@ def sala_1(screen):
                 gab_topa_eu.speedy = gab_topa_eu.speedx = 0
                 keys_down = {}
 
-            
-
-
         screen.fill(PRETO)
         screen.blit(background,background_rect)
+        screen.blit(Mesa, Mesa_rect)
+        screen.blit(Estante, Estante_rect)
+
         all_sprites.draw(screen)
         all_sprites.update()
         pygame.display.update()
