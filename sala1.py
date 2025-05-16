@@ -25,7 +25,13 @@ def sala_1(screen):
     Sofa_rect.topleft = (350,20)  
 
     # Criando objetos interativos com pistas
-    livro_sofa = ObjetoInterativo(380, 50, 50, 50, "Há um livro aqui... parece conter algo importante!")
+    texto_livro = "Página do diário:\n\n" + \
+                  "Dia 15 - Descobri algo incrível hoje...\n" + \
+                  "A chave para escapar está escondida em algum lugar da sala.\n" + \
+                  "Preciso me lembrar: os números são importantes.\n" + \
+                  "4-7-2-9... mas o que isso significa?"
+    
+    livro_sofa = ObjetoInterativo(535, 200, 50, 50, texto_livro, tipo='livro')
     gaveta_mesa = ObjetoInterativo(620, 400, 60, 30, "Uma gaveta... talvez tenha algo útil dentro.")
     objeto_estante = ObjetoInterativo(930, 30, 40, 40, "Tem algo interessante na estante...")
 
