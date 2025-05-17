@@ -69,15 +69,46 @@ def sala_1(screen):
     Sofa_rect.topleft = (350,20)  
 
     # Criando a porta interativa
-    porta = PortaInterativa(750, ALTURA//4 - 80, 108, 120, "1234", assets)
+    porta = PortaInterativa(750, ALTURA//4 - 80, 108, 120, "MORPH", assets)
     
     # Criando objetos interativos com pistas
-    texto_livro = "\n\n\n"  # Texto vazio para o livro
+    texto_livro = """Caderno de Lab - Projeto Metamorfose
+
+Amostra 13-α: Mutação Primária
+Taxa de replicação: 15.4%
+Contaminação: 18.2%
+Estabilidade: 8.9%
+
+Nota Dr. Chen:
+Número 13 é crucial nos testes.
+Verificar posições no alfabeto.
+Possível padrão molecular."""
     
     # Ajustando posições para corresponder melhor aos objetos
     livro_sofa = ObjetoInterativo(400, 200, 30, 30, texto_livro, tipo='livro', assets=assets)
-    gaveta_mesa = ObjetoInterativo(620, 420, 40, 20, "Achei um papel amassado com o número 2...")
-    objeto_estante = ObjetoInterativo(930, 200, 30, 30, "Tem algo riscado na estante... os números '34'")
+    
+    gaveta_mesa = ObjetoInterativo(620, 420, 40, 20, """RELATÓRIO - CONFIDENCIAL
+Lab 15-P
+
+Incidente:
+- Setor 16 comprometido
+- Contenção: 18 min
+- Ref.13 reagiu com
+  composto 15
+
+Nota: Sequência alfabética
+encontrada. Ver lousa.""")
+
+    objeto_estante = ObjetoInterativo(930, 200, 30, 30, """LOUSA - TRANSFORMAÇÃO MOLECULAR
+
+Sequência:
+13 → início
+15 → catálise
+18 → base
+16 → mutação
+8 → final
+
+'Posição = Transformação'""")
 
     background = assets[TELA_DE_FUNDO_ESCAPE_1]
     background_rect = background.get_rect()
@@ -132,21 +163,19 @@ def sala_1(screen):
 
             # Processamento de inputs quando a interface da porta está ativa
             elif event.type == pygame.KEYDOWN and porta.input_ativo:
-                if event.key in [pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4,
-                            pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9]:
-                    if len(porta.codigo_digitado) < 4:
-                        porta.codigo_digitado += event.unicode
-                    if len(porta.codigo_digitado) == 4:
-                        if porta.codigo_digitado == porta.codigo:
-                            porta.is_unlocked = True
-                            porta.texto = "Porta desbloqueada!"
-                            porta.input_ativo = False
-                        else:
-                            porta.mensagem_erro = "Código incorreto!"
-                            porta.tempo_erro = time.time()
-                            porta.codigo_digitado = ""
+                if event.key == pygame.K_RETURN:
+                    if porta.codigo_digitado.upper() == porta.codigo:
+                        porta.is_unlocked = True
+                        porta.texto = "Acesso concedido. Porta desbloqueada."
+                        porta.input_ativo = False
+                    else:
+                        porta.mensagem_erro = "Código inválido. Acesso negado."
+                        porta.tempo_erro = time.time()
+                        porta.codigo_digitado = ""
                 elif event.key == pygame.K_BACKSPACE:
                     porta.codigo_digitado = porta.codigo_digitado[:-1]
+                elif event.unicode.isalpha() and len(porta.codigo_digitado) < 5:
+                    porta.codigo_digitado += event.unicode.upper()
             
             # Verifica se apertou alguma tecla.
             if event.type == pygame.KEYDOWN:
