@@ -58,7 +58,10 @@ def sala_1(screen):
 
     Mesa = assets[MESA]
     Mesa_rect = Mesa.get_rect()
-    Mesa_rect.topleft = (600, 350) 
+    Mesa_rect.topleft = (600, 350)
+    # Criar um retângulo de colisão menor que a mesa, com espaço máximo na parte inferior
+    Mesa_colisao = pygame.Rect(Mesa_rect.left + 20, Mesa_rect.top + 20, 
+                              LARGURA_MESA - 40, ALTURA_MESA - 140)  # Aumentei a redução na altura para 140 pixels
 
     Estante = assets[ESTANTE]
     Estante_rect = Estante.get_rect()
@@ -118,6 +121,7 @@ Sequência:
     grupos = {}
     zumbi = pygame.Rect((0,0),(250,170))
     parede_esquerda = pygame.Rect((0,ALTURA-115),(CENTROx-130,ALTURA-115))
+    parede_direita = pygame.Rect((CENTROx+80,ALTURA-115),(LARGURA-(CENTROx+80),ALTURA-115))  # Movida 50 pixels para a esquerda
     all_death =  pygame.sprite.Group()
     all_sprites = pygame.sprite.Group()
     all_interactables = pygame.sprite.Group()  # Grupo para objetos interativos
@@ -225,8 +229,8 @@ Sequência:
 
         if state == JOGANDO:
             hit_zumbi = pygame.Rect.colliderect(zumbi,gab_topa_eu)
-            colide_parede = pygame.Rect.colliderect(parede_esquerda,gab_topa_eu)
-            colide_mesa =  pygame.Rect.colliderect(Mesa_rect,gab_topa_eu)
+            colide_parede = pygame.Rect.colliderect(parede_esquerda,gab_topa_eu) or pygame.Rect.colliderect(parede_direita,gab_topa_eu)  # Adicionada colisão com parede direita
+            colide_mesa =  pygame.Rect.colliderect(Mesa_colisao,gab_topa_eu)
             
             # Verifica se o jogador pode passar pela porta
             if pygame.Rect.colliderect(porta.rect, gab_topa_eu.rect):
