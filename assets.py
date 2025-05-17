@@ -36,6 +36,8 @@ ESTANTE = 'estante'
 SOFA = 'sofa'
 LIVRO = 'livro'
 MONITOR = 'monitor'
+PAPEL = 'papel'
+PAPEL2 = 'papel2'
 
 #IMAGENS
 def load_assets():
@@ -65,6 +67,10 @@ def load_assets():
     assets[SOFA] = pygame.transform.scale(assets[SOFA], (LARGURA_SOFA, ALTURA_SOFA))
     assets[LIVRO] = pygame.image.load(os.path.join(IMG_DIR, 'LIVRO1.png')).convert_alpha()
     assets[LIVRO] = pygame.transform.scale(assets[LIVRO], (800, 600))
+    assets[PAPEL] = pygame.image.load(os.path.join(IMG_DIR, 'PAPEL1.png')).convert_alpha()
+    assets[PAPEL] = pygame.transform.scale(assets[PAPEL], (30, 30))  # Tamanho pequeno para o papel no chão
+    assets[PAPEL2] = pygame.image.load(os.path.join(IMG_DIR, 'PAPEL2.png')).convert_alpha()
+    assets[PAPEL2] = pygame.transform.scale(assets[PAPEL2], (800, 600))  # Tamanho grande para visualização
     try:
         # First try loading normally
         assets[MONITOR] = pygame.image.load(os.path.join(IMG_DIR, 'MONITOR1.png')).convert_alpha()

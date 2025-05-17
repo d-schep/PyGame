@@ -3,11 +3,11 @@ from cfg import *
 from assets import *
 
 class ObjetoInterativo(pygame.sprite.Sprite):
-    def __init__(self, x, y, width, height, pista, tipo='normal', assets=None):
+    def __init__(self, x, y, width, height, pista, tipo='normal', assets=None, show_indicator=True):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((width, height))
         self.image.fill((255, 255, 0))  # Amarelo para visualizar a área
-        self.image.set_alpha(50)  # Semi-transparente
+        self.image.set_alpha(50)  # Semi-transparente (era 0, voltou para 50)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -22,6 +22,7 @@ class ObjetoInterativo(pygame.sprite.Sprite):
         self.indicador_rect = self.indicador.get_rect()
         self.tipo = tipo
         self.assets = assets
+        self.show_indicator = show_indicator
 
     def update(self, jogador):
         # Verifica se o jogador está perto
@@ -41,11 +42,11 @@ class ObjetoInterativo(pygame.sprite.Sprite):
         return False
 
     def desenhar(self, screen):
-        # Sempre desenha a área interativa em amarelo transparente
+        # Sempre desenha a área interativa (agora invisível)
         screen.blit(self.image, self.rect)
         
-        # Se o jogador estiver perto, desenha o indicador verde
-        if self.pode_interagir:
+        # Se o jogador estiver perto e show_indicator for True, desenha o indicador verde
+        if self.pode_interagir and self.show_indicator:
             self.indicador_rect.center = self.rect.center
             screen.blit(self.indicador, (self.rect.x - 10, self.rect.y - 10))
             
@@ -59,6 +60,33 @@ class ObjetoInterativo(pygame.sprite.Sprite):
         if self.mostrando_pista:
             if self.tipo == 'livro':
                 self.desenhar_livro(screen)
+            elif self.tipo == 'papel':
+                if self.assets and PAPEL2 in self.assets:
+                    # Usa a imagem do PAPEL2
+                    papel_img = self.assets[PAPEL2]
+                    papel_rect = papel_img.get_rect(center=(LARGURA/2, ALTURA/2))
+                    screen.blit(papel_img, papel_rect)
+                    
+                    # Configuração da fonte menor
+                    fonte = pygame.font.Font(None, 24)  # Reduzido de 32 para 24
+                    espacamento = 30  # Reduzido de 40 para 30
+                    
+                    # Renderiza o texto linha por linha
+                    linhas = self.pista.split('\n')
+                    y = papel_rect.top + 80  # Começa um pouco mais acima
+                    
+                    for linha in linhas:
+                        if linha.strip():  # Se a linha não estiver vazia
+                            texto = fonte.render(linha.strip(), True, (0, 0, 0))
+                            texto_rect = texto.get_rect(centerx=LARGURA/2, top=y)
+                            screen.blit(texto, texto_rect)
+                        y += espacamento
+                    
+                    # Adiciona botão de fechar
+                    fonte_botao = pygame.font.Font(None, 28)  # Botão de fechar também menor
+                    texto_fechar = fonte_botao.render("Pressione E para fechar", True, BRANCO)
+                    texto_fechar_rect = texto_fechar.get_rect(center=(LARGURA/2, papel_rect.bottom + 20))
+                    screen.blit(texto_fechar, texto_fechar_rect)
             else:
                 self.desenhar_pista_normal(screen)
 
@@ -186,66 +214,61 @@ class ObjetoInterativo(pygame.sprite.Sprite):
             screen.blit(livro_img, livro_rect)
             
             # Define a área útil para texto em cada página
-            margem_x = 120  # Aumentei a margem esquerda
-            margem_y = 120
+            margem_x = 120
+            margem_y = 100  # Reduzida a margem superior
             largura_pagina = (livro_rect.width - 3 * margem_x) // 2
             altura_pagina = livro_rect.height - 2 * margem_y
             
-            # Configuração da fonte
-            tamanho_fonte = 24
+            # Configuração da fonte menor
+            tamanho_fonte = 28  # Reduzido de 36 para 28
             fonte = pygame.font.Font(None, tamanho_fonte)
-            espacamento = tamanho_fonte + 5
+            espacamento = tamanho_fonte + 8  # Reduzido o espaçamento
             
-            # Divide o texto em duas partes (esquerda e direita)
-            partes = self.pista.split('\n\n\n')
+            # Divide o texto em linhas como fornecido
+            linhas = [
+                "19 9 1 13 5 4",
+                "5 4 18 1 20",
+                "1 10 5 19",
+                "5 21 17",
+                "19 5 20 14 1",
+                "5 22 12 1 19",
+                "19 15 14",
+                "5",
+                "5 12 5",
+                "5 21 7 5 16",
+                "15 1 8 3",
+                "15 14",
+                "15 4 1 19 19 1 13 1",
+                "12 5 16 1 16",
+                "15",
+                "5 20 1",
+                "1 22"
+            ]
             
-            # Função auxiliar para quebrar texto em linhas
-            def quebrar_texto(texto, largura_max):
-                palavras = texto.split()
-                linhas = []
-                linha_atual = []
-                
-                for palavra in palavras:
-                    linha_teste = ' '.join(linha_atual + [palavra])
-                    if fonte.size(linha_teste)[0] <= largura_max:
-                        linha_atual.append(palavra)
-                    else:
-                        if linha_atual:
-                            linhas.append(' '.join(linha_atual))
-                            linha_atual = [palavra]
-                        else:
-                            linhas.append(palavra)
-                            linha_atual = []
-                
-                if linha_atual:
-                    linhas.append(' '.join(linha_atual))
-                return linhas
+            # Divide as linhas entre as duas páginas
+            meio = len(linhas) // 2
+            linhas_esquerda = linhas[:meio]
+            linhas_direita = linhas[meio:]
             
-            # Renderiza o texto na página esquerda
-            if len(partes) > 0:
-                y = livro_rect.top + margem_y
-                linhas = quebrar_texto(partes[0], largura_pagina)
-                
-                for linha in linhas:
-                    if y + espacamento > livro_rect.bottom - margem_y//2:
-                        break
-                    texto = fonte.render(linha, True, (0, 0, 0))
-                    pos_x = livro_rect.left + margem_x + 30  # Adicionei 30 pixels à posição x
-                    screen.blit(texto, (pos_x, y))
-                    y += espacamento
+            # Renderiza as linhas na página esquerda
+            y = livro_rect.top + margem_y
+            for linha in linhas_esquerda:
+                if y + espacamento > livro_rect.bottom - margem_y:
+                    break
+                texto = fonte.render(linha, True, (0, 0, 0))
+                pos_x = livro_rect.left + margem_x
+                screen.blit(texto, (pos_x, y))
+                y += espacamento
             
-            # Renderiza o texto na página direita
-            if len(partes) > 1:
-                y = livro_rect.top + margem_y
-                linhas = quebrar_texto(partes[1], largura_pagina)
-                
-                for linha in linhas:
-                    if y + espacamento > livro_rect.bottom - margem_y//2:
-                        break
-                    texto = fonte.render(linha, True, (0, 0, 0))
-                    pos_x = livro_rect.centerx + margem_x//2 + 30  # Adicionei 30 pixels à posição x
-                    screen.blit(texto, (pos_x, y))
-                    y += espacamento
+            # Renderiza as linhas na página direita
+            y = livro_rect.top + margem_y
+            for linha in linhas_direita:
+                if y + espacamento > livro_rect.bottom - margem_y:
+                    break
+                texto = fonte.render(linha, True, (0, 0, 0))
+                pos_x = livro_rect.centerx + margem_x
+                screen.blit(texto, (pos_x, y))
+                y += espacamento
 
             # Adiciona botão de fechar
             fonte_botao = pygame.font.Font(None, 36)

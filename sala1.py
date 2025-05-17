@@ -25,9 +25,9 @@ class PortaInterativa(ObjetoInterativo):
             
             # Desenha o fundo da interface de senha
             if self.input_ativo:
-                # Fundo semi-transparente
+                # Fundo semi-transparente mais escuro para melhor visibilidade
                 s = pygame.Surface((400, 150))
-                s.set_alpha(128)
+                s.set_alpha(200)  # Aumentei a opacidade
                 s.fill((0, 0, 0))
                 screen.blit(s, (LARGURA//2 - 200, ALTURA//2 - 75))
                 
@@ -35,14 +35,16 @@ class PortaInterativa(ObjetoInterativo):
                 titulo = fonte.render("Digite a senha:", True, (255, 255, 255))
                 screen.blit(titulo, (LARGURA//2 - titulo.get_width()//2, ALTURA//2 - 50))
                 
-                # Campo de senha
-                senha = "*" * len(self.codigo_digitado)
-                senha_surface = fonte.render(senha, True, (255, 255, 255))
-                pygame.draw.rect(screen, (100, 100, 100), (LARGURA//2 - 50, ALTURA//2, 100, 40))
+                # Campo de senha - mostrando os caracteres digitados
+                pygame.draw.rect(screen, (50, 50, 50), (LARGURA//2 - 100, ALTURA//2, 200, 40))  # Campo maior
+                if self.codigo_digitado:
+                    senha_surface = fonte.render(self.codigo_digitado, True, (0, 255, 0))  # Texto em verde
+                else:
+                    senha_surface = fonte.render("_", True, (0, 255, 0))  # Cursor quando vazio
                 screen.blit(senha_surface, (LARGURA//2 - senha_surface.get_width()//2, ALTURA//2 + 10))
                 
                 # Instruções
-                instrucoes = fonte.render("Pressione E para sair", True, (200, 200, 200))
+                instrucoes = fonte.render("Pressione ENTER para confirmar", True, (200, 200, 200))
                 screen.blit(instrucoes, (LARGURA//2 - instrucoes.get_width()//2, ALTURA//2 + 50))
             else:
                 texto = fonte.render(self.texto, True, (255, 255, 255))
@@ -71,55 +73,60 @@ def sala_1(screen):
     Sofa_rect = Sofa.get_rect()
     Sofa_rect.topleft = (350,20)  
 
-    # Criando a porta interativa
+    # Criando a porta interativa (x=750, y=ALTURA//4 - 80)
     porta = PortaInterativa(750, ALTURA//4 - 80, 108, 120, "MORPH", assets)
     
     # Criando objetos interativos com pistas
-    texto_livro = """Caderno de Lab - Projeto Metamorfose
-
-Amostra 13-α: Mutação Primária
-Taxa de replicação: 15.4%
-Contaminação: 18.2%
-Estabilidade: 8.9%
-
-Nota Dr. Chen:
-Número 13 é crucial nos testes.
-Verificar posições no alfabeto.
-Possível padrão molecular."""
+    texto_livro = """19 9 1 13 5 4 5 4 18 1 20 1 10 5 19 5 21 17 19 5 20 14 1 5 22 12 1 19 19 15 14 5 5 12 5 5 21 7 5 16 15 1 8 3 15 14 15 4 1 19 19 1 13 1 12 5 16 1 16 15 5 20 1 1 22"""
     
-    # Ajustando posições para corresponder melhor aos objetos
-    livro_sofa = ObjetoInterativo(450, 200, 30, 30, texto_livro, tipo='livro', assets=assets)
+    # Livro no sofá (x=450, y=200)
+    livro_sofa = ObjetoInterativo(550, 200, 30, 30, texto_livro, tipo='livro', assets=assets)
+
+    # Papel amassado no chão (x=300, y=600)
+    texto_papel = """📜 Lista de sobrevivência – Entrada da base, 3 dias atrás
+
+4 galões de água
+
+6 enlatados
+
+10 barras de cereal
+
+1 lanterna
+
+5 munições
+
+7 curativos
+
+8 pilhas"""
+
+    papel_chao = ObjetoInterativo(270, 620, 30, 30, texto_papel, tipo='papel', assets=assets, show_indicator=False)
     
-    # Terminal na mesa - mostra apenas os números
-    gaveta_mesa = ObjetoInterativo(620, 380, 60, 40, """TERMINAL DO LABORATÓRIO
->> Iniciando sistema...
->> Acessando logs do projeto...
->> Carregando registros...
+    # Terminal na mesa (x=620, y=380)
+    gaveta_mesa = ObjetoInterativo(670, 410, 60, 40, """
 
-REGISTRO DE INCIDENTES:
-- Falha no setor treze
-- Contaminação após quinze minutos
-- Protocolo dezoito ativado
-- Dezesseis amostras perdidas
-- Oito sobreviventes_""", assets=assets)
 
-    # Terminal na estante - fornece contexto sobre o incidente
-    objeto_estante = ObjetoInterativo(920, 150, 60, 60, """TERMINAL DO LABORATÓRIO
->> Acessando diário pessoal...
->> Arquivo criptografado...
->> Decodificando...
+                    ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+                     VOCÊ NUNCA IRÁ
+                     SAIR DA SALA,
+                      DESISTA!!!
+                    ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 
-Notas Dr. Chen - Dia 42:
-O padrão está claro agora.
-Tudo começou no lab treze,
-após quinze horas de exposição.
-Dezoito tentativas falharam.
-Dezesseis mutações observadas.
-Apenas oito permaneceram estáveis.
 
-A sequência é a chave.
-Cada número tem seu significado.
-A transformação é inevitável.""", assets=assets)
+""", assets=assets)
+
+    # Barril com pista (x=100, y=500)
+    barril = ObjetoInterativo(100, 600, 40, 40, """
+    
+                   REGISTRO PESSOAL:
+                   
+         Hoje é dia 13, mês 15...
+         Algo está errado, os números 
+         não fazem sentido.
+         
+         O tempo está distorcido?
+         Ou será que...
+    
+    """, tipo='barril', assets=assets)
 
     background = assets[TELA_DE_FUNDO_ESCAPE_1]
     background_rect = background.get_rect()
@@ -140,8 +147,9 @@ A transformação é inevitável.""", assets=assets)
     # Adiciona objetos interativos ao grupo
     all_interactables.add(livro_sofa)
     all_interactables.add(gaveta_mesa)
-    all_interactables.add(objeto_estante)
     all_interactables.add(porta)
+    all_interactables.add(papel_chao)
+    all_interactables.add(barril)
 
     gab_topa_eu = Jogador(assets)
     all_sprites.add(gab_topa_eu)
@@ -170,7 +178,7 @@ A transformação é inevitável.""", assets=assets)
                         porta.mensagem_erro = ""  # Limpa mensagens de erro
                 else:
                     # Se não estiver perto da porta, tenta interagir com outros objetos
-                    for obj in [livro_sofa, gaveta_mesa, objeto_estante]:
+                    for obj in [livro_sofa, gaveta_mesa, papel_chao, barril]:
                         obj.tentar_interagir()
 
             # Processamento de inputs quando a interface da porta está ativa
