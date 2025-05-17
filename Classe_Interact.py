@@ -64,32 +64,119 @@ class ObjetoInterativo(pygame.sprite.Sprite):
 
     def desenhar_pista_normal(self, screen):
         if self.mostrando_pista:
-            # Cria uma superfície semi-transparente para o fundo da pista
-            fundo = pygame.Surface((LARGURA - 100, ALTURA//2))
-            fundo.fill(PRETO)
-            fundo.set_alpha(230)
+            if "620" in str(self.rect.topleft):  # Identifica se é a mesa
+                # Criar uma superfície para a prancheta
+                prancheta = pygame.Surface((500, 600))
+                prancheta.fill((240, 234, 214))  # Cor bege claro para papel
+                
+                # Adicionar efeito de borda da prancheta
+                pygame.draw.rect(prancheta, (139, 69, 19), (0, 0, 500, 600), 20)  # Borda marrom
+                
+                # Adicionar clip de metal no topo
+                pygame.draw.rect(prancheta, (192, 192, 192), (200, 0, 100, 30))  # Clip metálico
+                
+                # Linhas do papel
+                for i in range(40, 600, 25):
+                    pygame.draw.line(prancheta, (200, 200, 200), (40, i), (460, i), 1)
+                
+                # Posicionar a prancheta no centro
+                prancheta_rect = prancheta.get_rect(center=(LARGURA//2, ALTURA//2))
+                screen.blit(prancheta, prancheta_rect)
+                
+                # Renderizar o texto
+                fonte = pygame.font.Font(None, 32)
+                linhas = self.pista.split('\n')
+                y = prancheta_rect.top + 60
+                
+                # Adicionar título sublinhado
+                titulo = fonte.render("RELATÓRIO - CONFIDENCIAL", True, (139, 0, 0))  # Vermelho escuro
+                titulo_rect = titulo.get_rect(centerx=LARGURA//2, top=y)
+                screen.blit(titulo, titulo_rect)
+                pygame.draw.line(screen, (139, 0, 0), 
+                               (titulo_rect.left, titulo_rect.bottom + 2),
+                               (titulo_rect.right, titulo_rect.bottom + 2), 2)
+                
+                y += 50  # Espaço após o título
+                
+                # Resto do texto
+                for linha in linhas[1:]:  # Pula a primeira linha (título)
+                    if linha.strip() != '':
+                        texto = fonte.render(linha, True, (0, 0, 120))  # Azul escuro para texto
+                        texto_rect = texto.get_rect(centerx=LARGURA//2, top=y)
+                        screen.blit(texto, texto_rect)
+                    y += 30
+                
+                # Adicionar carimbo "CONFIDENCIAL" rotacionado
+                fonte_carimbo = pygame.font.Font(None, 48)
+                carimbo = fonte_carimbo.render("CONFIDENCIAL", True, (255, 0, 0, 128))
+                carimbo = pygame.transform.rotate(carimbo, -45)
+                screen.blit(carimbo, (prancheta_rect.right - 200, prancheta_rect.top + 150))
+                
+                # Instrução para fechar
+                fonte_instrucao = pygame.font.Font(None, 24)
+                instrucao = fonte_instrucao.render("Pressione E para fechar", True, (100, 100, 100))
+                instrucao_rect = instrucao.get_rect(centerx=LARGURA//2, bottom=prancheta_rect.bottom + 30)
+                screen.blit(instrucao, instrucao_rect)
             
-            # Posiciona o fundo no centro da tela
-            fundo_rect = fundo.get_rect(center=(LARGURA//2, ALTURA//2))
-            screen.blit(fundo, fundo_rect)
-            
-            # Renderiza o texto da pista
-            fonte = pygame.font.Font(None, 32)
-            linhas = self.pista.split('\n')
-            y = fundo_rect.top + 20  # Começa 20 pixels abaixo do topo do fundo
-            
-            for linha in linhas:
-                if linha.strip() != '':  # Ignora linhas vazias
-                    texto = fonte.render(linha, True, BRANCO)
-                    texto_rect = texto.get_rect(centerx=LARGURA//2, top=y)
-                    screen.blit(texto, texto_rect)
-                y += 30  # Espaçamento entre linhas
-            
-            # Adiciona instrução para fechar
-            fonte_instrucao = pygame.font.Font(None, 24)
-            instrucao = fonte_instrucao.render("Pressione E para fechar", True, (200, 200, 200))
-            instrucao_rect = instrucao.get_rect(centerx=LARGURA//2, bottom=fundo_rect.bottom - 10)
-            screen.blit(instrucao, instrucao_rect)
+            elif "920" in str(self.rect.topleft) and self.assets and MONITOR in self.assets:  # Se for a estante (monitor)
+                fundo_img = self.assets[MONITOR]
+                fundo_rect = fundo_img.get_rect(center=(LARGURA//2, ALTURA//2))
+                screen.blit(fundo_img, fundo_rect)
+                
+                fonte = pygame.font.Font(None, 32)
+                cor_texto = (0, 255, 0)  # Verde fosforescente para o monitor
+                y_inicial = fundo_rect.top + 60  # Reduzido de 100 para 60
+                espacamento = 30
+                
+                # Adiciona efeito de terminal
+                tempo = pygame.time.get_ticks() / 1000
+                cursor = "_" if int(tempo * 2) % 2 == 0 else " "
+                
+                # Calcula a largura máxima do texto
+                largura_maxima = 400  # Reduzido para centralizar melhor
+                
+                linhas = self.pista.split('\n')
+                y = y_inicial
+                
+                # Centraliza o texto horizontalmente
+                margem_esquerda = LARGURA//2 - largura_maxima//2
+                
+                for linha in linhas:
+                    if linha.strip() != '':
+                        texto = fonte.render(linha + (cursor if linha == linhas[-1] else ""), True, cor_texto)
+                        # Alinha o texto à esquerda, mas dentro da largura máxima
+                        texto_rect = texto.get_rect()
+                        texto_rect.left = margem_esquerda
+                        texto_rect.top = y
+                        screen.blit(texto, texto_rect)
+                    y += espacamento
+                
+                fonte_instrucao = pygame.font.Font(None, 24)
+                instrucao = fonte_instrucao.render("[ Pressione E para fechar ]", True, (0, 255, 0))
+                instrucao_rect = instrucao.get_rect(centerx=LARGURA//2, bottom=fundo_rect.bottom + 30)
+                screen.blit(instrucao, instrucao_rect)
+            else:  # Fallback para qualquer outro caso
+                fundo = pygame.Surface((LARGURA - 100, ALTURA//2))
+                fundo.fill(PRETO)
+                fundo.set_alpha(230)
+                fundo_rect = fundo.get_rect(center=(LARGURA//2, ALTURA//2))
+                screen.blit(fundo, fundo_rect)
+                
+                fonte = pygame.font.Font(None, 32)
+                linhas = self.pista.split('\n')
+                y = fundo_rect.top + 20
+                
+                for linha in linhas:
+                    if linha.strip() != '':
+                        texto = fonte.render(linha, True, BRANCO)
+                        texto_rect = texto.get_rect(centerx=LARGURA//2, top=y)
+                        screen.blit(texto, texto_rect)
+                    y += 30
+                
+                fonte_instrucao = pygame.font.Font(None, 24)
+                instrucao = fonte_instrucao.render("Pressione E para fechar", True, (200, 200, 200))
+                instrucao_rect = instrucao.get_rect(centerx=LARGURA//2, bottom=fundo_rect.bottom - 10)
+                screen.blit(instrucao, instrucao_rect)
 
     def desenhar_livro(self, screen):
         if self.assets and LIVRO in self.assets:

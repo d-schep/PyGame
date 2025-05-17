@@ -90,7 +90,8 @@ Possível padrão molecular."""
     # Ajustando posições para corresponder melhor aos objetos
     livro_sofa = ObjetoInterativo(450, 200, 30, 30, texto_livro, tipo='livro', assets=assets)
     
-    gaveta_mesa = ObjetoInterativo(620, 420, 40, 20, """RELATÓRIO - CONFIDENCIAL
+    # Aumentando a área de interação da mesa e ajustando posição
+    gaveta_mesa = ObjetoInterativo(620, 380, 60, 40, """RELATÓRIO - CONFIDENCIAL
 Lab 15-P
 
 Incidente:
@@ -100,18 +101,21 @@ Incidente:
   composto 15
 
 Nota: Sequência alfabética
-encontrada. Ver lousa.""")
+encontrada. Ver terminal.""", assets=assets)
 
-    objeto_estante = ObjetoInterativo(930, 200, 30, 30, """LOUSA - TRANSFORMAÇÃO MOLECULAR
+    # Aumentando a área de interação da estante e ajustando posição
+    objeto_estante = ObjetoInterativo(920, 150, 60, 60, """TERMINAL DO LABORATÓRIO
+>> Iniciando sequência...
+>> Carregando dados...
 
-Sequência:
+Sequência detectada:
 13 → início
 15 → catálise
 18 → base
 16 → mutação
 8 → final
 
-'Posição = Transformação'""")
+'Posição = Transformação'""", assets=assets)
 
     background = assets[TELA_DE_FUNDO_ESCAPE_1]
     background_rect = background.get_rect()

@@ -35,6 +35,8 @@ MESA = 'mesa'
 ESTANTE = 'estante'
 SOFA = 'sofa'
 LIVRO = 'livro'
+PAPEL = 'papel'
+MONITOR = 'monitor'
 
 #IMAGENS
 def load_assets():
@@ -63,7 +65,26 @@ def load_assets():
     assets[SOFA] = pygame.image.load(os.path.join(IMG_DIR, 'SOFA1.png')).convert_alpha()
     assets[SOFA] = pygame.transform.scale(assets[SOFA], (LARGURA_SOFA, ALTURA_SOFA))
     assets[LIVRO] = pygame.image.load(os.path.join(IMG_DIR, 'LIVRO1.png')).convert_alpha()
-    assets[LIVRO] = pygame.transform.scale(assets[LIVRO], (800, 600))  # Ajuste o tamanho conforme necessário
+    assets[LIVRO] = pygame.transform.scale(assets[LIVRO], (800, 600))
+    assets[PAPEL] = pygame.image.load(os.path.join(IMG_DIR, 'PAPEL1.png')).convert_alpha()
+    assets[PAPEL] = pygame.transform.scale(assets[PAPEL], (600, 400))
+    try:
+        # First try loading normally
+        assets[MONITOR] = pygame.image.load(os.path.join(IMG_DIR, 'MONITOR1.png')).convert_alpha()
+    except pygame.error:
+        try:
+            # Try loading without convert_alpha
+            assets[MONITOR] = pygame.image.load(os.path.join(IMG_DIR, 'MONITOR1.png'))
+        except pygame.error:
+            print("Error loading MONITOR1.png - Creating fallback surface")
+            # Create a fallback surface if loading fails
+            assets[MONITOR] = pygame.Surface((700, 500))
+            assets[MONITOR].fill((50, 50, 50))  # Dark gray color for monitor
+            # Add a screen area
+            screen_area = pygame.Surface((600, 400))
+            screen_area.fill((0, 0, 0))  # Black screen
+            assets[MONITOR].blit(screen_area, (50, 50))  # Position the screen on the monitor
+    assets[MONITOR] = pygame.transform.scale(assets[MONITOR], (700, 500))
     
 
 #     #SONS
