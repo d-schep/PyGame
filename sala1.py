@@ -90,6 +90,7 @@ Possível padrão molecular."""
     # Ajustando posições para corresponder melhor aos objetos
     livro_sofa = ObjetoInterativo(450, 200, 30, 30, texto_livro, tipo='livro', assets=assets)
     
+<<<<<<< HEAD
     # Terminal na mesa - mostra apenas os números
     gaveta_mesa = ObjetoInterativo(620, 380, 60, 40, """TERMINAL DO LABORATÓRIO
 >> Iniciando sistema...
@@ -108,6 +109,10 @@ Posição 8
 
     # Relatório na estante - fornece contexto sobre o incidente
     objeto_estante = ObjetoInterativo(920, 150, 60, 60, """RELATÓRIO - CONFIDENCIAL
+=======
+    # Relatório na mesa
+    gaveta_mesa = ObjetoInterativo(620, 380, 60, 40, """RELATÓRIO - CONFIDENCIAL
+>>>>>>> 5d48d4c03096e0b13cfb6ef9ed2e6ae4c4811a9b
 Lab 15-P
 
 Incidente:
@@ -120,6 +125,23 @@ Incidente:
 Nota: Sequência alfabética
 encontrada. Ver terminal.""", assets=assets)
 
+<<<<<<< HEAD
+=======
+    # Terminal na estante
+    objeto_estante = ObjetoInterativo(920, 150, 60, 60, """TERMINAL DO LABORATÓRIO
+>> Iniciando sequência...
+>> Carregando dados...
+
+Sequência detectada:
+13 → início
+15 → catálise
+18 → base
+16 → mutação
+8 → final
+
+'Posição = Transformação'""", assets=assets)
+
+>>>>>>> 5d48d4c03096e0b13cfb6ef9ed2e6ae4c4811a9b
     background = assets[TELA_DE_FUNDO_ESCAPE_1]
     background_rect = background.get_rect()
     state = JOGANDO
