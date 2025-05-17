@@ -17,36 +17,10 @@ class PortaInterativa(ObjetoInterativo):
         self.mensagem_erro = ""
         self.tempo_erro = 0
         self.input_ativo = False
-
-    def handle_keypress(self, event):
-        if self.mostrando_pista:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_e:
-                    self.input_ativo = not self.input_ativo
-                    self.codigo_digitado = ""
-                    self.mensagem_erro = ""
-                elif self.input_ativo:
-                    if event.key in [pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4,
-                                pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9]:
-                        if len(self.codigo_digitado) < 4:  # Limita a 4 dígitos
-                            self.codigo_digitado += event.unicode
-                        if len(self.codigo_digitado) == 4:
-                            if self.codigo_digitado == self.codigo:
-                                self.is_unlocked = True
-                                self.texto = "Porta desbloqueada!"
-                                self.input_ativo = False
-                            else:
-                                self.mensagem_erro = "Código incorreto!"
-                                self.tempo_erro = time.time()
-                                self.codigo_digitado = ""
-                    elif event.key == pygame.K_BACKSPACE:
-                        self.codigo_digitado = self.codigo_digitado[:-1]
-                    elif event.key == pygame.K_ESCAPE:
-                        self.input_ativo = False
-                        self.codigo_digitado = ""
+        self.texto = "Pressione E para inserir o código"
 
     def desenhar_pista(self, screen):
-        if self.mostrando_pista:
+        if self.pode_interagir or self.input_ativo:
             fonte = pygame.font.Font(None, 36)
             
             # Desenha o fundo da interface de senha
@@ -68,7 +42,7 @@ class PortaInterativa(ObjetoInterativo):
                 screen.blit(senha_surface, (LARGURA//2 - senha_surface.get_width()//2, ALTURA//2 + 10))
                 
                 # Instruções
-                instrucoes = fonte.render("ESC para cancelar", True, (200, 200, 200))
+                instrucoes = fonte.render("Pressione E para sair", True, (200, 200, 200))
                 screen.blit(instrucoes, (LARGURA//2 - instrucoes.get_width()//2, ALTURA//2 + 50))
             else:
                 texto = fonte.render(self.texto, True, (255, 255, 255))
@@ -140,13 +114,39 @@ def sala_1(screen):
                 state = QUIT
             if event.type == pygame.KEYDOWN and event.key == pygame.K_l:
                 state = MORTO
-            # Verifica interação com objetos (tecla E)
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
-                for obj in all_interactables:
-                    obj.tentar_interagir()
             
-            # Handle porta keypress
-            porta.handle_keypress(event)
+            # Handle porta keypress e interações gerais
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
+                # Primeiro tenta interagir com a porta se estiver perto dela
+                if porta.pode_interagir:
+                    if porta.input_ativo:  # Se a interface está ativa
+                        porta.input_ativo = False  # Fecha a interface
+                        porta.codigo_digitado = ""  # Limpa o código digitado
+                    else:  # Se a interface está fechada
+                        porta.input_ativo = True  # Abre a interface
+                        porta.mensagem_erro = ""  # Limpa mensagens de erro
+                else:
+                    # Se não estiver perto da porta, tenta interagir com outros objetos
+                    for obj in [livro_sofa, gaveta_mesa, objeto_estante]:
+                        obj.tentar_interagir()
+
+            # Processamento de inputs quando a interface da porta está ativa
+            elif event.type == pygame.KEYDOWN and porta.input_ativo:
+                if event.key in [pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4,
+                            pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9]:
+                    if len(porta.codigo_digitado) < 4:
+                        porta.codigo_digitado += event.unicode
+                    if len(porta.codigo_digitado) == 4:
+                        if porta.codigo_digitado == porta.codigo:
+                            porta.is_unlocked = True
+                            porta.texto = "Porta desbloqueada!"
+                            porta.input_ativo = False
+                        else:
+                            porta.mensagem_erro = "Código incorreto!"
+                            porta.tempo_erro = time.time()
+                            porta.codigo_digitado = ""
+                elif event.key == pygame.K_BACKSPACE:
+                    porta.codigo_digitado = porta.codigo_digitado[:-1]
             
             # Verifica se apertou alguma tecla.
             if event.type == pygame.KEYDOWN:
