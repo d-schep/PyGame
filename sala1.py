@@ -24,9 +24,9 @@ def sala_1(screen):
     Sofa_rect = Estante.get_rect()
     Sofa_rect.topleft = (350,20)  
 
+    
     # Criando objetos interativos com pistas
-    texto_livro = "Uma menina urina lento\n\n\n" + \
-                  "Duas também irritam pessoas"
+    texto_livro = "\n\n\n"  # Texto vazio para o livro
     
     livro_sofa = ObjetoInterativo(535, 200, 50, 50, texto_livro, tipo='livro', assets=assets)
     gaveta_mesa = ObjetoInterativo(620, 400, 60, 30, "Uma gaveta... talvez tenha algo útil dentro.")

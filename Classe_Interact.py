@@ -85,6 +85,22 @@ class ObjetoInterativo(pygame.sprite.Sprite):
             # Adiciona o texto nas páginas
             fonte = pygame.font.Font(None, 32)
             linhas = self.pista.split('\n\n\n')  # Separa as duas frases
+            
+            # Página da esquerda
+            if len(linhas) > 0:
+                texto_esquerda = fonte.render(linhas[0], True, (0, 0, 0))
+                texto_rect = texto_esquerda.get_rect()
+                texto_rect.centerx = LARGURA/2 - 150  # Posição horizontal na página esquerda
+                texto_rect.centery = ALTURA/2 - 50    # Um pouco acima do centro
+                screen.blit(texto_esquerda, texto_rect)
+            
+            # Página da direita
+            if len(linhas) > 1:
+                texto_direita = fonte.render(linhas[1], True, (0, 0, 0))
+                texto_rect = texto_direita.get_rect()
+                texto_rect.centerx = LARGURA/2 + 150  # Posição horizontal na página direita
+                texto_rect.centery = ALTURA/2 - 50    # Um pouco acima do centro
+                screen.blit(texto_direita, texto_rect)
 
             # Adiciona botão de fechar
             fonte_botao = pygame.font.Font(None, 36)
