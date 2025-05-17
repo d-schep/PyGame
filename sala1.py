@@ -90,7 +90,7 @@ Possível padrão molecular."""
     # Ajustando posições para corresponder melhor aos objetos
     livro_sofa = ObjetoInterativo(450, 200, 30, 30, texto_livro, tipo='livro', assets=assets)
     
-    # Aumentando a área de interação da mesa e ajustando posição
+    # Relatório na mesa
     gaveta_mesa = ObjetoInterativo(620, 380, 60, 40, """RELATÓRIO - CONFIDENCIAL
 Lab 15-P
 
@@ -103,7 +103,7 @@ Incidente:
 Nota: Sequência alfabética
 encontrada. Ver terminal.""", assets=assets)
 
-    # Aumentando a área de interação da estante e ajustando posição
+    # Terminal na estante
     objeto_estante = ObjetoInterativo(920, 150, 60, 60, """TERMINAL DO LABORATÓRIO
 >> Iniciando sequência...
 >> Carregando dados...
