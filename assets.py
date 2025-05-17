@@ -34,6 +34,7 @@ DIREITA = 'drt'
 MESA = 'mesa'
 ESTANTE = 'estante'
 SOFA = 'sofa'
+LIVRO = 'livro'
 
 #IMAGENS
 def load_assets():
@@ -59,6 +60,8 @@ def load_assets():
     assets[ESTANTE] = pygame.transform.scale(assets[ESTANTE], (LARGURA_ESTANTE, ALTURA_ESTANTE))
     assets[SOFA] = pygame.image.load(os.path.join(IMG_DIR, 'SOFA1.png')).convert_alpha()
     assets[SOFA] = pygame.transform.scale(assets[SOFA], (LARGURA_SOFA, ALTURA_SOFA))
+    assets[LIVRO] = pygame.image.load(os.path.join(IMG_DIR, 'LIVRO1.png')).convert_alpha()
+    assets[LIVRO] = pygame.transform.scale(assets[LIVRO], (800, 600))  # Ajuste o tamanho conforme necessário
     
 
 #     #SONS
