@@ -10,39 +10,73 @@ from Classe_Interact import *
 
 class PortaInterativa(ObjetoInterativo):
     def __init__(self, x, y, width, height, codigo, assets):
-        super().__init__(x, y, width, height, "Digite o código:", tipo='porta')
+        super().__init__(x, y, width, height, "Pressione E para inserir o código", tipo='porta')
         self.codigo = codigo
         self.codigo_digitado = ""
         self.is_unlocked = False
         self.mensagem_erro = ""
         self.tempo_erro = 0
+        self.input_ativo = False
 
     def handle_keypress(self, event):
-        if self.mostrando_pista and event.type == pygame.KEYDOWN:
-            if event.key in [pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4,
-                           pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9]:
-                self.codigo_digitado += event.unicode
-                if len(self.codigo_digitado) == len(self.codigo):
-                    if self.codigo_digitado == self.codigo:
-                        self.is_unlocked = True
-                        self.texto = "Porta desbloqueada!"
-                    else:
+        if self.mostrando_pista:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_e:
+                    self.input_ativo = not self.input_ativo
+                    self.codigo_digitado = ""
+                    self.mensagem_erro = ""
+                elif self.input_ativo:
+                    if event.key in [pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4,
+                                pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9]:
+                        if len(self.codigo_digitado) < 4:  # Limita a 4 dígitos
+                            self.codigo_digitado += event.unicode
+                        if len(self.codigo_digitado) == 4:
+                            if self.codigo_digitado == self.codigo:
+                                self.is_unlocked = True
+                                self.texto = "Porta desbloqueada!"
+                                self.input_ativo = False
+                            else:
+                                self.mensagem_erro = "Código incorreto!"
+                                self.tempo_erro = time.time()
+                                self.codigo_digitado = ""
+                    elif event.key == pygame.K_BACKSPACE:
+                        self.codigo_digitado = self.codigo_digitado[:-1]
+                    elif event.key == pygame.K_ESCAPE:
+                        self.input_ativo = False
                         self.codigo_digitado = ""
-                        self.mensagem_erro = "Código incorreto!"
-                        self.tempo_erro = time.time()
-            elif event.key == pygame.K_BACKSPACE:
-                self.codigo_digitado = self.codigo_digitado[:-1]
 
     def desenhar_pista(self, screen):
         if self.mostrando_pista:
             fonte = pygame.font.Font(None, 36)
-            texto_base = f"Digite o código: {self.codigo_digitado}"
-            texto_surface = fonte.render(texto_base, True, (255, 255, 255))
-            screen.blit(texto_surface, (LARGURA//2 - texto_surface.get_width()//2, ALTURA - 50))
+            
+            # Desenha o fundo da interface de senha
+            if self.input_ativo:
+                # Fundo semi-transparente
+                s = pygame.Surface((400, 150))
+                s.set_alpha(128)
+                s.fill((0, 0, 0))
+                screen.blit(s, (LARGURA//2 - 200, ALTURA//2 - 75))
+                
+                # Título
+                titulo = fonte.render("Digite a senha:", True, (255, 255, 255))
+                screen.blit(titulo, (LARGURA//2 - titulo.get_width()//2, ALTURA//2 - 50))
+                
+                # Campo de senha
+                senha = "*" * len(self.codigo_digitado)
+                senha_surface = fonte.render(senha, True, (255, 255, 255))
+                pygame.draw.rect(screen, (100, 100, 100), (LARGURA//2 - 50, ALTURA//2, 100, 40))
+                screen.blit(senha_surface, (LARGURA//2 - senha_surface.get_width()//2, ALTURA//2 + 10))
+                
+                # Instruções
+                instrucoes = fonte.render("ESC para cancelar", True, (200, 200, 200))
+                screen.blit(instrucoes, (LARGURA//2 - instrucoes.get_width()//2, ALTURA//2 + 50))
+            else:
+                texto = fonte.render(self.texto, True, (255, 255, 255))
+                screen.blit(texto, (LARGURA//2 - texto.get_width()//2, ALTURA - 50))
 
             if self.mensagem_erro and time.time() - self.tempo_erro < 2:
                 texto_erro = fonte.render(self.mensagem_erro, True, (255, 0, 0))
-                screen.blit(texto_erro, (LARGURA//2 - texto_erro.get_width()//2, ALTURA - 100))
+                screen.blit(texto_erro, (LARGURA//2 - texto_erro.get_width()//2, ALTURA//2 - 100))
 
 def sala_1(screen):
     clock = pygame.time.Clock()
