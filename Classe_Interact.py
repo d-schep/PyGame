@@ -99,15 +99,15 @@ class ObjetoInterativo(pygame.sprite.Sprite):
             screen.blit(livro_img, livro_rect)
             
             # Define a área útil para texto em cada página
-            margem_x = 100  # Margem horizontal para cada página
-            margem_y = 120   # Aumentei a margem superior de 50 para 120
-            largura_pagina = (livro_rect.width - 3 * margem_x) // 2  # Largura disponível para texto em cada página
-            altura_pagina = livro_rect.height - 2 * margem_y         # Altura disponível para texto
+            margem_x = 120  # Aumentei a margem esquerda
+            margem_y = 120
+            largura_pagina = (livro_rect.width - 3 * margem_x) // 2
+            altura_pagina = livro_rect.height - 2 * margem_y
             
             # Configuração da fonte
             tamanho_fonte = 24
             fonte = pygame.font.Font(None, tamanho_fonte)
-            espacamento = tamanho_fonte + 5  # Espaçamento entre linhas
+            espacamento = tamanho_fonte + 5
             
             # Divide o texto em duas partes (esquerda e direita)
             partes = self.pista.split('\n\n\n')
@@ -140,10 +140,10 @@ class ObjetoInterativo(pygame.sprite.Sprite):
                 linhas = quebrar_texto(partes[0], largura_pagina)
                 
                 for linha in linhas:
-                    if y + espacamento > livro_rect.bottom - margem_y//2:  # Ajustei a margem inferior
+                    if y + espacamento > livro_rect.bottom - margem_y//2:
                         break
                     texto = fonte.render(linha, True, (0, 0, 0))
-                    pos_x = livro_rect.left + margem_x
+                    pos_x = livro_rect.left + margem_x + 30  # Adicionei 30 pixels à posição x
                     screen.blit(texto, (pos_x, y))
                     y += espacamento
             
@@ -153,10 +153,10 @@ class ObjetoInterativo(pygame.sprite.Sprite):
                 linhas = quebrar_texto(partes[1], largura_pagina)
                 
                 for linha in linhas:
-                    if y + espacamento > livro_rect.bottom - margem_y//2:  # Ajustei a margem inferior
+                    if y + espacamento > livro_rect.bottom - margem_y//2:
                         break
                     texto = fonte.render(linha, True, (0, 0, 0))
-                    pos_x = livro_rect.centerx + margem_x//2
+                    pos_x = livro_rect.centerx + margem_x//2 + 30  # Adicionei 30 pixels à posição x
                     screen.blit(texto, (pos_x, y))
                     y += espacamento
 

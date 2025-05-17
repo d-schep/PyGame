@@ -88,7 +88,7 @@ Verificar posições no alfabeto.
 Possível padrão molecular."""
     
     # Ajustando posições para corresponder melhor aos objetos
-    livro_sofa = ObjetoInterativo(400, 200, 30, 30, texto_livro, tipo='livro', assets=assets)
+    livro_sofa = ObjetoInterativo(450, 200, 30, 30, texto_livro, tipo='livro', assets=assets)
     
     gaveta_mesa = ObjetoInterativo(620, 420, 40, 20, """RELATÓRIO - CONFIDENCIAL
 Lab 15-P
