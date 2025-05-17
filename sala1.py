@@ -202,8 +202,8 @@ def sala_1(screen):
             # Verifica se o jogador pode passar pela porta
             if pygame.Rect.colliderect(porta.rect, gab_topa_eu.rect):
                 if porta.is_unlocked:
-                    # Transição para próxima sala ou estado de vitória
-                    state = QUIT  # Você pode mudar isso para um novo estado para a próxima sala
+                    # Transição para próxima sala
+                    state = PROXIMA_SALA  # Mudando para o novo estado ao invés de QUIT
             
             if hit_zumbi == True:
                 state = MORTO

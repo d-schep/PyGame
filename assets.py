@@ -46,6 +46,8 @@ def load_assets():
     assets[TELA_INICIAL] = pygame.transform.scale(assets[TELA_INICIAL], (LARGURA,ALTURA))
     assets[TELA_DE_FUNDO_ESCAPE_1] = pygame.image.load(os.path.join(IMG_DIR,'Sala_1.png')).convert()
     assets[TELA_DE_FUNDO_ESCAPE_1] = pygame.transform.scale(assets[TELA_DE_FUNDO_ESCAPE_1], (LARGURA,ALTURA))
+    assets[TELA_DE_FUNDO_ESCAPE_2] = pygame.image.load(os.path.join(IMG_DIR,'Sala_2.png')).convert()
+    assets[TELA_DE_FUNDO_ESCAPE_2] = pygame.transform.scale(assets[TELA_DE_FUNDO_ESCAPE_2], (LARGURA,ALTURA))
     assets[PERSONAGEM] = pygame.image.load(os.path.join(IMG_DIR,'gab_de_frente.png')).convert_alpha()
     assets[PERSONAGEM] = pygame.transform.scale(assets[PERSONAGEM], (ALT_GAB,LARG_GAB))
     assets[GAB_TRAS] = pygame.image.load(os.path.join(IMG_DIR,'COSTAS.png')).convert_alpha()
