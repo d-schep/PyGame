@@ -155,7 +155,6 @@ class ObjetoInterativo(pygame.sprite.Sprite):
                 instrucao = fonte_instrucao.render("Pressione E para fechar", True, (100, 100, 100))
                 instrucao_rect = instrucao.get_rect(centerx=LARGURA//2, bottom=prancheta_rect.bottom + 30)
                 screen.blit(instrucao, instrucao_rect)
-<<<<<<< HEAD
             else:  # Fallback para qualquer outro caso
                 fundo = pygame.Surface((LARGURA - 100, ALTURA//2))
                 fundo.fill(PRETO)
@@ -178,8 +177,6 @@ class ObjetoInterativo(pygame.sprite.Sprite):
                 instrucao = fonte_instrucao.render("Pressione E para fechar", True, (200, 200, 200))
                 instrucao_rect = instrucao.get_rect(centerx=LARGURA//2, bottom=fundo_rect.bottom - 10)
                 screen.blit(instrucao, instrucao_rect)
-=======
->>>>>>> 5d48d4c03096e0b13cfb6ef9ed2e6ae4c4811a9b
 
     def desenhar_livro(self, screen):
         if self.assets and LIVRO in self.assets:

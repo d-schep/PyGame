@@ -90,58 +90,37 @@ Possível padrão molecular."""
     # Ajustando posições para corresponder melhor aos objetos
     livro_sofa = ObjetoInterativo(450, 200, 30, 30, texto_livro, tipo='livro', assets=assets)
     
-<<<<<<< HEAD
     # Terminal na mesa - mostra apenas os números
     gaveta_mesa = ObjetoInterativo(620, 380, 60, 40, """TERMINAL DO LABORATÓRIO
 >> Iniciando sistema...
->> Acessando banco de dados...
->> Carregando sequência...
+>> Acessando logs do projeto...
+>> Carregando registros...
 
-SEQUÊNCIA CRÍTICA DETECTADA:
-Posição 13
-Posição 15
-Posição 18
-Posição 16
-Posição 8
+REGISTRO DE INCIDENTES:
+- Falha no setor treze
+- Contaminação após quinze minutos
+- Protocolo dezoito ativado
+- Dezesseis amostras perdidas
+- Oito sobreviventes_""", assets=assets)
 
->> Análise completa
->> Aguardando transformação..._""", assets=assets)
-
-    # Relatório na estante - fornece contexto sobre o incidente
-    objeto_estante = ObjetoInterativo(920, 150, 60, 60, """RELATÓRIO - CONFIDENCIAL
-=======
-    # Relatório na mesa
-    gaveta_mesa = ObjetoInterativo(620, 380, 60, 40, """RELATÓRIO - CONFIDENCIAL
->>>>>>> 5d48d4c03096e0b13cfb6ef9ed2e6ae4c4811a9b
-Lab 15-P
-
-Incidente:
-- Setor 16 comprometido
-- Contenção: 18 min
-- Ref.13 reagiu com
-  composto 15
-- Mutação fase 8
-
-Nota: Sequência alfabética
-encontrada. Ver terminal.""", assets=assets)
-
-<<<<<<< HEAD
-=======
-    # Terminal na estante
+    # Terminal na estante - fornece contexto sobre o incidente
     objeto_estante = ObjetoInterativo(920, 150, 60, 60, """TERMINAL DO LABORATÓRIO
->> Iniciando sequência...
->> Carregando dados...
+>> Acessando diário pessoal...
+>> Arquivo criptografado...
+>> Decodificando...
 
-Sequência detectada:
-13 → início
-15 → catálise
-18 → base
-16 → mutação
-8 → final
+Notas Dr. Chen - Dia 42:
+O padrão está claro agora.
+Tudo começou no lab treze,
+após quinze horas de exposição.
+Dezoito tentativas falharam.
+Dezesseis mutações observadas.
+Apenas oito permaneceram estáveis.
 
-'Posição = Transformação'""", assets=assets)
+A sequência é a chave.
+Cada número tem seu significado.
+A transformação é inevitável.""", assets=assets)
 
->>>>>>> 5d48d4c03096e0b13cfb6ef9ed2e6ae4c4811a9b
     background = assets[TELA_DE_FUNDO_ESCAPE_1]
     background_rect = background.get_rect()
     state = JOGANDO
