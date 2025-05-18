@@ -39,6 +39,8 @@ MONITOR = 'monitor'
 PAPEL = 'papel'
 PAPEL2 = 'papel2'
 PISTABARRIL = 'pistabarril'
+MESA_ARMA = 'mesa_arma'
+COMPUTADOR = 'computador'
 
 #IMAGENS
 def load_assets():
@@ -74,6 +76,10 @@ def load_assets():
     assets[PAPEL2] = pygame.transform.scale(assets[PAPEL2], (800, 600))  # Tamanho grande para visualização
     assets[PISTABARRIL] = pygame.image.load(os.path.join(IMG_DIR, 'PistaBarril.png')).convert_alpha()
     assets[PISTABARRIL] = pygame.transform.scale(assets[PISTABARRIL], (800, 600))
+    assets[MESA_ARMA] = pygame.image.load(os.path.join(IMG_DIR, 'Mesa_Arma.png')).convert_alpha()
+    assets[MESA_ARMA] = pygame.transform.scale(assets[MESA_ARMA], (int(LARGURA_MESA * 1.5), int(ALTURA_MESA * 1.5)))
+    assets[COMPUTADOR] = pygame.image.load(os.path.join(IMG_DIR, 'Computador.png')).convert_alpha()
+    assets[COMPUTADOR] = pygame.transform.scale(assets[COMPUTADOR], (250, 250))  # Tamanho intermediário
     try:
         # First try loading normally
         assets[MONITOR] = pygame.image.load(os.path.join(IMG_DIR, 'MONITOR1.png')).convert_alpha()
