@@ -116,16 +116,6 @@ def sala_1(screen):
 
     # Barril com pista (x=100, y=500)
     barril = ObjetoInterativo(100, 600, 40, 40, """
-    
-                   REGISTRO PESSOAL:
-                   
-         Hoje é dia 13, mês 15...
-         Algo está errado, os números 
-         não fazem sentido.
-         
-         O tempo está distorcido?
-         Ou será que...
-    
     """, tipo='barril', assets=assets)
 
     background = assets[TELA_DE_FUNDO_ESCAPE_1]
@@ -270,7 +260,7 @@ def sala_1(screen):
         screen.blit(background,background_rect)
         
         # Desenha a porta
-        pygame.draw.rect(screen, (139, 69, 19), porta.rect)  # Cor marrom para a porta
+        # pygame.draw.rect(screen, (139, 69, 19), porta.rect)  # Removido o retângulo marrom da porta
         
         screen.blit(Mesa, Mesa_rect)
         screen.blit(Estante, Estante_rect)

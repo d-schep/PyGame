@@ -38,6 +38,7 @@ LIVRO = 'livro'
 MONITOR = 'monitor'
 PAPEL = 'papel'
 PAPEL2 = 'papel2'
+PISTABARRIL = 'pistabarril'
 
 #IMAGENS
 def load_assets():
@@ -71,6 +72,8 @@ def load_assets():
     assets[PAPEL] = pygame.transform.scale(assets[PAPEL], (30, 30))  # Tamanho pequeno para o papel no chão
     assets[PAPEL2] = pygame.image.load(os.path.join(IMG_DIR, 'PAPEL2.png')).convert_alpha()
     assets[PAPEL2] = pygame.transform.scale(assets[PAPEL2], (800, 600))  # Tamanho grande para visualização
+    assets[PISTABARRIL] = pygame.image.load(os.path.join(IMG_DIR, 'PistaBarril.png')).convert_alpha()
+    assets[PISTABARRIL] = pygame.transform.scale(assets[PISTABARRIL], (800, 600))
     try:
         # First try loading normally
         assets[MONITOR] = pygame.image.load(os.path.join(IMG_DIR, 'MONITOR1.png')).convert_alpha()

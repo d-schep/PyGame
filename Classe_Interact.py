@@ -7,7 +7,7 @@ class ObjetoInterativo(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((width, height))
         self.image.fill((255, 255, 0))  # Amarelo para visualizar a área
-        self.image.set_alpha(50)  # Semi-transparente (era 0, voltou para 50)
+        self.image.set_alpha(0)  # Totalmente transparente (era 50)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -18,7 +18,7 @@ class ObjetoInterativo(pygame.sprite.Sprite):
         self.delay_interacao = 500
         self.indicador = pygame.Surface((width + 20, height + 20))
         self.indicador.fill((0, 255, 0))  # Verde para o indicador
-        self.indicador.set_alpha(100)
+        self.indicador.set_alpha(0)  # Indicador também totalmente transparente
         self.indicador_rect = self.indicador.get_rect()
         self.tipo = tipo
         self.assets = assets
@@ -30,7 +30,12 @@ class ObjetoInterativo(pygame.sprite.Sprite):
         dist_y = abs(self.rect.centery - jogador.rect.centery)
         
         # Define uma distância máxima para interação
-        self.pode_interagir = dist_x < 100 and dist_y < 100
+        if self.tipo == 'barril':
+            # Distância menor para o barril
+            self.pode_interagir = dist_x < 50 and dist_y < 50
+        else:
+            # Mantém a distância normal para outros objetos
+            self.pode_interagir = dist_x < 100 and dist_y < 100
 
     def tentar_interagir(self):
         agora = pygame.time.get_ticks()
@@ -62,30 +67,44 @@ class ObjetoInterativo(pygame.sprite.Sprite):
                 self.desenhar_livro(screen)
             elif self.tipo == 'papel':
                 if self.assets and PAPEL2 in self.assets:
+                    # Cria uma superfície para o fundo preto transparente
+                    fundo_escuro = pygame.Surface((LARGURA, ALTURA))
+                    fundo_escuro.fill((0, 0, 0))
+                    fundo_escuro.set_alpha(128)
+                    screen.blit(fundo_escuro, (0, 0))
+                    
                     # Usa a imagem do PAPEL2
                     papel_img = self.assets[PAPEL2]
-                    papel_rect = papel_img.get_rect(center=(LARGURA/2, ALTURA/2))
-                    screen.blit(papel_img, papel_rect)
+                    papel_rect = papel_img.get_rect()
+                    
+                    # Define a posição do papel (mais para a direita)
+                    papel_x = LARGURA - papel_rect.width - 50  # 50 pixels da borda direita
+                    papel_y = 50  # 50 pixels do topo
+                    screen.blit(papel_img, (papel_x, papel_y))
                     
                     # Configuração da fonte menor
-                    fonte = pygame.font.Font(None, 24)  # Reduzido de 32 para 24
-                    espacamento = 30  # Reduzido de 40 para 30
+                    fonte = pygame.font.Font(None, 24)
+                    espacamento = 30
                     
                     # Renderiza o texto linha por linha
                     linhas = self.pista.split('\n')
-                    y = papel_rect.top + 80  # Começa um pouco mais acima
+                    y = papel_y + 80
                     
                     for linha in linhas:
-                        if linha.strip():  # Se a linha não estiver vazia
+                        if linha.strip():
                             texto = fonte.render(linha.strip(), True, (0, 0, 0))
-                            texto_rect = texto.get_rect(centerx=LARGURA/2, top=y)
+                            texto_rect = texto.get_rect()
+                            texto_rect.centerx = papel_x + papel_rect.width // 2
+                            texto_rect.top = y
                             screen.blit(texto, texto_rect)
                         y += espacamento
                     
                     # Adiciona botão de fechar
-                    fonte_botao = pygame.font.Font(None, 28)  # Botão de fechar também menor
+                    fonte_botao = pygame.font.Font(None, 28)
                     texto_fechar = fonte_botao.render("Pressione E para fechar", True, BRANCO)
-                    texto_fechar_rect = texto_fechar.get_rect(center=(LARGURA/2, papel_rect.bottom + 20))
+                    texto_fechar_rect = texto_fechar.get_rect()
+                    texto_fechar_rect.centerx = papel_x + papel_rect.width // 2
+                    texto_fechar_rect.top = papel_y + papel_rect.height + 10
                     screen.blit(texto_fechar, texto_fechar_rect)
             else:
                 self.desenhar_pista_normal(screen)
@@ -127,9 +146,34 @@ class ObjetoInterativo(pygame.sprite.Sprite):
                     
                     fonte_instrucao = pygame.font.Font(None, 24)
                     instrucao = fonte_instrucao.render("[ Pressione E para fechar ]", True, (0, 255, 0))
-                    instrucao_rect = instrucao.get_rect(centerx=LARGURA//2, bottom=fundo_rect.bottom + 30)
+                    instrucao_rect = instrucao.get_rect(centerx=LARGURA//2, bottom=fundo_rect.bottom - 20)
                     screen.blit(instrucao, instrucao_rect)
-                    
+            elif self.tipo == 'barril' and self.assets and PISTABARRIL in self.assets:
+                # Usa a imagem do PISTABARRIL
+                pista_img = self.assets[PISTABARRIL]
+                pista_rect = pista_img.get_rect(center=(LARGURA/2, ALTURA/2))
+                screen.blit(pista_img, pista_rect)
+                
+                # Configuração da fonte
+                fonte = pygame.font.Font(None, 32)
+                espacamento = 35
+                
+                # Renderiza o texto linha por linha
+                linhas = self.pista.split('\n')
+                y = pista_rect.top + 100  # Começa um pouco mais acima
+                
+                for linha in linhas:
+                    if linha.strip():  # Se a linha não estiver vazia
+                        texto = fonte.render(linha.strip(), True, (0, 0, 0))
+                        texto_rect = texto.get_rect(centerx=LARGURA/2, top=y)
+                        screen.blit(texto, texto_rect)
+                    y += espacamento
+                
+                # Adiciona botão de fechar
+                fonte_botao = pygame.font.Font(None, 28)
+                texto_fechar = fonte_botao.render("Pressione E para fechar", True, BRANCO)
+                texto_fechar_rect = texto_fechar.get_rect(center=(LARGURA/2, pista_rect.bottom + 20))
+                screen.blit(texto_fechar, texto_fechar_rect)
             elif "920" in str(self.rect.topleft):  # Se for a estante (agora mostra a prancheta)
                 # Criar uma superfície para a prancheta
                 prancheta = pygame.Surface((500, 600))
