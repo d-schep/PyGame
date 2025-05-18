@@ -74,7 +74,7 @@ def sala_1(screen):
     Sofa_rect.topleft = (350,20)  
 
     # Criando a porta interativa (x=750, y=ALTURA//4 - 80)
-    porta = PortaInterativa(750, ALTURA//4 - 80, 108, 120, "MORPH", assets)
+    porta = PortaInterativa(750, ALTURA//4 - 80, 108, 120, "41100", assets)
     
     # Criando objetos interativos com pistas
     texto_livro = """19 9 1 13 5 4 5 4 18 1 20 1 10 5 19 5 21 17 19 5 20 14 1 5 22 12 1 19 19 15 14 5 5 12 5 5 21 7 5 16 15 1 8 3 15 14 15 4 1 19 19 1 13 1 12 5 16 1 16 15 5 20 1 1 22"""
@@ -174,18 +174,18 @@ def sala_1(screen):
             # Processamento de inputs quando a interface da porta está ativa
             elif event.type == pygame.KEYDOWN and porta.input_ativo:
                 if event.key == pygame.K_RETURN:
-                    if porta.codigo_digitado.upper() == porta.codigo:
+                    if porta.codigo_digitado == porta.codigo:
                         porta.is_unlocked = True
                         porta.texto = "Acesso concedido. Porta desbloqueada."
                         porta.input_ativo = False
                     else:
-                        porta.mensagem_erro = "Código inválido. Acesso negado."
+                        porta.mensagem_erro = "Código inválido. Tente novamente."
                         porta.tempo_erro = time.time()
                         porta.codigo_digitado = ""
                 elif event.key == pygame.K_BACKSPACE:
                     porta.codigo_digitado = porta.codigo_digitado[:-1]
-                elif event.unicode.isalpha() and len(porta.codigo_digitado) < 5:
-                    porta.codigo_digitado += event.unicode.upper()
+                elif event.unicode.isdigit() and len(porta.codigo_digitado) < 5:
+                    porta.codigo_digitado += event.unicode
             
             # Verifica se apertou alguma tecla.
             if event.type == pygame.KEYDOWN:
