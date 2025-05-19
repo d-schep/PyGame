@@ -22,75 +22,57 @@ def sala_2(screen):
     # Centralizando a mesa na sala
     Mesa_Arma_rect.centerx = LARGURA // 2
     Mesa_Arma_rect.centery = ALTURA // 2
+    # Criar um retângulo de colisão menor que a mesa
+    Mesa_colisao = pygame.Rect(Mesa_Arma_rect.left + 20, Mesa_Arma_rect.top + 20, 
+                              int(LARGURA_MESA * 1.5) - 40, int(ALTURA_MESA * 1.5) - 140)
 
     # Adicionando Computador
     Computador = assets[COMPUTADOR]
     Computador_rect = Computador.get_rect()
     # Posicionando o computador mais para a esquerda no fundo da sala
-    Computador_rect.left = 100  # Mantendo a mesma distância da esquerda
-    Computador_rect.top = 40  # Ajustando para o novo tamanho
+    Computador_rect.left = 100
+    Computador_rect.top = 40
     # Área de colisão para o computador
     Computador_colisao = pygame.Rect(Computador_rect.left + 25, Computador_rect.top + 25,
-                                    200, 200)  # Área de colisão proporcional ao novo tamanho
-
-    # Criando colisões para as bordas da mesa
-    borda_superior = pygame.Rect(Mesa_Arma_rect.left, Mesa_Arma_rect.top,
-                               int(LARGURA_MESA * 1.5), 40)
-    borda_inferior = pygame.Rect(Mesa_Arma_rect.left, Mesa_Arma_rect.bottom - 40,
-                               int(LARGURA_MESA * 1.5), 40)
-    borda_esquerda = pygame.Rect(Mesa_Arma_rect.left, Mesa_Arma_rect.top,
-                               40, int(ALTURA_MESA * 1.5))
-    borda_direita = pygame.Rect(Mesa_Arma_rect.right - 40, Mesa_Arma_rect.top,
-                               40, int(ALTURA_MESA * 1.5))
+                                    200, 200)
 
     # Criando objetos interativos para cada arma
     texto_arma1 = """
-    ⚔️ Pistola Tática M1911
-    
+    Pistola M1911
     Calibre: .45 ACP
-    Capacidade: 7+1 rounds
-    Alcance efetivo: 50m
-    
     Status: Munição esgotada
-    Observação: Mecanismo travado
     """
 
     texto_arma2 = """
-    🗡️ Revólver Magnum
-    
-    Calibre: .357 Magnum
-    Capacidade: 6 rounds
-    Alcance efetivo: 45m
-    
-    Status: 2 munições restantes
-    Observação: Tambor danificado
+    Revólver Magnum
+    Calibre: .357
+    Status: 2 munições
     """
 
     texto_arma3 = """
-    🔫 Shotgun Tática
-    
+    Shotgun Tática
     Calibre: 12 gauge
-    Capacidade: 5+1 rounds
-    Alcance efetivo: 40m
-    
     Status: Sem munição
-    Observação: Sistema de recarga comprometido
     """
 
     texto_computador = """
-    💻 Terminal de Segurança
-    
+    Terminal de Segurança
     Status: ONLINE
-    Nível de Acesso: ADMINISTRADOR
-    
-    Logs recentes:
-    > Falha no sistema de travas [ERRO-2891]
-    > Tentativa de acesso não autorizado
-    > Protocolo de emergência ativado
-    > Sistema de segurança comprometido
-    
-    AVISO: Backup de dados em andamento...
+    Nível: ADMINISTRADOR
     """
+
+    # Posicionando os objetos interativos para cada arma na mesa
+    arma1 = ObjetoInterativo(Mesa_Arma_rect.left + int(LARGURA_MESA * 0.3), 
+                            Mesa_Arma_rect.top + int(ALTURA_MESA * 0.8),
+                            60, 60, texto_arma1, tipo='arma', assets=assets, show_indicator=True)
+
+    arma2 = ObjetoInterativo(Mesa_Arma_rect.left + int(LARGURA_MESA * 0.65),
+                            Mesa_Arma_rect.top + int(ALTURA_MESA * 0.8),
+                            60, 60, texto_arma2, tipo='arma', assets=assets, show_indicator=True)
+
+    arma3 = ObjetoInterativo(Mesa_Arma_rect.left + int(LARGURA_MESA * 1.0),
+                            Mesa_Arma_rect.top + int(ALTURA_MESA * 0.8),
+                            60, 60, texto_arma3, tipo='arma', assets=assets, show_indicator=True)
 
     # Criando objeto interativo para o computador
     computador_interativo = ObjetoInterativo(Computador_rect.left + 95, 
@@ -99,24 +81,6 @@ def sala_2(screen):
                                            tipo='computador', assets=assets, 
                                            show_indicator=True)
 
-    # Posicionando os objetos interativos para cada arma na mesa
-    arma1 = ObjetoInterativo(Mesa_Arma_rect.left + int(LARGURA_MESA * 0.4), 
-                            Mesa_Arma_rect.top + int(ALTURA_MESA * 0.4),
-                            60, 60, texto_arma1, tipo='arma', assets=assets, show_indicator=True)
-
-    arma2 = ObjetoInterativo(Mesa_Arma_rect.left + int(LARGURA_MESA * 0.75),
-                            Mesa_Arma_rect.top + int(ALTURA_MESA * 0.4),
-                            60, 60, texto_arma2, tipo='arma', assets=assets, show_indicator=True)
-
-    arma3 = ObjetoInterativo(Mesa_Arma_rect.left + int(LARGURA_MESA * 1.1),
-                            Mesa_Arma_rect.top + int(ALTURA_MESA * 0.4),
-                            60, 60, texto_arma3, tipo='arma', assets=assets, show_indicator=True)
-    
-    state = JOGANDO
-
-    # Criando o jogador
-    gab_topa_eu = Jogador(assets)
-    
     # Grupos de sprites
     all_sprites = pygame.sprite.Group()
     all_interactables = pygame.sprite.Group()  # Grupo para objetos interativos
@@ -197,12 +161,8 @@ def sala_2(screen):
         for obj in all_interactables:
             obj.update(gab_topa_eu)
 
-        # Verifica colisões com as bordas da mesa e computador
-        colide_mesa = (pygame.Rect.colliderect(borda_superior, gab_topa_eu.rect) or
-                      pygame.Rect.colliderect(borda_inferior, gab_topa_eu.rect) or
-                      pygame.Rect.colliderect(borda_esquerda, gab_topa_eu.rect) or
-                      pygame.Rect.colliderect(borda_direita, gab_topa_eu.rect))
-        
+        # Verifica colisões com a mesa e computador
+        colide_mesa = pygame.Rect.colliderect(Mesa_colisao, gab_topa_eu.rect)
         colide_computador = pygame.Rect.colliderect(Computador_colisao, gab_topa_eu.rect)
         
         if colide_mesa or colide_computador:
@@ -214,8 +174,8 @@ def sala_2(screen):
         # Desenha
         screen.fill(PRETO)
         screen.blit(background, background_rect)
-        screen.blit(Computador, Computador_rect)  # Desenha o Computador
-        screen.blit(Mesa_Arma, Mesa_Arma_rect)  # Desenha a Mesa_Arma
+        screen.blit(Computador, Computador_rect)
+        screen.blit(Mesa_Arma, Mesa_Arma_rect)
 
         # Desenha os quadrados amarelos de interação
         for obj in all_interactables:
