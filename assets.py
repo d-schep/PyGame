@@ -42,6 +42,7 @@ PISTABARRIL = 'pistabarril'
 MESA_ARMA = 'mesa_arma'
 COMPUTADOR = 'computador'
 CAMERA = 'camera'
+QUADRO = 'quadro'
 
 #IMAGENS
 def load_assets():
@@ -99,7 +100,9 @@ def load_assets():
             assets[MONITOR].blit(screen_area, (50, 50))  # Position the screen on the monitor
     assets[MONITOR] = pygame.transform.scale(assets[MONITOR], (700, 500))
     assets[CAMERA] = pygame.image.load(os.path.join(IMG_DIR, 'Camera.png')).convert_alpha()
-    
+    assets[CAMERA] = pygame.transform.scale(assets[CAMERA], (60, 60))
+    assets[QUADRO] = pygame.image.load(os.path.join(IMG_DIR, 'Quadro.png')).convert_alpha()
+    assets[QUADRO] = pygame.transform.scale(assets[QUADRO], (300, 200))
 
 #     #SONS
 

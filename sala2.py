@@ -7,6 +7,7 @@ import time
 from Classe_Botoes_inicio import *
 from Classe_Textos import *
 from Classe_Interact import *
+import math
 
 def sala_2(screen):
     clock = pygame.time.Clock()
@@ -38,11 +39,16 @@ def sala_2(screen):
                                     170, 170)  # Reduzido significativamente e com maior offset
 
     # Adicionando Camera
-    Camera_img = pygame.transform.scale(assets[CAMERA], (60, 60))
+    Camera_img = assets[CAMERA]
     Camera_rect = Camera_img.get_rect()
     # Posicionando a camera na parede superior direita
     Camera_rect.right = LARGURA - 60
     Camera_rect.top = 40
+
+    # Adicionando Quadro
+    Quadro_img = assets[QUADRO]
+    Quadro_rect = Quadro_img.get_rect()
+    Quadro_rect.topleft = (450, 40)  # Posição exemplo: canto superior esquerdo
 
     # Criando objetos interativos para cada arma
     texto_arma1 = """
@@ -181,6 +187,21 @@ def sala_2(screen):
 
         pista_aberta = any(getattr(obj, 'mostrando_pista', False) for obj in all_interactables)
 
+        # --- ANIMAÇÃO DA CÂMERA ---
+        t = pygame.time.get_ticks() / 1000  # tempo em segundos
+        angulo = 20 * math.sin(t * 0.5)  # Oscila de -20 a +20 graus, mais devagar
+        Camera_img_anim = pygame.transform.rotate(Camera_img, angulo)
+        Camera_anim_rect = Camera_img_anim.get_rect(center=Camera_rect.center)
+
+        # Luzinha vermelha piscando
+        luz_on = int((t * 2) % 2) == 0  # Pisca a cada meio segundo
+        luz_cor = (255, 0, 0) if luz_on else (80, 0, 0)
+        # Posição da luz: ponta da câmera (direita da imagem rotacionada)
+        luz_raio = 7
+        luz_offset = 45  # distância do centro até a ponta
+        luz_x = Camera_anim_rect.centerx + luz_offset * math.cos(math.radians(angulo))
+        luz_y = Camera_anim_rect.centery + luz_offset * math.sin(math.radians(angulo))
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 state = QUIT
@@ -271,14 +292,17 @@ def sala_2(screen):
         # Desenha o background com offset da câmera
         screen.blit(background, (background_rect.x + camera_x, background_rect.y + camera_y))
         
+        # Desenha o quadro com offset da câmera
+        screen.blit(Quadro_img, (Quadro_rect.x + camera_x, Quadro_rect.y + camera_y))
+        
         # Desenha o computador com offset da câmera
         screen.blit(Computador, (Computador_rect.x + camera_x, Computador_rect.y + camera_y))
         
         # Desenha a mesa com offset da câmera
         screen.blit(Mesa_Arma, (Mesa_Arma_rect.x + camera_x, Mesa_Arma_rect.y + camera_y))
         
-        # Desenha a camera com offset da câmera
-        screen.blit(Camera_img, (Camera_rect.x + camera_x, Camera_rect.y + camera_y))
+        # Desenha a camera animada com offset da câmera
+        screen.blit(Camera_img_anim, (Camera_anim_rect.x + camera_x, Camera_anim_rect.y + camera_y))
 
         # Desenha os objetos interativos
         for obj in all_interactables:
