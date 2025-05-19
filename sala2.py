@@ -39,27 +39,56 @@ def sala_2(screen):
 
     # Criando objetos interativos para cada arma
     texto_arma1 = """
-    Pistola M1911
-    Calibre: .45 ACP
-    Status: Munição esgotada
+    Glock 17
+    Pistola
+    9mm
+    SN: --------
     """
 
     texto_arma2 = """
-    Revólver Magnum
-    Calibre: .357
-    Status: 2 munições
+    AK-47
+    Fuzil
+    -----mm
+    SN: RN7B43
     """
 
     texto_arma3 = """
-    Shotgun Tática
-    Calibre: 12 gauge
-    Status: Sem munição
+    --------
+    Submetralhadora
+    9mm
+    SN: UM1009J
     """
 
     texto_arma4 = """
-    Rifle de Assalto
-    Calibre: 5.56mm
-    Status: Carregador vazio
+    Mossberg 500
+    ----------
+    12 GA
+    SN: SM416K0
+    """
+
+    # Textos para as pistas
+    texto_tabela_substituicao = """
+    TABELA DE SUBSTITUIÇÃO
+
+    A = ⭐  H = △    O = ⚫    V = ●
+    B = ▲  I = □    P = ⚪    W = ◆
+    C = ■  J = ○    Q = ⚡    X = ○
+    D = ●  K = ⚫    R = ⚠    Y = ☆
+    E = ◆  L = ⚪    S = ⭐    Z = △
+    F = ○  M = ⚡    T = ▲    1 = □
+    G = ☆  N = ⚠    U = ■    2 = ○
+    """
+
+    texto_equacao = """
+    (2 × π) + 1.34
+    """
+
+    texto_morse = """
+    ..- --.. .. / -- .. -. ..
+    """
+
+    texto_quebra_cabeca = """
+    Imagem QR Code
     """
 
     texto_computador = """
@@ -85,6 +114,23 @@ def sala_2(screen):
                             Mesa_Arma_rect.bottom - 110,
                             60, 60, texto_arma4, tipo='arma', assets=assets, show_indicator=True)
 
+    # Criando objetos interativos para as pistas
+    # Tabela de substituição (na lateral esquerda)
+    tabela_substituicao = ObjetoInterativo(100, ALTURA//2, 40, 40, texto_tabela_substituicao, 
+                                         tipo='documento', assets=assets, show_indicator=True)
+
+    # Equação matemática (no canto superior direito)
+    equacao = ObjetoInterativo(LARGURA - 200, 350, 40, 40, texto_equacao, 
+                              tipo='documento', assets=assets, show_indicator=True)
+
+    # Código morse (no canto inferior esquerdo)
+    morse = ObjetoInterativo(100, ALTURA - 200, 40, 40, texto_morse, 
+                            tipo='documento', assets=assets, show_indicator=True)
+
+    # Quebra-cabeça (no canto inferior direito)
+    quebra_cabeca = ObjetoInterativo(LARGURA - 200, ALTURA - 200, 40, 40, texto_quebra_cabeca, 
+                                    tipo='documento', assets=assets, show_indicator=True)
+
     # Criando objeto interativo para o computador
     computador_interativo = ObjetoInterativo(Computador_rect.left + 95, 
                                            Computador_rect.centery - 30,
@@ -106,6 +152,10 @@ def sala_2(screen):
     all_interactables.add(arma3)
     all_interactables.add(arma4)
     all_interactables.add(computador_interativo)
+    all_interactables.add(tabela_substituicao)
+    all_interactables.add(equacao)
+    all_interactables.add(morse)
+    all_interactables.add(quebra_cabeca)
 
     # Posiciona o jogador na entrada da nova sala
     gab_topa_eu.rect.x = LARGURA // 2
