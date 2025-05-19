@@ -7,7 +7,7 @@ class ObjetoInterativo(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((width, height))
         self.image.fill((255, 255, 0))  # Amarelo para visualizar a área
-        self.image.set_alpha(0)  # Totalmente transparente (era 50)
+        self.image.set_alpha(0)  # Totalmente transparente
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -58,7 +58,13 @@ class ObjetoInterativo(pygame.sprite.Sprite):
             # Desenha texto "Pressione E" acima do objeto
             fonte = pygame.font.Font(None, 24)
             texto = fonte.render("Pressione E", True, (255, 255, 255))
-            texto_rect = texto.get_rect(centerx=self.rect.centerx, bottom=self.rect.top - 5)
+            
+            # Ajusta a posição do texto baseado no tipo e posição do objeto
+            if self.tipo == 'arma' and self.rect.y < ALTURA//2:  # Se for uma arma na parte superior
+                texto_rect = texto.get_rect(centerx=self.rect.centerx, bottom=self.rect.top + 35)  # 35 pixels abaixo
+            else:
+                texto_rect = texto.get_rect(centerx=self.rect.centerx, bottom=self.rect.top + 15)  # 15 pixels abaixo para os outros
+                
             screen.blit(texto, texto_rect)
 
     def desenhar_pista(self, screen):
@@ -119,7 +125,7 @@ class ObjetoInterativo(pygame.sprite.Sprite):
                     
                     fonte = pygame.font.Font(None, 32)
                     cor_texto = (0, 255, 0)  # Verde fosforescente para o monitor
-                    y_inicial = fundo_rect.top + 60
+                    y_inicial = fundo_rect.top + 80  # Aumentado de 60 para 80
                     espacamento = 30
                     
                     # Adiciona efeito de terminal

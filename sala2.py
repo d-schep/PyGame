@@ -11,6 +11,7 @@ from Classe_Interact import *
 def sala_2(screen):
     clock = pygame.time.Clock()
     assets = load_assets()
+    state = JOGANDO  # Definindo o estado inicial
 
     # Carregando a nova imagem de fundo (sala de armas)
     background = assets[TELA_DE_FUNDO_ESCAPE_2]
@@ -55,6 +56,12 @@ def sala_2(screen):
     Status: Sem munição
     """
 
+    texto_arma4 = """
+    Rifle de Assalto
+    Calibre: 5.56mm
+    Status: Carregador vazio
+    """
+
     texto_computador = """
     Terminal de Segurança
     Status: ONLINE
@@ -62,34 +69,42 @@ def sala_2(screen):
     """
 
     # Posicionando os objetos interativos para cada arma na mesa
-    arma1 = ObjetoInterativo(Mesa_Arma_rect.left + int(LARGURA_MESA * 0.3), 
-                            Mesa_Arma_rect.top + int(ALTURA_MESA * 0.8),
+    arma1 = ObjetoInterativo(Mesa_Arma_rect.left + 50, 
+                            Mesa_Arma_rect.top - 20,
                             60, 60, texto_arma1, tipo='arma', assets=assets, show_indicator=True)
 
-    arma2 = ObjetoInterativo(Mesa_Arma_rect.left + int(LARGURA_MESA * 0.65),
-                            Mesa_Arma_rect.top + int(ALTURA_MESA * 0.8),
+    arma2 = ObjetoInterativo(Mesa_Arma_rect.right - 110,
+                            Mesa_Arma_rect.top - 20,
                             60, 60, texto_arma2, tipo='arma', assets=assets, show_indicator=True)
 
-    arma3 = ObjetoInterativo(Mesa_Arma_rect.left + int(LARGURA_MESA * 1.0),
-                            Mesa_Arma_rect.top + int(ALTURA_MESA * 0.8),
+    arma3 = ObjetoInterativo(Mesa_Arma_rect.left + 50,
+                            Mesa_Arma_rect.bottom - 110,
                             60, 60, texto_arma3, tipo='arma', assets=assets, show_indicator=True)
+
+    arma4 = ObjetoInterativo(Mesa_Arma_rect.right - 110,
+                            Mesa_Arma_rect.bottom - 110,
+                            60, 60, texto_arma4, tipo='arma', assets=assets, show_indicator=True)
 
     # Criando objeto interativo para o computador
     computador_interativo = ObjetoInterativo(Computador_rect.left + 95, 
                                            Computador_rect.centery - 30,
-                                           60, 60, texto_computador, 
+                                           20, 20, texto_computador, 
                                            tipo='computador', assets=assets, 
                                            show_indicator=True)
 
     # Grupos de sprites
     all_sprites = pygame.sprite.Group()
     all_interactables = pygame.sprite.Group()  # Grupo para objetos interativos
+    
+    # Criando o jogador
+    gab_topa_eu = Jogador(assets)
     all_sprites.add(gab_topa_eu)
 
     # Adiciona objetos interativos ao grupo
     all_interactables.add(arma1)
     all_interactables.add(arma2)
     all_interactables.add(arma3)
+    all_interactables.add(arma4)
     all_interactables.add(computador_interativo)
 
     # Posiciona o jogador na entrada da nova sala
@@ -176,15 +191,6 @@ def sala_2(screen):
         screen.blit(background, background_rect)
         screen.blit(Computador, Computador_rect)
         screen.blit(Mesa_Arma, Mesa_Arma_rect)
-
-        # Desenha os quadrados amarelos de interação
-        for obj in all_interactables:
-            if obj.pode_interagir:
-                pygame.draw.rect(screen, AMARELO, obj.rect, 2)  # Desenha borda amarela
-                s = pygame.Surface((60, 60))
-                s.set_alpha(128)  # Transparência
-                s.fill(AMARELO)
-                screen.blit(s, obj.rect)  # Desenha quadrado amarelo semi-transparente
 
         # Desenha os objetos interativos
         for obj in all_interactables:
