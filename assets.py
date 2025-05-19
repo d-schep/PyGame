@@ -41,6 +41,7 @@ PAPEL2 = 'papel2'
 PISTABARRIL = 'pistabarril'
 MESA_ARMA = 'mesa_arma'
 COMPUTADOR = 'computador'
+CAMERA = 'camera'
 
 #IMAGENS
 def load_assets():
@@ -97,6 +98,7 @@ def load_assets():
             screen_area.fill((0, 0, 0))  # Black screen
             assets[MONITOR].blit(screen_area, (50, 50))  # Position the screen on the monitor
     assets[MONITOR] = pygame.transform.scale(assets[MONITOR], (700, 500))
+    assets[CAMERA] = pygame.image.load(os.path.join(IMG_DIR, 'Camera.png')).convert_alpha()
     
 
 #     #SONS

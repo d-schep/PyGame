@@ -104,6 +104,8 @@ def sala_1(screen):
     while state == JOGANDO:
         clock.tick(FPS)
         
+        pista_aberta = porta.input_ativo or any(getattr(obj, 'mostrando_pista', False) for obj in all_interactables)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 state = QUIT
@@ -144,9 +146,8 @@ def sala_1(screen):
                 elif event.unicode.isdigit() and len(porta.codigo_digitado) < 5:
                     porta.codigo_digitado += event.unicode
             
-            # Verifica se apertou alguma tecla.
-            if event.type == pygame.KEYDOWN:
-                # Dependendo da tecla, altera a velocidade.
+            # Controles do jogador (só se nenhuma pista estiver aberta e porta não estiver ativa)
+            if not pista_aberta and event.type == pygame.KEYDOWN:
                 keys_down[event.key] = True
                 if event.key == pygame.K_a:
                     gab_topa_eu.speedx -= 2
@@ -165,9 +166,8 @@ def sala_1(screen):
                     gab_topa_eu.speedy -= 2
                 if event.key == pygame.K_DOWN:
                     gab_topa_eu.speedy += 2
-            # Verifica se soltou alguma tecla.
-            if event.type == pygame.KEYUP:
-                # Dependendo da tecla, altera a velocidade.
+
+            if not pista_aberta and event.type == pygame.KEYUP:
                 if event.key in keys_down and keys_down[event.key]:
                     if event.key == pygame.K_a:
                         gab_topa_eu.speedx += 2
@@ -176,7 +176,7 @@ def sala_1(screen):
                     if event.key == pygame.K_w:
                         gab_topa_eu.speedy += 2
                     if event.key == pygame.K_s:
-                        gab_topa_eu.speedy -= 2 
+                        gab_topa_eu.speedy -= 2
 
                     if event.key == pygame.K_LEFT:
                         gab_topa_eu.speedx += 2
@@ -185,9 +185,8 @@ def sala_1(screen):
                     if event.key == pygame.K_UP:
                         gab_topa_eu.speedy += 2
                     if event.key == pygame.K_DOWN:
-                        gab_topa_eu.speedy -= 2 
+                        gab_topa_eu.speedy -= 2
                     
-                    # Remove a tecla do dicionário após soltá-la
                     keys_down.pop(event.key)
 
         if state == JOGANDO:

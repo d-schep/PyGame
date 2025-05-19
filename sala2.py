@@ -37,6 +37,13 @@ def sala_2(screen):
     Computador_colisao = pygame.Rect(Computador_rect.left + 40, Computador_rect.top + 40,
                                     170, 170)  # Reduzido significativamente e com maior offset
 
+    # Adicionando Camera
+    Camera_img = pygame.transform.scale(assets[CAMERA], (60, 60))
+    Camera_rect = Camera_img.get_rect()
+    # Posicionando a camera na parede superior direita
+    Camera_rect.right = LARGURA - 60
+    Camera_rect.top = 40
+
     # Criando objetos interativos para cada arma
     texto_arma1 = """
     Glock 17
@@ -172,6 +179,8 @@ def sala_2(screen):
     while state == PROXIMA_SALA:
         clock.tick(FPS)
 
+        pista_aberta = any(getattr(obj, 'mostrando_pista', False) for obj in all_interactables)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 state = QUIT
@@ -185,8 +194,8 @@ def sala_2(screen):
             if event.type == pygame.KEYDOWN and event.key == pygame.K_0:
                 state = JOGANDO
 
-            # Controles do jogador
-            if event.type == pygame.KEYDOWN:
+            # Controles do jogador (só se nenhuma pista estiver aberta)
+            if not pista_aberta and event.type == pygame.KEYDOWN:
                 keys_down[event.key] = True
                 if event.key == pygame.K_a:
                     gab_topa_eu.speedx -= 2
@@ -206,7 +215,7 @@ def sala_2(screen):
                 if event.key == pygame.K_DOWN:
                     gab_topa_eu.speedy += 2
 
-            if event.type == pygame.KEYUP:
+            if not pista_aberta and event.type == pygame.KEYUP:
                 if event.key in keys_down and keys_down[event.key]:
                     if event.key == pygame.K_a:
                         gab_topa_eu.speedx += 2
@@ -245,11 +254,31 @@ def sala_2(screen):
             gab_topa_eu.speedy = gab_topa_eu.speedx = 0
             keys_down.clear()
 
+        # Atualiza a posição da câmera para seguir o jogador
+        camera_x = LARGURA//2 - gab_topa_eu.rect.centerx
+        camera_y = ALTURA//2 - gab_topa_eu.rect.centery
+
+        # Limita a câmera para não mostrar fora do cenário
+        max_camera_x = 0
+        max_camera_y = 0
+        min_camera_x = LARGURA - background.get_width()
+        min_camera_y = ALTURA - background.get_height()
+        camera_x = min(max_camera_x, max(min_camera_x, camera_x))
+        camera_y = min(max_camera_y, max(min_camera_y, camera_y))
+
         # Desenha
         screen.fill(PRETO)
-        screen.blit(background, background_rect)
-        screen.blit(Computador, Computador_rect)
-        screen.blit(Mesa_Arma, Mesa_Arma_rect)
+        # Desenha o background com offset da câmera
+        screen.blit(background, (background_rect.x + camera_x, background_rect.y + camera_y))
+        
+        # Desenha o computador com offset da câmera
+        screen.blit(Computador, (Computador_rect.x + camera_x, Computador_rect.y + camera_y))
+        
+        # Desenha a mesa com offset da câmera
+        screen.blit(Mesa_Arma, (Mesa_Arma_rect.x + camera_x, Mesa_Arma_rect.y + camera_y))
+        
+        # Desenha a camera com offset da câmera
+        screen.blit(Camera_img, (Camera_rect.x + camera_x, Camera_rect.y + camera_y))
 
         # Desenha os objetos interativos
         for obj in all_interactables:
