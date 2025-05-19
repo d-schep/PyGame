@@ -49,7 +49,15 @@ class ObjetoInterativo(pygame.sprite.Sprite):
     def desenhar(self, screen):
         # Sempre desenha a área interativa (agora invisível)
         screen.blit(self.image, self.rect)
-        
+
+        # Se for granada, desenha a imagem da granada centralizada e aumentada 1,5x
+        if self.tipo == 'granada' and self.assets and 'granada' in self.assets:
+            img = self.assets['granada']
+            w, h = img.get_width(), img.get_height()
+            img_big = pygame.transform.scale(img, (int(w * 1.5), int(h * 1.5)))
+            img_rect = img_big.get_rect(center=self.rect.center)
+            screen.blit(img_big, img_rect)
+
         # Se o jogador estiver perto e show_indicator for True, desenha o indicador verde
         if self.pode_interagir and self.show_indicator:
             self.indicador_rect.center = self.rect.center

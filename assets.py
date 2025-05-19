@@ -43,6 +43,7 @@ MESA_ARMA = 'mesa_arma'
 COMPUTADOR = 'computador'
 CAMERA = 'camera'
 QUADRO = 'quadro'
+GRANADA = 'granada'
 
 #IMAGENS
 def load_assets():
@@ -103,7 +104,10 @@ def load_assets():
     assets[CAMERA] = pygame.transform.scale(assets[CAMERA], (60, 60))
     assets[QUADRO] = pygame.image.load(os.path.join(IMG_DIR, 'Quadro.png')).convert_alpha()
     assets[QUADRO] = pygame.transform.scale(assets[QUADRO], (300, 200))
-
+    assets[GRANADA] = pygame.image.load(os.path.join(IMG_DIR, 'Granadas.png')).convert_alpha()
+    assets[GRANADA] = pygame.transform.scale(assets[GRANADA], (100, 100))
+    # Se quiser redimensionar, descomente e ajuste:
+    # assets[GRANADA] = pygame.transform.scale(assets[GRANADA], (40, 40))
 #     #SONS
 
 #     pygame.mixer.music.load(os.path.join(SONS_DIR, 'nome do arquivo'))

@@ -157,19 +157,31 @@ def sala_2(screen):
                                            tipo='computador', assets=assets, 
                                            show_indicator=True)
 
+    # Criando objeto interativo para a granada (direita da mesa, no chão)
+    texto_granada = """
+    Granada de Mão
+    Fragmentação
+    SN: GND2024
+    """
+    granada = ObjetoInterativo(Mesa_Arma_rect.right + 150,
+                              Mesa_Arma_rect.bottom - 115,
+                              40, 40, texto_granada, tipo='granada', assets=assets, show_indicator=True)
+
     # Grupos de sprites
     all_sprites = pygame.sprite.Group()
     all_interactables = pygame.sprite.Group()  # Grupo para objetos interativos
     
     # Criando o jogador
     gab_topa_eu = Jogador(assets)
-    all_sprites.add(gab_topa_eu)
+    # NÃO adicionar o jogador ao grupo all_sprites!
+    # all_sprites.add(gab_topa_eu)
 
     # Adiciona objetos interativos ao grupo
     all_interactables.add(arma1)
     all_interactables.add(arma2)
     all_interactables.add(arma3)
     all_interactables.add(arma4)
+    all_interactables.add(granada)
     all_interactables.add(computador_interativo)
     all_interactables.add(tabela_substituicao)
     all_interactables.add(codigo)
@@ -186,6 +198,22 @@ def sala_2(screen):
         clock.tick(FPS)
 
         pista_aberta = any(getattr(obj, 'mostrando_pista', False) for obj in all_interactables)
+
+        # Hard lock: trava a posição do jogador enquanto pista estiver aberta
+        if pista_aberta and not hasattr(gab_topa_eu, 'pos_travada'):
+            gab_topa_eu.pos_travada = gab_topa_eu.rect.topleft
+
+        if pista_aberta and hasattr(gab_topa_eu, 'pos_travada'):
+            gab_topa_eu.rect.topleft = gab_topa_eu.pos_travada
+            gab_topa_eu.speedx = 0
+            gab_topa_eu.speedy = 0
+            keys_down.clear()
+        else:
+            if hasattr(gab_topa_eu, 'pos_travada'):
+                del gab_topa_eu.pos_travada
+
+        # Salva a posição do jogador antes do update
+        pos_antiga = gab_topa_eu.rect.topleft
 
         # --- ANIMAÇÃO DA CÂMERA ---
         t = pygame.time.get_ticks() / 1000  # tempo em segundos
@@ -207,16 +235,33 @@ def sala_2(screen):
                 state = QUIT
             if event.type == pygame.KEYDOWN and event.key == pygame.K_y:
                 state = QUIT
-            
-            # Handle interações com as armas
+
+            if pista_aberta:
+                # Só permite fechar a pista aberta
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
+                    for obj in all_interactables:
+                        if getattr(obj, 'mostrando_pista', False):
+                            obj.mostrando_pista = False
+                            # Ao fechar a pista, para o jogador e limpa teclas
+                            gab_topa_eu.speedx = 0
+                            gab_topa_eu.speedy = 0
+                            keys_down.clear()
+                # Ignora todos os outros eventos enquanto pista estiver aberta
+                continue
+
             if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
                 for obj in all_interactables:
-                    obj.tentar_interagir()
+                    if obj.tentar_interagir():
+                        # Se abriu uma pista, para o jogador imediatamente e limpa teclas
+                        if obj.mostrando_pista:
+                            gab_topa_eu.speedx = 0
+                            gab_topa_eu.speedy = 0
+                            keys_down.clear()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_0:
                 state = JOGANDO
 
             # Controles do jogador (só se nenhuma pista estiver aberta)
-            if not pista_aberta and event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN:
                 keys_down[event.key] = True
                 if event.key == pygame.K_a:
                     gab_topa_eu.speedx -= 2
@@ -236,7 +281,7 @@ def sala_2(screen):
                 if event.key == pygame.K_DOWN:
                     gab_topa_eu.speedy += 2
 
-            if not pista_aberta and event.type == pygame.KEYUP:
+            if event.type == pygame.KEYUP:
                 if event.key in keys_down and keys_down[event.key]:
                     if event.key == pygame.K_a:
                         gab_topa_eu.speedx += 2
@@ -258,8 +303,21 @@ def sala_2(screen):
                     
                     keys_down.pop(event.key)
 
-        # Atualiza posição de todos os sprites
-        all_sprites.update()
+        # Atualiza posição de todos os sprites, exceto o jogador
+        for sprite in all_sprites:
+            sprite.update()
+
+        # Só atualiza o jogador se não houver pista aberta
+        if not pista_aberta:
+            gab_topa_eu.update()
+        else:
+            gab_topa_eu.speedx = 0
+            gab_topa_eu.speedy = 0
+            keys_down.clear()
+
+        # Se pista estiver aberta, restaura a posição antiga do jogador
+        if pista_aberta:
+            gab_topa_eu.rect.topleft = pos_antiga
 
         # Atualiza estado dos objetos interativos
         for obj in all_interactables:
@@ -308,7 +366,8 @@ def sala_2(screen):
         for obj in all_interactables:
             obj.desenhar(screen)
 
-        all_sprites.draw(screen)
+        # Desenha o jogador manualmente
+        screen.blit(gab_topa_eu.image, gab_topa_eu.rect)
 
         # Desenha as pistas dos objetos interativos
         for obj in all_interactables:
