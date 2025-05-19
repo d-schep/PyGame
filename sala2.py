@@ -68,15 +68,17 @@ def sala_2(screen):
 
     # Textos para as pistas
     texto_tabela_substituicao = """
-    TABELA DE SUBSTITUIÇÃO
+    A = 7    H = K     O = 3     V = W
+    B = W    I = 9     P = M     W = 5
+    C = 4    J = G     Q = 8     X = T
+    D = L    K = 2     R = B     Y = N
+    E = P    L = 6     S = 1     Z = H
+    F = Q    M = D     T = X     1 = K
+    G = J    N = Y     U = V     2 = 1
+    """
 
-    A = ⭐  H = △    O = ⚫    V = ●
-    B = ▲  I = □    P = ⚪    W = ◆
-    C = ■  J = ○    Q = ⚡    X = ○
-    D = ●  K = ⚫    R = ⚠    Y = ☆
-    E = ◆  L = ⚪    S = ⭐    Z = △
-    F = ○  M = ⚡    T = ▲    1 = □
-    G = ☆  N = ⚠    U = ■    2 = ○
+    texto_codigo = """
+    J 2 G Q 6 O
     """
 
     texto_equacao = """
@@ -119,6 +121,10 @@ def sala_2(screen):
     tabela_substituicao = ObjetoInterativo(100, ALTURA//2, 40, 40, texto_tabela_substituicao, 
                                          tipo='documento', assets=assets, show_indicator=True)
 
+    # Código a ser decodificado (centro superior)
+    codigo = ObjetoInterativo(LARGURA//2, 100, 40, 40, texto_codigo, 
+                             tipo='documento', assets=assets, show_indicator=True)
+
     # Equação matemática (no canto superior direito)
     equacao = ObjetoInterativo(LARGURA - 200, 350, 40, 40, texto_equacao, 
                               tipo='documento', assets=assets, show_indicator=True)
@@ -153,6 +159,7 @@ def sala_2(screen):
     all_interactables.add(arma4)
     all_interactables.add(computador_interativo)
     all_interactables.add(tabela_substituicao)
+    all_interactables.add(codigo)
     all_interactables.add(equacao)
     all_interactables.add(morse)
     all_interactables.add(quebra_cabeca)
