@@ -33,9 +33,9 @@ def sala_2(screen):
     # Posicionando o computador mais para a esquerda no fundo da sala
     Computador_rect.left = 100
     Computador_rect.top = 40
-    # Área de colisão para o computador
-    Computador_colisao = pygame.Rect(Computador_rect.left + 25, Computador_rect.top + 25,
-                                    200, 200)
+    # Área de colisão para o computador - muito reduzida
+    Computador_colisao = pygame.Rect(Computador_rect.left + 40, Computador_rect.top + 40,
+                                    170, 170)  # Reduzido significativamente e com maior offset
 
     # Criando objetos interativos para cada arma
     texto_arma1 = """
