@@ -11,7 +11,7 @@ from Classe_Interact import *
 def sala_2(screen):
     clock = pygame.time.Clock()
     assets = load_assets()
-    state = JOGANDO  # Definindo o estado inicial
+    state = PROXIMA_SALA  # Definindo o estado inicial
 
     # Carregando a nova imagem de fundo (sala de armas)
     background = assets[TELA_DE_FUNDO_ESCAPE_2]
@@ -169,7 +169,7 @@ def sala_2(screen):
     gab_topa_eu.rect.y = ALTURA - 100
 
     keys_down = {}
-    while state == JOGANDO:
+    while state == PROXIMA_SALA:
         clock.tick(FPS)
 
         for event in pygame.event.get():
@@ -182,6 +182,8 @@ def sala_2(screen):
             if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
                 for obj in all_interactables:
                     obj.tentar_interagir()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_0:
+                state = JOGANDO
 
             # Controles do jogador
             if event.type == pygame.KEYDOWN:
