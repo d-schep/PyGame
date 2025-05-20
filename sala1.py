@@ -109,11 +109,11 @@ def sala_1(screen):
         
         pista_aberta = porta.input_ativo or any(getattr(obj, 'mostrando_pista', False) for obj in all_interactables)
 
-        # Hard lock: trava a posição do jogador enquanto pista estiver aberta
-        if pista_aberta and not hasattr(gab_topa_eu, 'pos_travada'):
+        # Hard lock: trava a posição do jogador enquanto pista ou senha estiver aberta
+        if (pista_aberta or porta.input_ativo) and not hasattr(gab_topa_eu, 'pos_travada'):
             gab_topa_eu.pos_travada = gab_topa_eu.rect.topleft
 
-        if pista_aberta and hasattr(gab_topa_eu, 'pos_travada'):
+        if (pista_aberta or porta.input_ativo) and hasattr(gab_topa_eu, 'pos_travada'):
             gab_topa_eu.rect.topleft = gab_topa_eu.pos_travada
             gab_topa_eu.speedx = 0
             gab_topa_eu.speedy = 0

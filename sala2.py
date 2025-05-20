@@ -21,7 +21,7 @@ def sala_2(screen):
     background_rect = background.get_rect()
     
     # Criando a porta interativa
-    porta = PortaInterativa(750, ALTURA//4 - 80, 108, 120, "SHOTGUN\nUZI MINI\n7.62\nGK18L3", assets)
+    porta = PortaInterativa(750, ALTURA//4 - 80, 108, 120, "UZI MINI\nSHOTGUN\n7.62\nGK18L3", assets)
     # Ajusta a área de interação da porta para ser mais precisa
     porta.rect = pygame.Rect(750, ALTURA//4 - 80, 108, 120)
     porta.pode_interagir = False  # Inicializa como False
@@ -208,9 +208,9 @@ def sala_2(screen):
     while state == PROXIMA_SALA:
         clock.tick(FPS)
 
-        pista_aberta = any(getattr(obj, 'mostrando_pista', False) for obj in all_interactables)
+        pista_aberta = any(getattr(obj, 'mostrando_pista', False) for obj in all_interactables) or porta.input_ativo
 
-        # Hard lock: trava a posição do jogador enquanto pista estiver aberta
+        # Hard lock: trava a posição do jogador enquanto pista ou senha estiver aberta
         if pista_aberta and not hasattr(gab_topa_eu, 'pos_travada'):
             gab_topa_eu.pos_travada = gab_topa_eu.rect.topleft
 
@@ -244,6 +244,29 @@ def sala_2(screen):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 state = QUIT
+
+            # Sempre processa eventos da porta se a interface estiver ativa
+            if porta.input_ativo:
+                if event.type == pygame.KEYDOWN:
+                    porta.handle_keypress(event)
+                    # Se o jogador acertou o código, para o timer
+                    if porta.is_unlocked:
+                        parar_timer()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    porta.handle_mouse(event)
+                continue  # Não processa mais nada neste evento
+
+            # Sempre processa eventos do computador se a interface estiver ativa
+            if computador_interativo.mostrando_pista:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_c:
+                        computador_interativo.pagina_atual = (computador_interativo.pagina_atual + 1) % len(computador_interativo.dicas)
+                        computador_interativo.texto = computador_interativo.dicas[computador_interativo.pagina_atual]
+                        computador_interativo.atualizar_tela()
+                    elif event.key == pygame.K_e:
+                        computador_interativo.mostrando_pista = False
+                continue  # Não processa mais nada neste evento
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_y:
                     state = QUIT
@@ -253,7 +276,7 @@ def sala_2(screen):
                 # Handle porta keypress e interações gerais
                 if event.key == pygame.K_e:
                     # Primeiro tenta interagir com a porta se estiver perto dela
-                    if porta.pode_interagir:
+                    if porta.pode_interagir or porta.input_ativo:
                         if porta.input_ativo:  # Se a interface está ativa
                             porta.input_ativo = False  # Fecha a interface
                             porta.codigo_digitado = ""  # Limpa o código digitado
@@ -264,32 +287,6 @@ def sala_2(screen):
                         # Se não estiver perto da porta, tenta interagir com outros objetos
                         for obj in [arma1, arma2, arma3, arma4, computador_interativo, granada]:
                             obj.tentar_interagir()
-            
-            # Adiciona interação com a tecla C para o computador
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_c:
-                if computador_interativo.pode_interagir:
-                    if computador_interativo.mostrando_pista:
-                        # Se já está mostrando uma pista, avança para a próxima
-                        computador_interativo.pagina_atual = (computador_interativo.pagina_atual + 1) % len(computador_interativo.dicas)
-                        computador_interativo.texto = computador_interativo.dicas[computador_interativo.pagina_atual]
-                        # Atualiza a tela do computador com a nova dica
-                        computador_interativo.atualizar_tela()
-                    else:
-                        # Se não está mostrando pista, mostra a primeira
-                        computador_interativo.tentar_interagir()
-                        computador_interativo.texto = computador_interativo.dicas[0]
-                        computador_interativo.pagina_atual = 0
-                        # Atualiza a tela do computador com a primeira dica
-                        computador_interativo.atualizar_tela()
-
-            # Processamento de inputs quando a interface da porta está ativa
-            elif event.type == pygame.KEYDOWN and porta.input_ativo:
-                porta.handle_keypress(event)
-                # Se o jogador acertou o código, para o timer
-                if porta.is_unlocked:
-                    parar_timer()
-            elif porta.input_ativo:
-                porta.handle_mouse(event)
             
             # Controles do jogador (só se nenhuma pista estiver aberta e porta não estiver ativa)
             if not pista_aberta and event.type == pygame.KEYDOWN:
@@ -419,5 +416,11 @@ def sala_2(screen):
             desenhar_timer(screen)
 
         pygame.display.flip()
+
+        # Verifica se o jogador pode passar pela porta
+        if pygame.Rect.colliderect(porta.rect, gab_topa_eu.rect):
+            if porta.is_unlocked:
+                # Transição para a terceira sala
+                state = TERCEIRA_SALA
 
     return state 

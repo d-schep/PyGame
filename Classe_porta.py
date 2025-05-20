@@ -134,3 +134,9 @@ class PortaInterativa(ObjetoInterativo):
                 self.linha_atual = (self.linha_atual + 1) % len(self.linhas_codigo)
             elif event.unicode.isalnum() and len(self.linhas_digitadas[self.linha_atual]) < 20:
                 self.linhas_digitadas[self.linha_atual] += event.unicode.upper()
+            elif event.unicode.isalpha() and len(self.linhas_digitadas[self.linha_atual]) < 20:
+                self.linhas_digitadas[self.linha_atual] += event.unicode.upper()
+            elif event.unicode == '.' and len(self.linhas_digitadas[self.linha_atual]) < 20:
+                self.linhas_digitadas[self.linha_atual] += '.'
+            elif event.unicode == ' ' and len(self.linhas_digitadas[self.linha_atual]) < 20:
+                self.linhas_digitadas[self.linha_atual] += ' '
