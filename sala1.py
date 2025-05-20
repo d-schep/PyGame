@@ -8,6 +8,7 @@ from Classe_Botoes_inicio import *
 from Classe_Textos import *
 from Classe_Interact import *
 from Classe_porta import * 
+from timer import desenhar_timer, atualizar_timer, timer_ativo  # Importando timer_ativo
 
 
 def sala_1(screen):
@@ -31,6 +32,8 @@ def sala_1(screen):
 
     # Criando a porta interativa (x=750, y=ALTURA//4 - 80)
     porta = PortaInterativa(750, ALTURA//4 - 80, 108, 120, "41100", assets)
+    porta.rect = pygame.Rect(750, ALTURA//4 - 80, 108, 120)
+    porta.pode_interagir = False  # Inicializa como False
     
     # Criando objetos interativos com pistas
     texto_livro = """19 9 1 13 5 4 5 4 18 1 20 1 10 5 19 5 21 17 19 5 20 14 1 5 22 12 1 19 19 15 14 5 5 12 5 5 21 7 5 16 15 1 8 3 15 14 15 4 1 19 19 1 13 1 12 5 16 1 16 15 5 20 1 1 22"""
@@ -125,33 +128,37 @@ def sala_1(screen):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 state = QUIT
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_y:
-                state = QUIT
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_l:
-                state = MORTO
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
-                state = PROXIMA_SALA
-            # Handle porta keypress e interações gerais
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
-                # Primeiro tenta interagir com a porta se estiver perto dela
-                if porta.pode_interagir:
-                    if porta.input_ativo:  # Se a interface está ativa
-                        porta.input_ativo = False  # Fecha a interface
-                        porta.codigo_digitado = ""  # Limpa o código digitado
-                    else:  # Se a interface está fechada
-                        porta.input_ativo = True  # Abre a interface
-                        porta.mensagem_erro = ""  # Limpa mensagens de erro
-                else:
-                    # Se não estiver perto da porta, tenta interagir com outros objetos
-                    for obj in [livro_sofa, gaveta_mesa, papel_chao, barril]:
-                        obj.tentar_interagir()
 
-            # Processamento de inputs quando a interface da porta está ativa
-            elif event.type == pygame.KEYDOWN and porta.input_ativo:
-                porta.handle_keypress(event)
-            elif porta.input_ativo:
-                porta.handle_mouse(event)
-            
+            # Se a interface da porta está ativa, só processa eventos para a porta
+            if porta.input_ativo:
+                if event.type == pygame.KEYDOWN:
+                    porta.handle_keypress(event)
+                else:
+                    porta.handle_mouse(event)
+                continue  # Pula o restante do processamento de eventos
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_y:
+                    state = QUIT
+                if event.key == pygame.K_l:
+                    state = MORTO
+                if event.key == pygame.K_p:
+                    state = PROXIMA_SALA
+                # Handle porta keypress e interações gerais
+                if event.key == pygame.K_e:
+                    # Primeiro tenta interagir com a porta se estiver perto dela
+                    if porta.pode_interagir:
+                        if porta.input_ativo:  # Se a interface está ativa
+                            porta.input_ativo = False  # Fecha a interface
+                            porta.codigo_digitado = ""  # Limpa o código digitado
+                        else:  # Se a interface está fechada
+                            porta.input_ativo = True  # Abre a interface
+                            porta.mensagem_erro = ""  # Limpa mensagens de erro
+                    else:
+                        # Se não estiver perto da porta, tenta interagir com outros objetos
+                        for obj in [livro_sofa, gaveta_mesa, papel_chao, barril]:
+                            obj.tentar_interagir()
+
             # Controles do jogador (só se nenhuma pista estiver aberta e porta não estiver ativa)
             if not pista_aberta and event.type == pygame.KEYDOWN:
                 keys_down[event.key] = True
@@ -239,7 +246,14 @@ def sala_1(screen):
         for obj in all_interactables:
             obj.desenhar_pista(screen)
 
-        pygame.display.update()
+        # Desenha o timer
+        if timer_ativo:
+            tempo_restante = atualizar_timer()
+            if tempo_restante <= 0:
+                state = MORTO
+            desenhar_timer(screen)
+
+        pygame.display.flip()
 
     return state
 

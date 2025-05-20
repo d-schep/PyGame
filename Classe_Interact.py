@@ -23,6 +23,8 @@ class ObjetoInterativo(pygame.sprite.Sprite):
         self.tipo = tipo
         self.assets = assets
         self.show_indicator = show_indicator
+        self.texto = pista  # Adiciona atributo texto
+        self.pagina_atual = 0  # Adiciona atributo pagina_atual
 
     def update(self, jogador):
         # Verifica se o jogador está perto
@@ -87,7 +89,7 @@ class ObjetoInterativo(pygame.sprite.Sprite):
                 
                 # Sobrepor o texto da dica/página atual
                 fonte = pygame.font.Font(None, 28)  # Reduzido de 32 para 28
-                dica = self.pista.strip().split('\n')
+                dica = self.texto.strip().split('\n')  # Usa self.texto ao invés de self.pista
                 
                 # Calcula a altura total do texto
                 altura_total = 0
@@ -119,7 +121,7 @@ class ObjetoInterativo(pygame.sprite.Sprite):
                     pagina_rect = pagina_txt.get_rect(centerx=LARGURA//2, bottom=tela_rect.bottom-40)
                     screen.blit(pagina_txt, pagina_rect)
                 return
-            if self.tipo == 'livro':
+            elif self.tipo == 'livro':
                 self.desenhar_livro(screen)
             elif self.tipo == 'papel':
                 if self.assets and PAPEL2 in self.assets:
@@ -374,4 +376,9 @@ class ObjetoInterativo(pygame.sprite.Sprite):
             fonte_botao = pygame.font.Font(None, 36)
             texto_fechar = fonte_botao.render("Pressione E para fechar", True, BRANCO)
             texto_fechar_rect = texto_fechar.get_rect(center=(LARGURA/2, livro_rect.bottom + 20))
-            screen.blit(texto_fechar, texto_fechar_rect) 
+            screen.blit(texto_fechar, texto_fechar_rect)
+
+    def atualizar_tela(self):
+        if hasattr(self, 'dicas'):
+            self.texto = self.dicas[self.pagina_atual]
+            self.pista = self.texto  # Atualiza também o pista para manter consistência 

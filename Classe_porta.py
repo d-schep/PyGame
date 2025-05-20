@@ -4,7 +4,7 @@ from Classe_Interact import *
 
 class PortaInterativa(ObjetoInterativo):
     def __init__(self, x, y, width, height, codigo, assets):
-        super().__init__(x, y, width, height, "E", tipo='porta')
+        super().__init__(x, y, width, height, "E", tipo='porta', show_indicator=False)
         self.codigo = codigo
         self.codigo_digitado = ""
         self.is_unlocked = False
@@ -13,7 +13,11 @@ class PortaInterativa(ObjetoInterativo):
         self.input_ativo = False
         self.texto = "E"
         self.linha_atual = 0
-        self.linhas_codigo = codigo.split('\n')
+        # Se o código não tiver quebras de linha, trata como uma única linha
+        if '\n' not in codigo:
+            self.linhas_codigo = [codigo]
+        else:
+            self.linhas_codigo = codigo.split('\n')
         self.linhas_digitadas = [""] * len(self.linhas_codigo)
         self.last_key_time = 0
         self.key_delay = 200
@@ -30,6 +34,11 @@ class PortaInterativa(ObjetoInterativo):
         if self.pode_interagir or self.input_ativo:
             fonte = pygame.font.Font(None, 36)
             
+            # Desenha o texto "Pressione E" quando o jogador está perto
+            if self.pode_interagir and not self.input_ativo:
+                texto = fonte.render("Pressione E", True, (255, 255, 255))
+                screen.blit(texto, (self.rect.centerx - texto.get_width()//2, self.rect.top - 40))
+            
             # Desenha o fundo da interface de senha
             if self.input_ativo:
                 # Fundo semi-transparente mais escuro para melhor visibilidade
@@ -44,7 +53,7 @@ class PortaInterativa(ObjetoInterativo):
                 
                 # Campos de senha - mostrando os caracteres digitados
                 y_offset = ALTURA//2 - 50
-                self.campos_linha = []  # Lista para armazenar os retângulos das linhas
+                self.campos_linha = []
                 for i, linha in enumerate(self.linhas_codigo):
                     # Desenha o campo de entrada
                     campo_rect = pygame.Rect(LARGURA//2 - 100, y_offset, 200, 40)
@@ -70,11 +79,6 @@ class PortaInterativa(ObjetoInterativo):
                 # Instrução para sair
                 instrucao_sair = fonte.render("Pressione E para sair", True, (200, 200, 200))
                 screen.blit(instrucao_sair, (LARGURA//2 - instrucao_sair.get_width()//2, y_offset + 50))
-            else:
-                # Desenha o texto "E" centralizado acima da porta
-                texto = fonte.render(self.texto, True, (255, 255, 255))
-                texto_rect = texto.get_rect(centerx=self.rect.centerx, bottom=self.rect.top - 10)
-                screen.blit(texto, texto_rect)
 
             if self.mensagem_erro and time.time() - self.tempo_erro < 2:
                 texto_erro = fonte.render(self.mensagem_erro, True, (255, 0, 0))
@@ -100,7 +104,7 @@ class PortaInterativa(ObjetoInterativo):
             return
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_e:  # Mudado de K_x para K_e
+            if event.key == pygame.K_e:
                 self.input_ativo = False
                 self.linhas_digitadas = [""] * len(self.linhas_codigo)
                 self.linha_atual = 0
@@ -109,7 +113,8 @@ class PortaInterativa(ObjetoInterativo):
                 # Verifica se todas as linhas foram preenchidas
                 if all(linha for linha in self.linhas_digitadas):
                     # Verifica se o código está correto
-                    if "\n".join(self.linhas_digitadas) == self.codigo:
+                    codigo_digitado = "\n".join(self.linhas_digitadas)
+                    if codigo_digitado == self.codigo:
                         self.is_unlocked = True
                         self.input_ativo = False
                         self.texto = "E"
@@ -127,5 +132,5 @@ class PortaInterativa(ObjetoInterativo):
             elif event.key == pygame.K_TAB:
                 # Move para a próxima linha
                 self.linha_atual = (self.linha_atual + 1) % len(self.linhas_codigo)
-            elif event.unicode.isalpha() and len(self.linhas_digitadas[self.linha_atual]) < 20:
+            elif event.unicode.isalnum() and len(self.linhas_digitadas[self.linha_atual]) < 20:
                 self.linhas_digitadas[self.linha_atual] += event.unicode.upper()

@@ -9,6 +9,7 @@ from Classe_Textos import *
 from Classe_Interact import *
 import math
 from Classe_porta import *
+from timer import desenhar_timer, parar_timer, atualizar_timer, timer_ativo  # Importando timer_ativo
 
 def sala_2(screen):
     clock = pygame.time.Clock()
@@ -169,11 +170,9 @@ def sala_2(screen):
     granada = ObjetoInterativo(Mesa_Arma_rect.right + 150,
                               Mesa_Arma_rect.bottom - 115,
                               40, 40, "", tipo='granada', assets=assets, show_indicator=False)
-    # Adiciona áreas de colisão para a granada - atrás, laterais e frente
-    granada_colisao_atras = pygame.Rect(granada.rect.left, granada.rect.top, 40, 50)  # Atrás (lado da porta), altura menor
-    granada_colisao_lado_esq = pygame.Rect(granada.rect.left - 20, granada.rect.top, 20, 40)  # Lateral esquerda
-    granada_colisao_lado_dir = pygame.Rect(granada.rect.right, granada.rect.top, 20, 40)      # Lateral direita
-    granada_colisao_frente = pygame.Rect(granada.rect.left, granada.rect.bottom - 50, 40, 1)  # Frente (parte de baixo)
+
+    # Ajustando a colisão da caixa do lado direito
+    caixa_colisao = pygame.Rect(LARGURA - 300, ALTURA//2 - 20, 120, 20)
 
     # Grupos de sprites
     all_sprites = pygame.sprite.Group()
@@ -196,6 +195,14 @@ def sala_2(screen):
     # Posiciona o jogador na entrada da nova sala
     gab_topa_eu.rect.x = LARGURA // 2
     gab_topa_eu.rect.y = ALTURA - 100
+
+    # Adicionando paredes invisíveis para colisão
+    parede_esquerda = pygame.Rect((0,ALTURA-115),(CENTROx-100,ALTURA-115))
+    parede_direita = pygame.Rect((CENTROx+100,ALTURA-115),(LARGURA-(CENTROx+100),ALTURA-115))
+    
+    # Adicionando paredes laterais finas
+    parede_lateral_esquerda = pygame.Rect((0,0),(50,ALTURA))
+    parede_lateral_direita = pygame.Rect((LARGURA-50,0),(50,ALTURA))
 
     keys_down = {}
     while state == PROXIMA_SALA:
@@ -237,51 +244,55 @@ def sala_2(screen):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 state = QUIT
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_y:
-                state = QUIT
-
-            if pista_aberta:
-                # Só permite fechar a pista aberta ou trocar página do computador
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
-                    for obj in all_interactables:
-                        if getattr(obj, 'mostrando_pista', False):
-                            obj.mostrando_pista = False
-                            gab_topa_eu.speedx = 0
-                            gab_topa_eu.speedy = 0
-                            keys_down.clear()
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_c:
-                    for obj in all_interactables:
-                        if getattr(obj, 'mostrando_pista', False) and getattr(obj, 'tipo', None) == 'computador':
-                            obj.pagina_atual = (obj.pagina_atual + 1) % len(obj.dicas)
-                            obj.pista = obj.dicas[obj.pagina_atual]
-                continue
-
-            # Adiciona interação com a tecla E
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
-                for obj in all_interactables:
-                    if obj.pode_interagir:
-                        if obj == porta:
-                            if porta.input_ativo:
-                                porta.input_ativo = False
-                                porta.linhas_digitadas = [""] * len(porta.linhas_codigo)
-                                porta.linha_atual = 0
-                            else:
-                                porta.input_ativo = True
-                                porta.mensagem_erro = ""
-                        else:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_y:
+                    state = QUIT
+                if event.key == pygame.K_RETURN:
+                    state = MORTO
+                
+                # Handle porta keypress e interações gerais
+                if event.key == pygame.K_e:
+                    # Primeiro tenta interagir com a porta se estiver perto dela
+                    if porta.pode_interagir:
+                        if porta.input_ativo:  # Se a interface está ativa
+                            porta.input_ativo = False  # Fecha a interface
+                            porta.codigo_digitado = ""  # Limpa o código digitado
+                        else:  # Se a interface está fechada
+                            porta.input_ativo = True  # Abre a interface
+                            porta.mensagem_erro = ""  # Limpa mensagens de erro
+                    else:
+                        # Se não estiver perto da porta, tenta interagir com outros objetos
+                        for obj in [arma1, arma2, arma3, arma4, computador_interativo, granada]:
                             obj.tentar_interagir()
+            
+            # Adiciona interação com a tecla C para o computador
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_c:
+                if computador_interativo.pode_interagir:
+                    if computador_interativo.mostrando_pista:
+                        # Se já está mostrando uma pista, avança para a próxima
+                        computador_interativo.pagina_atual = (computador_interativo.pagina_atual + 1) % len(computador_interativo.dicas)
+                        computador_interativo.texto = computador_interativo.dicas[computador_interativo.pagina_atual]
+                        # Atualiza a tela do computador com a nova dica
+                        computador_interativo.atualizar_tela()
+                    else:
+                        # Se não está mostrando pista, mostra a primeira
+                        computador_interativo.tentar_interagir()
+                        computador_interativo.texto = computador_interativo.dicas[0]
+                        computador_interativo.pagina_atual = 0
+                        # Atualiza a tela do computador com a primeira dica
+                        computador_interativo.atualizar_tela()
 
             # Processamento de inputs quando a interface da porta está ativa
             elif event.type == pygame.KEYDOWN and porta.input_ativo:
                 porta.handle_keypress(event)
+                # Se o jogador acertou o código, para o timer
+                if porta.is_unlocked:
+                    parar_timer()
             elif porta.input_ativo:
                 porta.handle_mouse(event)
-
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_0:
-                state = JOGANDO
-
-            # Controles do jogador (só se nenhuma pista estiver aberta)
-            if event.type == pygame.KEYDOWN:
+            
+            # Controles do jogador (só se nenhuma pista estiver aberta e porta não estiver ativa)
+            if not pista_aberta and event.type == pygame.KEYDOWN:
                 keys_down[event.key] = True
                 if event.key == pygame.K_a:
                     gab_topa_eu.speedx -= 2
@@ -301,7 +312,7 @@ def sala_2(screen):
                 if event.key == pygame.K_DOWN:
                     gab_topa_eu.speedy += 2
 
-            if event.type == pygame.KEYUP:
+            if not pista_aberta and event.type == pygame.KEYUP:
                 if event.key in keys_down and keys_down[event.key]:
                     if event.key == pygame.K_a:
                         gab_topa_eu.speedx += 2
@@ -343,17 +354,18 @@ def sala_2(screen):
         for obj in all_interactables:
             obj.update(gab_topa_eu)
 
-        # Verifica colisões com a mesa, computador e granada
+        # Verifica colisões com a mesa, computador, granada e paredes
         colide_mesa = pygame.Rect.colliderect(Mesa_colisao, gab_topa_eu.rect)
         colide_computador = pygame.Rect.colliderect(Computador_colisao, gab_topa_eu.rect)
-        colide_granada = (
-            pygame.Rect.colliderect(granada_colisao_atras, gab_topa_eu.rect) or
-            pygame.Rect.colliderect(granada_colisao_lado_esq, gab_topa_eu.rect) or
-            pygame.Rect.colliderect(granada_colisao_lado_dir, gab_topa_eu.rect) or
-            pygame.Rect.colliderect(granada_colisao_frente, gab_topa_eu.rect)
+        colide_parede = (
+            pygame.Rect.colliderect(parede_esquerda, gab_topa_eu.rect) or 
+            pygame.Rect.colliderect(parede_direita, gab_topa_eu.rect) or
+            pygame.Rect.colliderect(parede_lateral_esquerda, gab_topa_eu.rect) or
+            pygame.Rect.colliderect(parede_lateral_direita, gab_topa_eu.rect)
         )
+        colide_caixa = pygame.Rect.colliderect(caixa_colisao, gab_topa_eu.rect)
         
-        if colide_mesa or colide_computador or colide_granada:
+        if colide_mesa or colide_computador or colide_parede or colide_caixa:
             gab_topa_eu.rect.x -= gab_topa_eu.speedx
             gab_topa_eu.rect.y -= gab_topa_eu.speedy
             gab_topa_eu.speedy = gab_topa_eu.speedx = 0
@@ -392,19 +404,20 @@ def sala_2(screen):
         for obj in all_interactables:
             obj.desenhar(screen)
 
-        # Desenha o jogador manualmente
-        screen.blit(gab_topa_eu.image, gab_topa_eu.rect)
+        # Desenha o jogador
+        screen.blit(gab_topa_eu.image, (gab_topa_eu.rect.x + camera_x, gab_topa_eu.rect.y + camera_y))
 
         # Desenha as pistas dos objetos interativos
         for obj in all_interactables:
             obj.desenhar_pista(screen)
 
-        # Verifica se o jogador pode passar pela porta
-        if pygame.Rect.colliderect(porta.rect, gab_topa_eu.rect):
-            if porta.is_unlocked:
-                # Transição para próxima sala
-                state = JOGANDO  # Mudando para o estado JOGANDO ao invés de PROXIMA_SALA
+        # Desenha o timer
+        if timer_ativo:
+            tempo_restante = atualizar_timer()
+            if tempo_restante <= 0:
+                state = MORTO
+            desenhar_timer(screen)
 
-        pygame.display.update()
+        pygame.display.flip()
 
     return state 
