@@ -106,6 +106,22 @@ def sala_1(screen):
         
         pista_aberta = porta.input_ativo or any(getattr(obj, 'mostrando_pista', False) for obj in all_interactables)
 
+        # Hard lock: trava a posição do jogador enquanto pista estiver aberta
+        if pista_aberta and not hasattr(gab_topa_eu, 'pos_travada'):
+            gab_topa_eu.pos_travada = gab_topa_eu.rect.topleft
+
+        if pista_aberta and hasattr(gab_topa_eu, 'pos_travada'):
+            gab_topa_eu.rect.topleft = gab_topa_eu.pos_travada
+            gab_topa_eu.speedx = 0
+            gab_topa_eu.speedy = 0
+            keys_down.clear()
+        else:
+            if hasattr(gab_topa_eu, 'pos_travada'):
+                del gab_topa_eu.pos_travada
+
+        # Salva a posição do jogador antes do update
+        pos_antiga = gab_topa_eu.rect.topleft
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 state = QUIT
@@ -132,19 +148,9 @@ def sala_1(screen):
 
             # Processamento de inputs quando a interface da porta está ativa
             elif event.type == pygame.KEYDOWN and porta.input_ativo:
-                if event.key == pygame.K_RETURN:
-                    if porta.codigo_digitado == porta.codigo:
-                        porta.is_unlocked = True
-                        porta.texto = "Acesso concedido. Porta desbloqueada."
-                        porta.input_ativo = False
-                    else:
-                        porta.mensagem_erro = "Código inválido. Tente novamente."
-                        porta.tempo_erro = time.time()
-                        porta.codigo_digitado = ""
-                elif event.key == pygame.K_BACKSPACE:
-                    porta.codigo_digitado = porta.codigo_digitado[:-1]
-                elif event.unicode.isdigit() and len(porta.codigo_digitado) < 5:
-                    porta.codigo_digitado += event.unicode
+                porta.handle_keypress(event)
+            elif porta.input_ativo:
+                porta.handle_mouse(event)
             
             # Controles do jogador (só se nenhuma pista estiver aberta e porta não estiver ativa)
             if not pista_aberta and event.type == pygame.KEYDOWN:

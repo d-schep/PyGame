@@ -33,10 +33,10 @@ class PortaInterativa(ObjetoInterativo):
             # Desenha o fundo da interface de senha
             if self.input_ativo:
                 # Fundo semi-transparente mais escuro para melhor visibilidade
-                s = pygame.Surface((400, 250))  # Aumentado para acomodar múltiplas linhas
+                s = pygame.Surface((400, 300))  # Aumentado de 250 para 300
                 s.set_alpha(200)
                 s.fill((0, 0, 0))
-                screen.blit(s, (LARGURA//2 - 200, ALTURA//2 - 125))
+                screen.blit(s, (LARGURA//2 - 200, ALTURA//2 - 150))  # Ajustado o offset Y
                 
                 # Título
                 titulo = fonte.render("Digite a senha:", True, (255, 255, 255))
@@ -44,9 +44,12 @@ class PortaInterativa(ObjetoInterativo):
                 
                 # Campos de senha - mostrando os caracteres digitados
                 y_offset = ALTURA//2 - 50
+                self.campos_linha = []  # Lista para armazenar os retângulos das linhas
                 for i, linha in enumerate(self.linhas_codigo):
                     # Desenha o campo de entrada
-                    pygame.draw.rect(screen, (50, 50, 50), (LARGURA//2 - 100, y_offset, 200, 40))
+                    campo_rect = pygame.Rect(LARGURA//2 - 100, y_offset, 200, 40)
+                    self.campos_linha.append(campo_rect)  # Guarda o retângulo para detecção de clique
+                    pygame.draw.rect(screen, (50, 50, 50), campo_rect)
                     
                     # Desenha o texto digitado ou cursor
                     if i == self.linha_atual:
@@ -65,7 +68,7 @@ class PortaInterativa(ObjetoInterativo):
                 screen.blit(instrucoes, (LARGURA//2 - instrucoes.get_width()//2, y_offset + 10))
                 
                 # Instrução para sair
-                instrucao_sair = fonte.render("Pressione X para sair", True, (200, 200, 200))
+                instrucao_sair = fonte.render("Pressione E para sair", True, (200, 200, 200))
                 screen.blit(instrucao_sair, (LARGURA//2 - instrucao_sair.get_width()//2, y_offset + 50))
             else:
                 # Desenha o texto "E" centralizado acima da porta
@@ -77,6 +80,17 @@ class PortaInterativa(ObjetoInterativo):
                 texto_erro = fonte.render(self.mensagem_erro, True, (255, 0, 0))
                 screen.blit(texto_erro, (LARGURA//2 - texto_erro.get_width()//2, ALTURA//2 - 150))
 
+    def handle_mouse(self, event):
+        if not self.input_ativo or not hasattr(self, 'campos_linha'):
+            return
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_pos = pygame.mouse.get_pos()
+            for i, campo_rect in enumerate(self.campos_linha):
+                if campo_rect.collidepoint(mouse_pos):
+                    self.linha_atual = i
+                    return
+
     def handle_keypress(self, event):
         if not self.input_ativo or self.is_unlocked:
             return
@@ -86,7 +100,7 @@ class PortaInterativa(ObjetoInterativo):
             return
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_x:  # Adiciona saída com X
+            if event.key == pygame.K_e:  # Mudado de K_x para K_e
                 self.input_ativo = False
                 self.linhas_digitadas = [""] * len(self.linhas_codigo)
                 self.linha_atual = 0

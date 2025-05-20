@@ -20,7 +20,7 @@ def sala_2(screen):
     background_rect = background.get_rect()
     
     # Criando a porta interativa
-    porta = PortaInterativa(750, ALTURA//4 - 80, 108, 120, "ESPINGARDA\nUZI MINI\n7.62\nGK18L3", assets)
+    porta = PortaInterativa(750, ALTURA//4 - 80, 108, 120, "SHOTGUN\nUZI MINI\n7.62\nGK18L3", assets)
     # Ajusta a área de interação da porta para ser mais precisa
     porta.rect = pygame.Rect(750, ALTURA//4 - 80, 108, 120)
     porta.pode_interagir = False  # Inicializa como False
@@ -109,7 +109,15 @@ def sala_2(screen):
     """
 
     texto_quebra_cabeca = """
-    Imagem QR Code
+    S___G__
+
+    Usada de perto.
+
+    Espalha medo.
+
+    Preencha as lacunas.
+
+    Em Inglês
     """
 
     texto_computador = """
@@ -121,8 +129,8 @@ def sala_2(screen):
     # Dicas/páginas do computador
     dicas_computador = [
         texto_computador,
-        texto_tabela_substituicao,
         texto_codigo,
+        texto_tabela_substituicao,
         texto_equacao,
         texto_morse,
         texto_quebra_cabeca,
@@ -161,8 +169,11 @@ def sala_2(screen):
     granada = ObjetoInterativo(Mesa_Arma_rect.right + 150,
                               Mesa_Arma_rect.bottom - 115,
                               40, 40, "", tipo='granada', assets=assets, show_indicator=False)
-    # Adiciona área de colisão para a granada - ajustada para cobrir toda a caixa
-    granada_colisao = pygame.Rect(granada.rect.left, granada.rect.top, 40, 40)
+    # Adiciona áreas de colisão para a granada - atrás, laterais e frente
+    granada_colisao_atras = pygame.Rect(granada.rect.left, granada.rect.top, 40, 50)  # Atrás (lado da porta), altura menor
+    granada_colisao_lado_esq = pygame.Rect(granada.rect.left - 20, granada.rect.top, 20, 40)  # Lateral esquerda
+    granada_colisao_lado_dir = pygame.Rect(granada.rect.right, granada.rect.top, 20, 40)      # Lateral direita
+    granada_colisao_frente = pygame.Rect(granada.rect.left, granada.rect.bottom - 50, 40, 1)  # Frente (parte de baixo)
 
     # Grupos de sprites
     all_sprites = pygame.sprite.Group()
@@ -252,7 +263,8 @@ def sala_2(screen):
                         if obj == porta:
                             if porta.input_ativo:
                                 porta.input_ativo = False
-                                porta.codigo_digitado = ""
+                                porta.linhas_digitadas = [""] * len(porta.linhas_codigo)
+                                porta.linha_atual = 0
                             else:
                                 porta.input_ativo = True
                                 porta.mensagem_erro = ""
@@ -262,6 +274,8 @@ def sala_2(screen):
             # Processamento de inputs quando a interface da porta está ativa
             elif event.type == pygame.KEYDOWN and porta.input_ativo:
                 porta.handle_keypress(event)
+            elif porta.input_ativo:
+                porta.handle_mouse(event)
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_0:
                 state = JOGANDO
@@ -332,7 +346,12 @@ def sala_2(screen):
         # Verifica colisões com a mesa, computador e granada
         colide_mesa = pygame.Rect.colliderect(Mesa_colisao, gab_topa_eu.rect)
         colide_computador = pygame.Rect.colliderect(Computador_colisao, gab_topa_eu.rect)
-        colide_granada = pygame.Rect.colliderect(granada_colisao, gab_topa_eu.rect)
+        colide_granada = (
+            pygame.Rect.colliderect(granada_colisao_atras, gab_topa_eu.rect) or
+            pygame.Rect.colliderect(granada_colisao_lado_esq, gab_topa_eu.rect) or
+            pygame.Rect.colliderect(granada_colisao_lado_dir, gab_topa_eu.rect) or
+            pygame.Rect.colliderect(granada_colisao_frente, gab_topa_eu.rect)
+        )
         
         if colide_mesa or colide_computador or colide_granada:
             gab_topa_eu.rect.x -= gab_topa_eu.speedx
