@@ -33,6 +33,9 @@ class ObjetoInterativo(pygame.sprite.Sprite):
         if self.tipo == 'barril':
             # Distância menor para o barril
             self.pode_interagir = dist_x < 50 and dist_y < 50
+        elif self.tipo == 'computador':
+            # Distância maior para o computador
+            self.pode_interagir = dist_x < 150 and dist_y < 150
         else:
             # Mantém a distância normal para outros objetos
             self.pode_interagir = dist_x < 100 and dist_y < 100
@@ -77,25 +80,43 @@ class ObjetoInterativo(pygame.sprite.Sprite):
 
     def desenhar_pista(self, screen):
         if self.mostrando_pista:
-            if self.tipo == 'computador' and self.assets and 'tela_comp' in self.assets:
+            if self.tipo == 'computador' and hasattr(self, 'tela_comp'):
                 # Desenha a tela do computador
-                tela_img = self.assets['tela_comp']
-                tela_rect = tela_img.get_rect(center=(LARGURA//2, ALTURA//2))
-                screen.blit(tela_img, tela_rect)
+                tela_rect = self.tela_comp.get_rect(center=(LARGURA//2, ALTURA//2))
+                screen.blit(self.tela_comp, tela_rect)
+                
                 # Sobrepor o texto da dica/página atual
-                fonte = pygame.font.Font(None, 28)
+                fonte = pygame.font.Font(None, 28)  # Reduzido de 32 para 28
                 dica = self.pista.strip().split('\n')
-                y = tela_rect.top + 60
+                
+                # Calcula a altura total do texto
+                altura_total = 0
+                linhas_texto = []
+                largura_maxima = 0
+                
+                # Primeiro passo: calcular dimensões
                 for linha in dica:
                     if linha.strip():
                         texto = fonte.render(linha.strip(), True, (0,255,0))
-                        texto_rect = texto.get_rect(centerx=LARGURA//2, top=y)
-                        screen.blit(texto, texto_rect)
-                    y += 32
+                        linhas_texto.append(texto)
+                        altura_total += texto.get_height() + 15
+                        largura_maxima = max(largura_maxima, texto.get_width())
+                
+                # Calcula a posição inicial para centralizar verticalmente
+                y_inicial = tela_rect.top + (tela_rect.height - altura_total) // 2 - 45
+                y = y_inicial
+                
+                # Desenha cada linha centralizada horizontalmente
+                for texto in linhas_texto:
+                    texto_rect = texto.get_rect(centerx=LARGURA//2, top=y)
+                    screen.blit(texto, texto_rect)
+                    y += texto.get_height() + 15
+                
                 # Número da página e instrução
                 if hasattr(self, 'dicas'):
-                    pagina_txt = fonte.render(f'Página {self.pagina_atual+1}/{len(self.dicas)} (C para trocar)', True, (0,255,0))
-                    pagina_rect = pagina_txt.get_rect(centerx=LARGURA//2, bottom=tela_rect.bottom-20)
+                    fonte_pagina = pygame.font.Font(None, 24)  # Reduzido de 28 para 24
+                    pagina_txt = fonte_pagina.render(f'Página {self.pagina_atual+1}/{len(self.dicas)} (C para trocar)', True, (0,255,0))
+                    pagina_rect = pagina_txt.get_rect(centerx=LARGURA//2, bottom=tela_rect.bottom-40)
                     screen.blit(pagina_txt, pagina_rect)
                 return
             if self.tipo == 'livro':

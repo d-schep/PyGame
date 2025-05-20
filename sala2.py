@@ -8,6 +8,7 @@ from Classe_Botoes_inicio import *
 from Classe_Textos import *
 from Classe_Interact import *
 import math
+from Classe_porta import *
 
 def sala_2(screen):
     clock = pygame.time.Clock()
@@ -17,6 +18,12 @@ def sala_2(screen):
     # Carregando a nova imagem de fundo (sala de armas)
     background = assets[TELA_DE_FUNDO_ESCAPE_2]
     background_rect = background.get_rect()
+    
+    # Criando a porta interativa
+    porta = PortaInterativa(750, ALTURA//4 - 80, 108, 120, "ESPINGARDA\nUZI MINI\n7.62\nGK18L3", assets)
+    # Ajusta a área de interação da porta para ser mais precisa
+    porta.rect = pygame.Rect(750, ALTURA//4 - 80, 108, 120)
+    porta.pode_interagir = False  # Inicializa como False
     
     # Adicionando Mesa_Arma
     Mesa_Arma = assets[MESA_ARMA]
@@ -138,27 +145,6 @@ def sala_2(screen):
                             Mesa_Arma_rect.bottom - 110,
                             60, 60, texto_arma4, tipo='arma', assets=assets, show_indicator=True)
 
-    # Criando objetos interativos para as pistas
-    # Tabela de substituição (na lateral esquerda)
-    tabela_substituicao = ObjetoInterativo(100, ALTURA//2, 40, 40, texto_tabela_substituicao, 
-                                         tipo='documento', assets=assets, show_indicator=True)
-
-    # Código a ser decodificado (centro superior)
-    codigo = ObjetoInterativo(LARGURA//2, 100, 40, 40, texto_codigo, 
-                             tipo='documento', assets=assets, show_indicator=True)
-
-    # Equação matemática (no canto superior direito)
-    equacao = ObjetoInterativo(LARGURA - 200, 350, 40, 40, texto_equacao, 
-                              tipo='documento', assets=assets, show_indicator=True)
-
-    # Código morse (no canto inferior esquerdo)
-    morse = ObjetoInterativo(100, ALTURA - 200, 40, 40, texto_morse, 
-                            tipo='documento', assets=assets, show_indicator=True)
-
-    # Quebra-cabeça (no canto inferior direito)
-    quebra_cabeca = ObjetoInterativo(LARGURA - 200, ALTURA - 200, 40, 40, texto_quebra_cabeca, 
-                                    tipo='documento', assets=assets, show_indicator=True)
-
     # Criando objeto interativo para o computador (área de interação grande na frente)
     comp_x = Computador_rect.left + Computador_rect.width // 2 - 60
     comp_y = Computador_rect.bottom - 60
@@ -167,16 +153,16 @@ def sala_2(screen):
                                            show_indicator=True)
     computador_interativo.dicas = dicas_computador
     computador_interativo.pagina_atual = 0
+    computador_interativo.tela_comp = assets[TELA_COMP]  # Store the computer screen image
+    # Ajusta a área de interação para ser mais precisa
+    computador_interativo.rect = pygame.Rect(Computador_rect.left + 40, Computador_rect.top + 40, 170, 120)
 
     # Criando objeto interativo para a granada (direita da mesa, no chão)
-    texto_granada = """
-    Granada de Mão
-    Fragmentação
-    SN: GND2024
-    """
     granada = ObjetoInterativo(Mesa_Arma_rect.right + 150,
                               Mesa_Arma_rect.bottom - 115,
-                              40, 40, texto_granada, tipo='granada', assets=assets, show_indicator=True)
+                              40, 40, "", tipo='granada', assets=assets, show_indicator=False)
+    # Adiciona área de colisão para a granada - ajustada para cobrir toda a caixa
+    granada_colisao = pygame.Rect(granada.rect.left, granada.rect.top, 40, 40)
 
     # Grupos de sprites
     all_sprites = pygame.sprite.Group()
@@ -192,13 +178,9 @@ def sala_2(screen):
     all_interactables.add(arma2)
     all_interactables.add(arma3)
     all_interactables.add(arma4)
-    all_interactables.add(granada)
     all_interactables.add(computador_interativo)
-    # all_interactables.add(tabela_substituicao)
-    # all_interactables.add(codigo)
-    # all_interactables.add(equacao)
-    # all_interactables.add(morse)
-    # all_interactables.add(quebra_cabeca)
+    all_interactables.add(granada)
+    all_interactables.add(porta)  # Adicionando a porta ao grupo de interativos
 
     # Posiciona o jogador na entrada da nova sala
     gab_topa_eu.rect.x = LARGURA // 2
@@ -262,6 +244,24 @@ def sala_2(screen):
                             obj.pagina_atual = (obj.pagina_atual + 1) % len(obj.dicas)
                             obj.pista = obj.dicas[obj.pagina_atual]
                 continue
+
+            # Adiciona interação com a tecla E
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
+                for obj in all_interactables:
+                    if obj.pode_interagir:
+                        if obj == porta:
+                            if porta.input_ativo:
+                                porta.input_ativo = False
+                                porta.codigo_digitado = ""
+                            else:
+                                porta.input_ativo = True
+                                porta.mensagem_erro = ""
+                        else:
+                            obj.tentar_interagir()
+
+            # Processamento de inputs quando a interface da porta está ativa
+            elif event.type == pygame.KEYDOWN and porta.input_ativo:
+                porta.handle_keypress(event)
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_0:
                 state = JOGANDO
@@ -329,11 +329,12 @@ def sala_2(screen):
         for obj in all_interactables:
             obj.update(gab_topa_eu)
 
-        # Verifica colisões com a mesa e computador
+        # Verifica colisões com a mesa, computador e granada
         colide_mesa = pygame.Rect.colliderect(Mesa_colisao, gab_topa_eu.rect)
         colide_computador = pygame.Rect.colliderect(Computador_colisao, gab_topa_eu.rect)
+        colide_granada = pygame.Rect.colliderect(granada_colisao, gab_topa_eu.rect)
         
-        if colide_mesa or colide_computador:
+        if colide_mesa or colide_computador or colide_granada:
             gab_topa_eu.rect.x -= gab_topa_eu.speedx
             gab_topa_eu.rect.y -= gab_topa_eu.speedy
             gab_topa_eu.speedy = gab_topa_eu.speedx = 0
@@ -372,15 +373,18 @@ def sala_2(screen):
         for obj in all_interactables:
             obj.desenhar(screen)
 
-        # DEBUG: desenha a área de interação do computador
-        pygame.draw.rect(screen, (255,0,0), computador_interativo.rect, 2)
-
         # Desenha o jogador manualmente
         screen.blit(gab_topa_eu.image, gab_topa_eu.rect)
 
         # Desenha as pistas dos objetos interativos
         for obj in all_interactables:
             obj.desenhar_pista(screen)
+
+        # Verifica se o jogador pode passar pela porta
+        if pygame.Rect.colliderect(porta.rect, gab_topa_eu.rect):
+            if porta.is_unlocked:
+                # Transição para próxima sala
+                state = JOGANDO  # Mudando para o estado JOGANDO ao invés de PROXIMA_SALA
 
         pygame.display.update()
 
