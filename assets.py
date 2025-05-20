@@ -44,6 +44,7 @@ COMPUTADOR = 'computador'
 CAMERA = 'camera'
 QUADRO = 'quadro'
 GRANADA = 'granada'
+TELA_COMP = 'tela_comp'
 
 #IMAGENS
 def load_assets():
@@ -106,6 +107,7 @@ def load_assets():
     assets[QUADRO] = pygame.transform.scale(assets[QUADRO], (300, 200))
     assets[GRANADA] = pygame.image.load(os.path.join(IMG_DIR, 'Granadas.png')).convert_alpha()
     assets[GRANADA] = pygame.transform.scale(assets[GRANADA], (100, 100))
+    assets[TELA_COMP] = pygame.image.load(os.path.join(IMG_DIR, 'Tela_Comp.png')).convert_alpha()
     # Se quiser redimensionar, descomente e ajuste:
     # assets[GRANADA] = pygame.transform.scale(assets[GRANADA], (40, 40))
 #     #SONS

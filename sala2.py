@@ -34,9 +34,8 @@ def sala_2(screen):
     # Posicionando o computador mais para a esquerda no fundo da sala
     Computador_rect.left = 100
     Computador_rect.top = 40
-    # Área de colisão para o computador - muito reduzida
-    Computador_colisao = pygame.Rect(Computador_rect.left + 40, Computador_rect.top + 40,
-                                    170, 170)  # Reduzido significativamente e com maior offset
+    # Área de colisão para o computador - justa ao corpo
+    Computador_colisao = pygame.Rect(Computador_rect.left + 40, Computador_rect.top + 40, 170, 120)
 
     # Adicionando Camera
     Camera_img = assets[CAMERA]
@@ -112,6 +111,16 @@ def sala_2(screen):
     Nível: ADMINISTRADOR
     """
 
+    # Dicas/páginas do computador
+    dicas_computador = [
+        texto_computador,
+        texto_tabela_substituicao,
+        texto_codigo,
+        texto_equacao,
+        texto_morse,
+        texto_quebra_cabeca,
+    ]
+
     # Posicionando os objetos interativos para cada arma na mesa
     arma1 = ObjetoInterativo(Mesa_Arma_rect.left + 50, 
                             Mesa_Arma_rect.top - 20,
@@ -150,12 +159,14 @@ def sala_2(screen):
     quebra_cabeca = ObjetoInterativo(LARGURA - 200, ALTURA - 200, 40, 40, texto_quebra_cabeca, 
                                     tipo='documento', assets=assets, show_indicator=True)
 
-    # Criando objeto interativo para o computador
-    computador_interativo = ObjetoInterativo(Computador_rect.left + 95, 
-                                           Computador_rect.centery - 30,
-                                           20, 20, texto_computador, 
+    # Criando objeto interativo para o computador (área de interação grande na frente)
+    comp_x = Computador_rect.left + Computador_rect.width // 2 - 60
+    comp_y = Computador_rect.bottom - 60
+    computador_interativo = ObjetoInterativo(comp_x, comp_y, 120, 120, dicas_computador[0], 
                                            tipo='computador', assets=assets, 
                                            show_indicator=True)
+    computador_interativo.dicas = dicas_computador
+    computador_interativo.pagina_atual = 0
 
     # Criando objeto interativo para a granada (direita da mesa, no chão)
     texto_granada = """
@@ -183,11 +194,11 @@ def sala_2(screen):
     all_interactables.add(arma4)
     all_interactables.add(granada)
     all_interactables.add(computador_interativo)
-    all_interactables.add(tabela_substituicao)
-    all_interactables.add(codigo)
-    all_interactables.add(equacao)
-    all_interactables.add(morse)
-    all_interactables.add(quebra_cabeca)
+    # all_interactables.add(tabela_substituicao)
+    # all_interactables.add(codigo)
+    # all_interactables.add(equacao)
+    # all_interactables.add(morse)
+    # all_interactables.add(quebra_cabeca)
 
     # Posiciona o jogador na entrada da nova sala
     gab_topa_eu.rect.x = LARGURA // 2
@@ -237,26 +248,21 @@ def sala_2(screen):
                 state = QUIT
 
             if pista_aberta:
-                # Só permite fechar a pista aberta
+                # Só permite fechar a pista aberta ou trocar página do computador
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
                     for obj in all_interactables:
                         if getattr(obj, 'mostrando_pista', False):
                             obj.mostrando_pista = False
-                            # Ao fechar a pista, para o jogador e limpa teclas
                             gab_topa_eu.speedx = 0
                             gab_topa_eu.speedy = 0
                             keys_down.clear()
-                # Ignora todos os outros eventos enquanto pista estiver aberta
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_c:
+                    for obj in all_interactables:
+                        if getattr(obj, 'mostrando_pista', False) and getattr(obj, 'tipo', None) == 'computador':
+                            obj.pagina_atual = (obj.pagina_atual + 1) % len(obj.dicas)
+                            obj.pista = obj.dicas[obj.pagina_atual]
                 continue
 
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
-                for obj in all_interactables:
-                    if obj.tentar_interagir():
-                        # Se abriu uma pista, para o jogador imediatamente e limpa teclas
-                        if obj.mostrando_pista:
-                            gab_topa_eu.speedx = 0
-                            gab_topa_eu.speedy = 0
-                            keys_down.clear()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_0:
                 state = JOGANDO
 
@@ -365,6 +371,9 @@ def sala_2(screen):
         # Desenha os objetos interativos
         for obj in all_interactables:
             obj.desenhar(screen)
+
+        # DEBUG: desenha a área de interação do computador
+        pygame.draw.rect(screen, (255,0,0), computador_interativo.rect, 2)
 
         # Desenha o jogador manualmente
         screen.blit(gab_topa_eu.image, gab_topa_eu.rect)

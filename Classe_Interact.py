@@ -77,6 +77,27 @@ class ObjetoInterativo(pygame.sprite.Sprite):
 
     def desenhar_pista(self, screen):
         if self.mostrando_pista:
+            if self.tipo == 'computador' and self.assets and 'tela_comp' in self.assets:
+                # Desenha a tela do computador
+                tela_img = self.assets['tela_comp']
+                tela_rect = tela_img.get_rect(center=(LARGURA//2, ALTURA//2))
+                screen.blit(tela_img, tela_rect)
+                # Sobrepor o texto da dica/página atual
+                fonte = pygame.font.Font(None, 28)
+                dica = self.pista.strip().split('\n')
+                y = tela_rect.top + 60
+                for linha in dica:
+                    if linha.strip():
+                        texto = fonte.render(linha.strip(), True, (0,255,0))
+                        texto_rect = texto.get_rect(centerx=LARGURA//2, top=y)
+                        screen.blit(texto, texto_rect)
+                    y += 32
+                # Número da página e instrução
+                if hasattr(self, 'dicas'):
+                    pagina_txt = fonte.render(f'Página {self.pagina_atual+1}/{len(self.dicas)} (C para trocar)', True, (0,255,0))
+                    pagina_rect = pagina_txt.get_rect(centerx=LARGURA//2, bottom=tela_rect.bottom-20)
+                    screen.blit(pagina_txt, pagina_rect)
+                return
             if self.tipo == 'livro':
                 self.desenhar_livro(screen)
             elif self.tipo == 'papel':
