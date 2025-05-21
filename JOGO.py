@@ -14,6 +14,7 @@ from Classe_Botoes_inicio import *
 from tela_de_morte import *
 from sala_vencedor import *  # Importando a sala do vencedor
 from timer import *  # Importando todas as funções do timer
+from tela_historia import *  # Importando a tela de história
 
 state = INICIO
 clock = pygame.time.Clock()  # Adiciona um clock para controlar o FPS
@@ -25,7 +26,9 @@ while state != QUIT:
     if state == INICIO:
         state = tela_inicial(window)
         if state == JOGANDO:  # Se saiu da tela inicial para jogar
-            iniciar_timer()  # Inicia o timer quando começa o jogo
+            state = tela_historia(window)  # Mostra a tela de história
+            if state == JOGANDO:  # Se saiu da tela de história
+                iniciar_timer()  # Inicia o timer quando começa o jogo
     elif state == JOGANDO:
         state = sala_1(window)
     elif state == PROXIMA_SALA:

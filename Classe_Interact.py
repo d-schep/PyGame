@@ -54,7 +54,7 @@ class ObjetoInterativo(pygame.sprite.Sprite):
     def desenhar(self, screen):
         # Sempre desenha a área interativa (agora invisível)
         screen.blit(self.image, self.rect)
-
+        
         # Se for granada, desenha a imagem da granada centralizada e aumentada 1,5x
         if self.tipo == 'granada' and self.assets and 'granada' in self.assets:
             img = self.assets['granada']
@@ -376,7 +376,7 @@ class ObjetoInterativo(pygame.sprite.Sprite):
             fonte_botao = pygame.font.Font(None, 36)
             texto_fechar = fonte_botao.render("Pressione E para fechar", True, BRANCO)
             texto_fechar_rect = texto_fechar.get_rect(center=(LARGURA/2, livro_rect.bottom + 20))
-            screen.blit(texto_fechar, texto_fechar_rect)
+            screen.blit(texto_fechar, texto_fechar_rect) 
 
     def atualizar_tela(self):
         if hasattr(self, 'dicas'):

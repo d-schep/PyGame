@@ -3,9 +3,8 @@ from cfg import *
 from assets import *
 from Classe_Botoes_inicio import *
 from Classe_Textos import *
-from timer import get_tempo_decorrido  # Importando a nova função
 
-def sala_vencedor(screen, tempo_restante):
+def tela_historia(screen):
     clock = pygame.time.Clock()
     assets = load_assets()
     state = INICIO
@@ -14,36 +13,40 @@ def sala_vencedor(screen, tempo_restante):
     background = assets[TELA_INICIAL]
     background_rect = background.get_rect()
     
-    # Cria os textos da vitória
+    # Cria os textos da história
     fonte = assets[FONTE_BOTAO]
     
-    # Calcula o tempo total usando o tempo decorrido
-    tempo_total = int(get_tempo_decorrido())
-    minutos = tempo_total // 60
-    segundos = tempo_total % 60
-    
-    # Texto da vitória dividido em linhas
+    # Texto da história dividido em linhas
     historia = [
-        "PARABÉNS, PROFESSOR!",
+        "INSPER - P3 - 2025",
         "",
-        "Você conseguiu escapar dos zumbis",
-        "e prometeu nunca mais colocar",
-        "classes nas provas finais.",
+        "Um erro fatal foi cometido...",
         "",
-        f"Tempo total: {minutos:02d}:{segundos:02d}",
+        "Classes nas Provas Finais de DesSoft!",
         "",
-        "Pressione ENTER para sair"
+        "Seus alunos, em fúria,",
+        "viraram zumbis programadores.",
+        "",
+        "Você está preso no P3,",
+        "cercado por zumbis de direito.",
+        "",
+        "15 minutos para desvendar",
+        "os mistérios e escapar.",
+        "",
+        "BOA SORTE, PROFESSOR...",
+        "",
+        "Pressione ENTER para começar"
     ]
     
     # Renderiza cada linha do texto
     textos = []
-    y = ALTURA/3  # Começa mais centralizado na tela
+    y = ALTURA/10  # Começa muito mais acima na tela
     
     for linha in historia:
         texto = fonte.render(linha, True, BRANCO)
         texto_rect = texto.get_rect(centerx=LARGURA/2, top=y)
         textos.append((texto, texto_rect))
-        y += 35  # Espaçamento entre linhas
+        y += 35  # Mantém o espaçamento entre linhas
     
     # Efeito de digitação
     texto_atual = ""
@@ -66,7 +69,7 @@ def sala_vencedor(screen, tempo_restante):
                 state = QUIT
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN and indice >= len(historia):
-                    state = QUIT
+                    state = JOGANDO
         
         # Desenha tudo
         screen.fill(PRETO)
