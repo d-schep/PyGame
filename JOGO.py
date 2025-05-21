@@ -12,6 +12,7 @@ from sala2 import *  # Importando a nova sala
 from INICIO import * 
 from Classe_Botoes_inicio import * 
 from tela_de_morte import *
+from sala_vencedor import *  # Importando a sala do vencedor
 import time
 
 # Variáveis globais para o timer
@@ -77,6 +78,8 @@ while state != QUIT:
         state = sala_2(window)
     elif state == MORTO:
         state = tela_morte(window)
+    elif state == VENCEDOR:  # Novo estado para a sala do vencedor
+        state = sala_vencedor(window, tempo_restante)
     else:
         state = QUIT
 

@@ -420,7 +420,8 @@ def sala_2(screen):
         # Verifica se o jogador pode passar pela porta
         if pygame.Rect.colliderect(porta.rect, gab_topa_eu.rect):
             if porta.is_unlocked:
-                # Transição para a terceira sala
-                state = TERCEIRA_SALA
+                # Transição para a sala do vencedor
+                state = VENCEDOR
+                parar_timer()  # Para o timer quando o jogador vence
 
     return state 
