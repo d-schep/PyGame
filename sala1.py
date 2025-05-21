@@ -25,10 +25,16 @@ def sala_1(screen):
     Estante = assets[ESTANTE]
     Estante_rect = Estante.get_rect()
     Estante_rect.topleft = (910,10)   
+    # Criar um retângulo de colisão para a estante - altura reduzida
+    Estante_colisao = pygame.Rect(Estante_rect.left + 20, Estante_rect.top + 20,
+                                 LARGURA_ESTANTE - 40, ALTURA_ESTANTE - 150)  # Reduzindo 150 pixels da altura
 
     Sofa = assets[SOFA]
     Sofa_rect = Sofa.get_rect()
     Sofa_rect.topleft = (350,20)  
+    # Criar um retângulo de colisão para o sofá - altura muito reduzida
+    Sofa_colisao = pygame.Rect(Sofa_rect.left + 20, Sofa_rect.top + 20,
+                              LARGURA_SOFA - 40, ALTURA_SOFA - 300)  # Reduzindo 300 pixels da altura
 
     # Criando a porta interativa (x=750, y=ALTURA//4 - 80)
     porta = PortaInterativa(750, ALTURA//4 - 80, 108, 120, "41100", assets)
@@ -204,18 +210,20 @@ def sala_1(screen):
 
         if state == JOGANDO:
             hit_zumbi = pygame.Rect.colliderect(zumbi,gab_topa_eu)
-            colide_parede = pygame.Rect.colliderect(parede_esquerda,gab_topa_eu) or pygame.Rect.colliderect(parede_direita,gab_topa_eu)  # Adicionada colisão com parede direita
-            colide_mesa =  pygame.Rect.colliderect(Mesa_colisao,gab_topa_eu)
+            colide_parede = pygame.Rect.colliderect(parede_esquerda,gab_topa_eu) or pygame.Rect.colliderect(parede_direita,gab_topa_eu)
+            colide_mesa = pygame.Rect.colliderect(Mesa_colisao,gab_topa_eu)
+            colide_estante = pygame.Rect.colliderect(Estante_colisao,gab_topa_eu)
+            colide_sofa = pygame.Rect.colliderect(Sofa_colisao,gab_topa_eu)
             
             # Verifica se o jogador pode passar pela porta
             if pygame.Rect.colliderect(porta.rect, gab_topa_eu.rect):
                 if porta.is_unlocked:
                     # Transição para próxima sala
-                    state = PROXIMA_SALA  # Mudando para o novo estado ao invés de QUIT
+                    state = PROXIMA_SALA
             
             if hit_zumbi == True:
                 state = MORTO
-            if colide_parede == True or colide_mesa == True:
+            if colide_parede == True or colide_mesa == True or colide_estante == True or colide_sofa == True:
                 gab_topa_eu.rect.x -= gab_topa_eu.speedx
                 gab_topa_eu.rect.y -= gab_topa_eu.speedy
                 gab_topa_eu.speedy = gab_topa_eu.speedx = 0
