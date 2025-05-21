@@ -255,11 +255,10 @@ def sala_1(screen):
             obj.desenhar_pista(screen)
 
         # Desenha o timer
-        if timer_ativo:
-            tempo_restante = atualizar_timer()
-            if tempo_restante <= 0:
-                state = MORTO
-            desenhar_timer(screen)
+        tempo_restante = atualizar_timer()
+        if tempo_restante <= 0:
+            state = MORTO
+        desenhar_timer(screen)
 
         pygame.display.flip()
 

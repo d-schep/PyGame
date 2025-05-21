@@ -7,6 +7,7 @@ import random
 import time 
 from Classe_Botoes_inicio import * 
 from Classe_Textos import *
+from timer import desenhar_timer, resetar_timer  # Importando as funções do timer
 
 
 def tela_inicial(screen):
@@ -17,6 +18,7 @@ def tela_inicial(screen):
     background = assets[TELA_INICIAL]
     titulo = assets[IMG_TITULO]
     state = INICIO
+
     def iniciar_jogo():
         nonlocal state
         state = JOGANDO
@@ -24,18 +26,17 @@ def tela_inicial(screen):
     background_rect = background.get_rect()
     botao_inicio = Botao(CENTROx-(LARG_BOT/2),(CENTROy+100-ALT_BOT),LARG_BOT,ALT_BOT,'INICIAR', ACINZENTADO, BRANCO_ALPHA,assets, iniciar_jogo)
     
-    
     def sair_jogo():
         nonlocal state
         print('funcao foi chamada')
         state = QUIT
-    
 
     botao_quit = Botao(CENTROx-(LARG_BOT/2),(CENTROy+120),LARG_BOT,ALT_BOT,'QUIT', ACINZENTADO, BRANCO_ALPHA,assets, sair_jogo)
 
+    # Reseta o timer para 15:00
+    resetar_timer()
 
     while state == INICIO:
-
         # Ajusta a velocidade do jogo.
         clock.tick(FPS)
         
@@ -45,7 +46,6 @@ def tela_inicial(screen):
             print(event)
             if event.type == pygame.QUIT:
                 state = QUIT
-                
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 state = QUIT
@@ -53,7 +53,7 @@ def tela_inicial(screen):
             if state == INICIO:
                 botao_inicio.checar_click(event)
                 botao_quit.checar_click(event)
-
+        
         # A cada loop, redesenha o fundo e os sprites
         screen.fill(PRETO)
         screen.blit(background, background_rect)
@@ -62,8 +62,11 @@ def tela_inicial(screen):
         screen.blit(titulo,((CENTROx-400,30)))
         botao_inicio.desenhar(screen)
         botao_quit.desenhar(screen)
+        
+        # Desenha o timer parado
+        desenhar_timer(screen)
+        
         # Depois de desenhar tudo, inverte o display.
         pygame.display.update()
-
 
     return state

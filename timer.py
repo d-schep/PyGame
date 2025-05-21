@@ -18,24 +18,17 @@ def atualizar_timer():
             tempo_decorrido = tempo_atual - tempo_inicial
             tempo_restante = max(0, 15 * 60 - tempo_decorrido)
             ultima_atualizacao = tempo_atual
-        return tempo_restante
     return tempo_restante
 
 def desenhar_timer(screen):
-    if timer_ativo:
-        minutos = int(tempo_restante) // 60
-        segundos = int(tempo_restante) % 60
-        
-        # Desenha um fundo preto semi-transparente atrás do timer
-        fundo = pygame.Surface((150, 40))
-        fundo.fill((0, 0, 0))
-        fundo.set_alpha(200)  # Aumentado para melhor visibilidade
-        screen.blit(fundo, (LARGURA - 150, 20))
-        
-        # Desenha o texto do timer
-        fonte = pygame.font.Font(None, 36)
-        texto = fonte.render(f"Tempo: {minutos:02d}:{segundos:02d}", True, (255, 0, 0))
-        screen.blit(texto, (LARGURA - 150, 20))
+    # Sempre desenha o timer, mesmo quando não está ativo
+    minutos = int(tempo_restante) // 60
+    segundos = int(tempo_restante) % 60
+    
+    # Desenha o texto do timer
+    fonte = pygame.font.Font(None, 36)
+    texto = fonte.render(f"Tempo: {minutos:02d}:{segundos:02d}", True, (255, 0, 0))
+    screen.blit(texto, (LARGURA - 200, 20))  # Movido 50 pixels para a esquerda
 
 def iniciar_timer():
     global tempo_inicial, timer_ativo, tempo_restante, ultima_atualizacao
@@ -46,4 +39,13 @@ def iniciar_timer():
 
 def parar_timer():
     global timer_ativo
-    timer_ativo = False 
+    timer_ativo = False
+
+def resetar_timer():
+    global tempo_restante
+    tempo_restante = 15 * 60  # Reinicia o tempo para 15 minutos
+
+def get_tempo_decorrido():
+    if tempo_inicial is not None:
+        return time.time() - tempo_inicial
+    return 0 

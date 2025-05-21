@@ -3,6 +3,7 @@ from cfg import *
 from assets import *
 from Classe_Botoes_inicio import *
 from Classe_Textos import *
+from timer import get_tempo_decorrido  # Importando a nova função
 
 def sala_vencedor(screen, tempo_restante):
     clock = pygame.time.Clock()
@@ -17,10 +18,10 @@ def sala_vencedor(screen, tempo_restante):
     fonte_media = pygame.font.Font(None, 48)
     fonte_pequena = pygame.font.Font(None, 36)
     
-    # Calcula o tempo total (15 minutos - tempo restante)
-    tempo_total = 15 * 60 - tempo_restante
-    minutos = int(tempo_total) // 60
-    segundos = int(tempo_total) % 60
+    # Calcula o tempo total usando o tempo decorrido
+    tempo_total = int(get_tempo_decorrido())
+    minutos = tempo_total // 60
+    segundos = tempo_total % 60
     
     texto_vitoria = fonte_grande.render("MISSÃO CUMPRIDA!", True, (255, 215, 0))  # Cor dourada
     texto_subtitulo = fonte_media.render("Você salvou a humanidade!", True, (255, 255, 255))
