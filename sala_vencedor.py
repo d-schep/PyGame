@@ -3,7 +3,8 @@ from cfg import *
 from assets import *
 from Classe_Botoes_inicio import *
 from Classe_Textos import *
-from timer import get_tempo_decorrido  # Importando a nova função
+from timer import get_tempo_decorrido
+from high_scores import update_high_scores, format_time
 
 def sala_vencedor(screen, tempo_restante):
     clock = pygame.time.Clock()
@@ -22,6 +23,9 @@ def sala_vencedor(screen, tempo_restante):
     minutos = tempo_total // 60
     segundos = tempo_total % 60
     
+    # Atualiza os high scores
+    high_scores = update_high_scores(tempo_total)
+    
     # Texto da vitória dividido em linhas
     historia = [
         "PARABÉNS, PROFESSOR!",
@@ -32,12 +36,17 @@ def sala_vencedor(screen, tempo_restante):
         "",
         f"Tempo total: {minutos:02d}:{segundos:02d}",
         "",
+        "Melhores Tempos:",
+        f"1º Lugar: {format_time(high_scores[0])}",
+        f"2º Lugar: {format_time(high_scores[1])}",
+        f"3º Lugar: {format_time(high_scores[2])}",
+        "",
         "Pressione ENTER para sair"
     ]
     
     # Renderiza cada linha do texto
     textos = []
-    y = ALTURA/3  # Começa mais centralizado na tela
+    y = ALTURA/4  # Começa mais acima na tela para acomodar os high scores
     
     for linha in historia:
         texto = fonte.render(linha, True, BRANCO)
@@ -45,27 +54,14 @@ def sala_vencedor(screen, tempo_restante):
         textos.append((texto, texto_rect))
         y += 35  # Espaçamento entre linhas
     
-    # Efeito de digitação
-    texto_atual = ""
-    indice = 0
-    ultima_atualizacao = 0
-    delay = 50  # Milissegundos entre cada caractere
-    
     while state == INICIO:
         clock.tick(FPS)
-        
-        # Atualiza o texto com efeito de digitação
-        tempo_atual = pygame.time.get_ticks()
-        if tempo_atual - ultima_atualizacao > delay and indice < len(historia):
-            texto_atual = historia[indice]
-            indice += 1
-            ultima_atualizacao = tempo_atual
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 state = QUIT
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN and indice >= len(historia):
+                if event.key == pygame.K_RETURN:
                     state = QUIT
         
         # Desenha tudo
@@ -75,10 +71,9 @@ def sala_vencedor(screen, tempo_restante):
         background.set_alpha(100)  # Valor entre 0 (transparente) e 255 (opaco)
         screen.blit(background, background_rect)
         
-        # Desenha o texto com efeito de digitação
-        for i, (texto, rect) in enumerate(textos):
-            if i < indice:
-                screen.blit(texto, rect)
+        # Desenha todos os textos
+        for texto, rect in textos:
+            screen.blit(texto, rect)
         
         pygame.display.flip()
     
