@@ -85,21 +85,17 @@ def load_assets():
     assets[COMPUTADOR] = pygame.image.load(os.path.join(IMG_DIR, 'Computador.png')).convert_alpha()
     assets[COMPUTADOR] = pygame.transform.scale(assets[COMPUTADOR], (250, 250))  # Tamanho intermediário
     try:
-        # First try loading normally
         assets[MONITOR] = pygame.image.load(os.path.join(IMG_DIR, 'MONITOR1.png')).convert_alpha()
     except pygame.error:
         try:
-            # Try loading without convert_alpha
             assets[MONITOR] = pygame.image.load(os.path.join(IMG_DIR, 'MONITOR1.png'))
         except pygame.error:
             print("Error loading MONITOR1.png - Creating fallback surface")
-            # Create a fallback surface if loading fails
             assets[MONITOR] = pygame.Surface((700, 500))
-            assets[MONITOR].fill((50, 50, 50))  # Dark gray color for monitor
-            # Add a screen area
+            assets[MONITOR].fill((50, 50, 50))
             screen_area = pygame.Surface((600, 400))
-            screen_area.fill((0, 0, 0))  # Black screen
-            assets[MONITOR].blit(screen_area, (50, 50))  # Position the screen on the monitor
+            screen_area.fill((0, 0, 0))
+            assets[MONITOR].blit(screen_area, (50, 50))
     assets[MONITOR] = pygame.transform.scale(assets[MONITOR], (700, 500))
     assets[CAMERA] = pygame.image.load(os.path.join(IMG_DIR, 'Camera.png')).convert_alpha()
     assets[CAMERA] = pygame.transform.scale(assets[CAMERA], (60, 60))
@@ -108,8 +104,7 @@ def load_assets():
     assets[GRANADA] = pygame.image.load(os.path.join(IMG_DIR, 'Granadas.png')).convert_alpha()
     assets[GRANADA] = pygame.transform.scale(assets[GRANADA], (100, 100))
     assets[TELA_COMP] = pygame.image.load(os.path.join(IMG_DIR, 'Tela_Comp.png')).convert_alpha()
-    # Se quiser redimensionar, descomente e ajuste:
-    # assets[GRANADA] = pygame.transform.scale(assets[GRANADA], (40, 40))
+
 #     #SONS
 
 #     pygame.mixer.music.load(os.path.join(SONS_DIR, 'nome do arquivo'))

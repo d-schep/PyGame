@@ -16,7 +16,8 @@ def sala_vencedor(screen, tempo_restante):
     background_rect = background.get_rect()
     
     # Cria os textos da vitória
-    fonte = assets[FONTE_BOTAO]
+    fonte_titulo = assets[FONTE_BOTAO]
+    fonte_texto = pygame.font.Font(None, 36)  # Fonte menor para os textos
     
     # Calcula o tempo total usando o tempo decorrido
     tempo_total = int(get_tempo_decorrido())
@@ -26,33 +27,43 @@ def sala_vencedor(screen, tempo_restante):
     # Atualiza os high scores
     high_scores = update_high_scores(tempo_total)
     
-    # Texto da vitória dividido em linhas
+    # Texto da vitória dividido em seções
+    titulo = fonte_titulo.render("PARABÉNS, PROFESSOR!", True, BRANCO)
+    titulo_rect = titulo.get_rect(centerx=LARGURA/2, top=ALTURA/6)
+    
     historia = [
-        "PARABÉNS, PROFESSOR!",
-        "",
         "Você conseguiu escapar dos zumbis",
         "e prometeu nunca mais colocar",
-        "classes nas provas finais.",
-        "",
-        f"Tempo total: {minutos:02d}:{segundos:02d}",
-        "",
-        "Melhores Tempos:",
-        f"1º Lugar: {format_time(high_scores[0])}",
-        f"2º Lugar: {format_time(high_scores[1])}",
-        f"3º Lugar: {format_time(high_scores[2])}",
-        "",
-        "Pressione ENTER para sair"
+        "classes nas provas finais."
     ]
     
-    # Renderiza cada linha do texto
-    textos = []
-    y = ALTURA/4  # Começa mais acima na tela para acomodar os high scores
+    tempo_atual = fonte_titulo.render(f"Tempo total: {minutos:02d}:{segundos:02d}", True, BRANCO)
+    tempo_rect = tempo_atual.get_rect(centerx=LARGURA/2, top=ALTURA/2)
     
+    # Renderiza a história
+    textos_historia = []
+    y = ALTURA/3
     for linha in historia:
-        texto = fonte.render(linha, True, BRANCO)
+        texto = fonte_texto.render(linha, True, BRANCO)
         texto_rect = texto.get_rect(centerx=LARGURA/2, top=y)
-        textos.append((texto, texto_rect))
-        y += 35  # Espaçamento entre linhas
+        textos_historia.append((texto, texto_rect))
+        y += 35
+    
+    # Renderiza os recordes
+    recordes_titulo = fonte_titulo.render("Melhores Tempos:", True, BRANCO)
+    recordes_rect = recordes_titulo.get_rect(centerx=LARGURA/2, top=ALTURA/2 + 80)
+    
+    recordes = []
+    y = ALTURA/2 + 130
+    for i, score in enumerate(high_scores, 1):
+        texto = fonte_texto.render(f"{i}º Lugar: {format_time(score)}", True, BRANCO)
+        texto_rect = texto.get_rect(centerx=LARGURA/2, top=y)
+        recordes.append((texto, texto_rect))
+        y += 35
+    
+    # Instrução para sair - Agora mais acima na tela
+    sair = fonte_texto.render("Pressione ENTER para sair", True, BRANCO)
+    sair_rect = sair.get_rect(centerx=LARGURA/2, bottom=ALTURA - 100)  # Subido de 50 para 100 pixels do fundo
     
     while state == INICIO:
         clock.tick(FPS)
@@ -68,12 +79,26 @@ def sala_vencedor(screen, tempo_restante):
         screen.fill(PRETO)
         
         # Desenha o background com transparência
-        background.set_alpha(100)  # Valor entre 0 (transparente) e 255 (opaco)
+        background.set_alpha(100)
         screen.blit(background, background_rect)
         
-        # Desenha todos os textos
-        for texto, rect in textos:
+        # Desenha o título
+        screen.blit(titulo, titulo_rect)
+        
+        # Desenha a história
+        for texto, rect in textos_historia:
             screen.blit(texto, rect)
+        
+        # Desenha o tempo atual
+        screen.blit(tempo_atual, tempo_rect)
+        
+        # Desenha os recordes
+        screen.blit(recordes_titulo, recordes_rect)
+        for texto, rect in recordes:
+            screen.blit(texto, rect)
+        
+        # Desenha a instrução para sair
+        screen.blit(sair, sair_rect)
         
         pygame.display.flip()
     

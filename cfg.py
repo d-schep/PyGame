@@ -40,8 +40,8 @@ INICIO = 0
 JOGANDO = 1 
 QUIT = 2
 MORTO = 3
-PROXIMA_SALA = 5  # Estado para a sala das armas
-VENCEDOR = 6  # Estado para a tela de vitória
+PROXIMA_SALA = 5  # sala das armas
+VENCEDOR = 6  # tela de vitória
 
 # ==== TAMANHO MESA ====
 LARGURA_MESA = 250

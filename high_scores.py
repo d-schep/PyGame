@@ -1,48 +1,60 @@
 import os
 
+# Arquivo onde guardamos os recordes
 HIGH_SCORES_FILE = "high_scores.txt"
+DEFAULT_TIME = 900  # 15 minutos em segundos
 
 def load_high_scores():
-    """Load the high scores from the text file."""
+    """Carrega os recordes do arquivo de texto."""
     try:
+        # Se o arquivo existe, lê os recordes
         if os.path.exists(HIGH_SCORES_FILE):
             with open(HIGH_SCORES_FILE, 'r') as f:
+                # Lê cada linha e converte para número
                 scores = [int(line.strip()) for line in f.readlines()]
-                # Garante que temos exatamente 3 scores
+                # Se tiver menos de 3 recordes, completa com o tempo padrão
                 while len(scores) < 3:
-                    scores.append(900)  # 15 minutos em segundos
-                return scores[:3]  # Retorna apenas os 3 primeiros
-    except:
-        pass
-    # Se algo der errado, retorna 3 scores padrão
-    return [900, 900, 900]  # 15 minutos em segundos
+                    scores.append(DEFAULT_TIME)
+                return scores[:3]  # Retorna só os 3 melhores
+    except Exception as e:
+        print(f"Erro ao carregar recordes: {e}")
+    
+    # Se algo der errado, retorna 3 recordes padrão
+    return [DEFAULT_TIME, DEFAULT_TIME, DEFAULT_TIME]
 
 def save_high_scores(scores):
-    """Save the high scores to the text file."""
+    """Salva os recordes no arquivo de texto."""
     try:
         with open(HIGH_SCORES_FILE, 'w') as f:
             for score in scores:
                 f.write(f"{score}\n")
-    except:
-        pass  # Se não conseguir salvar, continua sem salvar
+    except Exception as e:
+        print(f"Erro ao salvar recordes: {e}")
 
 def update_high_scores(new_time):
-    """Update the high scores with a new time if it's better than existing ones."""
+    """Atualiza os recordes com um novo tempo, se for melhor que os existentes."""
     try:
+        # Carrega os recordes atuais
         scores = load_high_scores()
+        # Adiciona o novo tempo
         scores.append(new_time)
-        scores.sort()  # Sort in ascending order
-        scores = scores[:3]  # Keep only top 3
+        # Ordena do menor para o maior (menor tempo = melhor)
+        scores.sort()
+        # Pega só os 3 melhores
+        scores = scores[:3]
+        # Salva os novos recordes
         save_high_scores(scores)
         return scores
-    except:
-        return [900, 900, 900]  # Retorna valores padrão se algo der errado
+    except Exception as e:
+        print(f"Erro ao atualizar recordes: {e}")
+        return [DEFAULT_TIME, DEFAULT_TIME, DEFAULT_TIME]
 
 def format_time(seconds):
-    """Format time in seconds to MM:SS format."""
+    """Formata o tempo em segundos para o formato MM:SS."""
     try:
         minutes = int(seconds) // 60
         seconds = int(seconds) % 60
         return f"{minutes:02d}:{seconds:02d}"
-    except:
+    except Exception as e:
+        print(f"Erro ao formatar tempo: {e}")
         return "15:00"  # Retorna tempo padrão se algo der errado 
