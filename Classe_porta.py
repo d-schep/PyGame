@@ -1,6 +1,6 @@
 from cfg import * 
-from sala1 import * 
 from Classe_Interact import * 
+import time  # Adicionando import do módulo time
 
 class PortaInterativa(ObjetoInterativo):
     def __init__(self, x, y, width, height, codigo, assets):
