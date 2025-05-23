@@ -5,6 +5,7 @@ from assets import *
 from math import * 
 import os 
 import time 
+from sons import *
 
 
 class Jogador(pygame.sprite.Sprite):
@@ -15,19 +16,20 @@ class Jogador(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.centerx = LARGURA/2
-        self.rect.centery = ALTURA
+        self.rect.bottom = ALTURA - 100
         self.speedx = 0
         self.speedy = 0
         #self.group = group  
         self.ultimo_interact = pygame.time.get_ticks()
         self.tick_de_interação = 300
+        self.som_andando_tocando = False
+        self.ultimo_som_andando = 0
+        self.delay_som_andando = 300  # Reduzido para 300ms para sons mais frequentes
     def update(self):
-
-        # == POSIÇÃO == 
+        # Atualiza a posição do jogador
         self.rect.x += self.speedx
         self.rect.y += self.speedy
         # == HARD LIMITS == 
-
         if self.rect.right > LARGURA-30:
             self.rect.right = LARGURA-30
         if self.rect.left < 30:
@@ -54,6 +56,21 @@ class Jogador(pygame.sprite.Sprite):
             print('esquerda')
             self.image = self.assets[DIREITA]
             
+        # Gerencia o som de caminhada
+        tempo_atual = pygame.time.get_ticks()
+        esta_andando = (self.speedx != 0 or self.speedy != 0)
+        
+        if esta_andando:
+            if not self.som_andando_tocando:
+                tocar_som(SOM_ANDANDO)
+                self.som_andando_tocando = True
+                self.ultimo_som_andando = tempo_atual
+            elif tempo_atual - self.ultimo_som_andando > self.delay_som_andando:
+                tocar_som(SOM_ANDANDO)
+                self.ultimo_som_andando = tempo_atual
+        elif self.som_andando_tocando:
+            parar_som(SOM_ANDANDO)
+            self.som_andando_tocando = False
     def interact(self):
         # == limite de interação por tick == 
         t0 = pygame.time.get_ticks()

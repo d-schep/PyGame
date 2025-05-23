@@ -105,13 +105,4 @@ def load_assets():
     assets[GRANADA] = pygame.transform.scale(assets[GRANADA], (100, 100))
     assets[TELA_COMP] = pygame.image.load(os.path.join(IMG_DIR, 'Tela_Comp.png')).convert_alpha()
 
-#     #SONS
-
-#     pygame.mixer.music.load(os.path.join(SONS_DIR, 'nome do arquivo'))
-#     pygame.mixer.music.set_volume()
-#     assets[MUSICA_FUNDO] = pygame.mixer.Sound(os.path.join(SONS_DIR, 'nome do arquivo'))
-#     assets[SOM_VITORIA] = pygame.mixer.Sound(os.path.join(SONS_DIR, 'nome do arquivo'))
-#     assets[SOM_DERROTA] = pygame.mixer.Sound(os.path.join(SONS_DIR, 'nome do arquivo'))
-#     assets[SOM_ANDANDO] = pygame.mixer.Sound(os.path.join(SONS_DIR, 'nome do arquivo'))
-#     assets[SOM_DICA] = pygame.mixer.Sound(os.path.join(SONS_DIR, 'nome do arquivo'))
     return assets
