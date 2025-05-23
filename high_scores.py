@@ -1,14 +1,13 @@
-import json
 import os
 
-HIGH_SCORES_FILE = "high_scores.json"
+HIGH_SCORES_FILE = "high_scores.txt"
 
 def load_high_scores():
-    """Load the high scores from the JSON file."""
+    """Load the high scores from the text file."""
     try:
         if os.path.exists(HIGH_SCORES_FILE):
             with open(HIGH_SCORES_FILE, 'r') as f:
-                scores = json.load(f)
+                scores = [int(line.strip()) for line in f.readlines()]
                 # Garante que temos exatamente 3 scores
                 while len(scores) < 3:
                     scores.append(900)  # 15 minutos em segundos
@@ -19,10 +18,11 @@ def load_high_scores():
     return [900, 900, 900]  # 15 minutos em segundos
 
 def save_high_scores(scores):
-    """Save the high scores to the JSON file."""
+    """Save the high scores to the text file."""
     try:
         with open(HIGH_SCORES_FILE, 'w') as f:
-            json.dump(scores, f)
+            for score in scores:
+                f.write(f"{score}\n")
     except:
         pass  # Se não conseguir salvar, continua sem salvar
 
