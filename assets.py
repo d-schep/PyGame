@@ -2,7 +2,6 @@ import pygame
 import os 
 from cfg import * 
 pygame.font.init()
-PERSONAGEM = 'personagem'
 TELA_INICIAL = 'tela_inicial'
 TELA_VITORIA = 'tela_vitoria'
 TELA_DERROTA = 'tela_derrota'
@@ -28,9 +27,20 @@ SOM_DICA = 'som_usando_dica'
 FONTE_BOTAO = 'fnt_btao'
 TELA_PRETA = 'tela_preta'
 IMG_TITULO = 'img_titulo'
-GAB_TRAS = 'gbr'
-ESQUERDA = 'sqerd'
-DIREITA = 'drt'
+# ==== GAB ==== 
+FRENTE1 = 'personagem'
+FRENTE2 = 'frnt'
+FRENTE3 = 'FRNETEE'
+TRAS1 = 'gbr'
+TRAS2 = 'gred'
+TRAS3 = 'schepnaldo cheroso'
+ESQUERD1 = 'sqerd'
+ESQUERD2 = 'sssqe'
+ESQUERD3 = 'sqertds'
+DIREITA1 = 'drt'
+DIREITA2 = 'dd'
+DIREITA3 = 'ddd'
+# === OBJTS === 
 MESA = 'mesa'
 ESTANTE = 'estante'
 SOFA = 'sofa'
@@ -58,14 +68,36 @@ def load_assets():
     assets[TELA_DE_FUNDO_ESCAPE_1] = pygame.transform.scale(assets[TELA_DE_FUNDO_ESCAPE_1], (LARGURA,ALTURA))
     assets[TELA_DE_FUNDO_ESCAPE_2] = pygame.image.load(os.path.join(IMG_DIR,'Sala_2.png')).convert()
     assets[TELA_DE_FUNDO_ESCAPE_2] = pygame.transform.scale(assets[TELA_DE_FUNDO_ESCAPE_2], (LARGURA,ALTURA))
-    assets[PERSONAGEM] = pygame.image.load(os.path.join(IMG_DIR,'gab_de_frente.png')).convert_alpha()
-    assets[PERSONAGEM] = pygame.transform.scale(assets[PERSONAGEM], (ALT_GAB,LARG_GAB))
-    assets[GAB_TRAS] = pygame.image.load(os.path.join(IMG_DIR,'COSTAS.png')).convert_alpha()
-    assets[GAB_TRAS] = pygame.transform.scale(assets[GAB_TRAS], (ALT_GAB,LARG_GAB))
-    assets[DIREITA] = pygame.image.load(os.path.join(IMG_DIR, 'direita.png')).convert_alpha()
-    assets[ESQUERDA] = pygame.image.load(os.path.join(IMG_DIR, 'esquerda.png')).convert_alpha()
-    assets[DIREITA] = pygame.transform.scale(assets[DIREITA], (ALT_GAB-20,LARG_GAB))
-    assets[ESQUERDA] = pygame.transform.scale(assets[ESQUERDA], (ALT_GAB-20,LARG_GAB))
+    # === GAB ===
+    assets[FRENTE1] = pygame.image.load(os.path.join(IMG_DIR,'Frente_1.png')).convert_alpha()
+    assets[FRENTE2] = pygame.image.load(os.path.join(IMG_DIR,'Frente_2.png')).convert_alpha()
+    assets[FRENTE3] = pygame.image.load(os.path.join(IMG_DIR,'Frente_3.png')).convert_alpha()
+    assets[TRAS1] = pygame.image.load(os.path.join(IMG_DIR,'Trás_1.png')).convert_alpha()
+    assets[TRAS2] = pygame.image.load(os.path.join(IMG_DIR,'Trás_2.png')).convert_alpha()
+    assets[TRAS3] = pygame.image.load(os.path.join(IMG_DIR,'Trás_3.png')).convert_alpha()
+    assets[ESQUERD1] = pygame.image.load(os.path.join(IMG_DIR,'Lado_1.png')).convert_alpha()
+    assets[ESQUERD2] = pygame.image.load(os.path.join(IMG_DIR,'Lado_2.png')).convert_alpha()
+    assets[ESQUERD3] = pygame.image.load(os.path.join(IMG_DIR,'Lado_3.png')).convert_alpha()
+    assets[DIREITA1] = pygame.image.load(os.path.join(IMG_DIR,'Lado_1.png')).convert_alpha()
+    assets[DIREITA2] = pygame.image.load(os.path.join(IMG_DIR,'Lado_2.png')).convert_alpha()
+    assets[DIREITA3] = pygame.image.load(os.path.join(IMG_DIR,'Lado_3.png')).convert_alpha()
+    # === GAB TRANSFORM ===
+    assets[FRENTE1] = pygame.transform.scale(assets[FRENTE1], (ALT_GAB,LARG_GAB))
+    assets[FRENTE2] = pygame.transform.scale(assets[FRENTE2], (ALT_GAB,LARG_GAB))
+    assets[FRENTE3] = pygame.transform.scale(assets[FRENTE3], (ALT_GAB,LARG_GAB))
+    assets[TRAS1] = pygame.transform.scale(assets[TRAS1], (ALT_GAB,LARG_GAB))
+    assets[TRAS2] = pygame.transform.scale(assets[TRAS2], (ALT_GAB,LARG_GAB))
+    assets[TRAS3] = pygame.transform.scale(assets[TRAS2], (ALT_GAB,LARG_GAB))
+    assets[ESQUERD1] = pygame.transform.scale(assets[ESQUERD1], (ALT_GAB,LARG_GAB))
+    assets[ESQUERD2] = pygame.transform.scale(assets[ESQUERD2], (ALT_GAB,LARG_GAB))
+    assets[ESQUERD3] = pygame.transform.scale(assets[ESQUERD3], (ALT_GAB,LARG_GAB))
+    assets[ESQUERD2] = pygame.transform.flip(assets[ESQUERD2], True, False)
+    assets[ESQUERD3] = pygame.transform.flip(assets[ESQUERD3], True, False)
+    assets[DIREITA1] = pygame.transform.scale(assets[DIREITA1], (ALT_GAB,LARG_GAB))
+    assets[DIREITA2] = pygame.transform.scale(assets[DIREITA2], (ALT_GAB,LARG_GAB))
+    assets[DIREITA3] = pygame.transform.scale(assets[DIREITA3], (ALT_GAB,LARG_GAB))
+    assets[DIREITA1] = pygame.transform.flip(assets[ESQUERD2], True, False)
+    # === OBJECTS === 
     assets[MESA] = pygame.image.load(os.path.join(IMG_DIR,'MESA1.png')).convert_alpha()
     assets[MESA] = pygame.transform.scale(assets[MESA], (LARGURA_MESA, ALTURA_MESA))
     assets[ESTANTE] = pygame.image.load(os.path.join(IMG_DIR, 'ESTANTE1.png')).convert_alpha()
