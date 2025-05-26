@@ -12,7 +12,7 @@ class Jogador(pygame.sprite.Sprite):
     def __init__(self,assets):
         self.assets = assets
         pygame.sprite.Sprite.__init__(self)
-        self.image = self.assets[PERSONAGEM]
+        self.image = self.assets[FRENTE1]
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.centerx = LARGURA/2
@@ -41,20 +41,20 @@ class Jogador(pygame.sprite.Sprite):
         # == TROCA IMAGEM == 
         if self.speedy < 0:
             print('cima', self.image)
-            self.image = self.assets[GAB_TRAS]  
+            self.image = self.assets[TRAS1]  
            # self.image = pygame.Surface((96, 164))
             #self.image.fill(VERDE)
         elif self.speedy > 0:
             print('baixo', self.image)
-            self.image = self.assets[PERSONAGEM]
+            self.image = self.assets[FRENTE1]
           #  self.image = pygame.Surface((96, 164))
           #  self.image.fill(VERMELHO)
         elif self.speedx < 0:
             print('esquerda')
-            self.image = self.assets[ESQUERDA]
+            self.image = self.assets[ESQUERD1]
         elif self.speedx > 0:
             print('esquerda')
-            self.image = self.assets[DIREITA]
+            self.image = self.assets[DIREITA1]
             
         # Gerencia o som de caminhada
         tempo_atual = pygame.time.get_ticks()
