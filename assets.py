@@ -81,22 +81,30 @@ def load_assets():
     assets[DIREITA1] = pygame.image.load(os.path.join(IMG_DIR,'Lado_1.png')).convert_alpha()
     assets[DIREITA2] = pygame.image.load(os.path.join(IMG_DIR,'Lado_2.png')).convert_alpha()
     assets[DIREITA3] = pygame.image.load(os.path.join(IMG_DIR,'Lado_3.png')).convert_alpha()
+
     # === GAB TRANSFORM ===
-    assets[FRENTE1] = pygame.transform.scale(assets[FRENTE1], (ALT_GAB,LARG_GAB))
-    assets[FRENTE2] = pygame.transform.scale(assets[FRENTE2], (ALT_GAB,LARG_GAB))
-    assets[FRENTE3] = pygame.transform.scale(assets[FRENTE3], (ALT_GAB,LARG_GAB))
-    assets[TRAS1] = pygame.transform.scale(assets[TRAS1], (ALT_GAB,LARG_GAB))
-    assets[TRAS2] = pygame.transform.scale(assets[TRAS2], (ALT_GAB,LARG_GAB))
-    assets[TRAS3] = pygame.transform.scale(assets[TRAS2], (ALT_GAB,LARG_GAB))
-    assets[ESQUERD1] = pygame.transform.scale(assets[ESQUERD1], (ALT_GAB,LARG_GAB))
-    assets[ESQUERD2] = pygame.transform.scale(assets[ESQUERD2], (ALT_GAB,LARG_GAB))
-    assets[ESQUERD3] = pygame.transform.scale(assets[ESQUERD3], (ALT_GAB,LARG_GAB))
+    # Frente
+    assets[FRENTE1] = pygame.transform.scale(assets[FRENTE1], (ALT_GAB+20,LARG_GAB+20))
+    assets[FRENTE2] = pygame.transform.scale(assets[FRENTE2], (ALT_GAB+20,LARG_GAB+20))
+    assets[FRENTE3] = pygame.transform.scale(assets[FRENTE3], (ALT_GAB+20,LARG_GAB+20))
+    
+    # Trás
+    assets[TRAS1] = pygame.transform.scale(assets[TRAS1], (ALT_GAB+20,LARG_GAB+20))
+    assets[TRAS2] = pygame.transform.scale(assets[TRAS2], (ALT_GAB+20,LARG_GAB+20))
+    assets[TRAS3] = pygame.transform.scale(assets[TRAS3], (ALT_GAB+20,LARG_GAB+20))
+    
+    # Lado (direita)
+    assets[DIREITA1] = pygame.transform.scale(assets[DIREITA1], (ALT_GAB,LARG_GAB+20))
+    assets[DIREITA2] = pygame.transform.scale(assets[DIREITA2], (ALT_GAB,LARG_GAB+20))
+    assets[DIREITA3] = pygame.transform.scale(assets[DIREITA3], (ALT_GAB,LARG_GAB+20))
+    
+    # Lado (esquerda) - flip das imagens da direita
+    assets[ESQUERD1] = pygame.transform.scale(assets[ESQUERD1], (ALT_GAB,LARG_GAB+20))
+    assets[ESQUERD2] = pygame.transform.scale(assets[ESQUERD2], (ALT_GAB,LARG_GAB+20))
+    assets[ESQUERD3] = pygame.transform.scale(assets[ESQUERD3], (ALT_GAB,LARG_GAB+20))
+    assets[ESQUERD1] = pygame.transform.flip(assets[ESQUERD1], True, False)
     assets[ESQUERD2] = pygame.transform.flip(assets[ESQUERD2], True, False)
     assets[ESQUERD3] = pygame.transform.flip(assets[ESQUERD3], True, False)
-    assets[DIREITA1] = pygame.transform.scale(assets[DIREITA1], (ALT_GAB,LARG_GAB))
-    assets[DIREITA2] = pygame.transform.scale(assets[DIREITA2], (ALT_GAB,LARG_GAB))
-    assets[DIREITA3] = pygame.transform.scale(assets[DIREITA3], (ALT_GAB,LARG_GAB))
-    assets[DIREITA1] = pygame.transform.flip(assets[ESQUERD2], True, False)
     # === OBJECTS === 
     assets[MESA] = pygame.image.load(os.path.join(IMG_DIR,'MESA1.png')).convert_alpha()
     assets[MESA] = pygame.transform.scale(assets[MESA], (LARGURA_MESA, ALTURA_MESA))

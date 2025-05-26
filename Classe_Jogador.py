@@ -25,10 +25,29 @@ class Jogador(pygame.sprite.Sprite):
         self.som_andando_tocando = False
         self.ultimo_som_andando = 0
         self.delay_som_andando = 300  # Reduzido para 300ms para sons mais frequentes
+        
+        # Variáveis de animação
+        self.animation_frame = 0
+        self.animation_timer = 0
+        self.animation_delay = 100  # Delay entre frames da animação
+        self.is_moving = False
+        self.direction = 'down'  # Direção inicial
+        self.last_direction = 'down'  # Última direção para manter consistência
+        
     def update(self):
         # Atualiza a posição do jogador
         self.rect.x += self.speedx
         self.rect.y += self.speedy
+        
+        # Verifica se está se movendo
+        self.is_moving = self.speedx != 0 or self.speedy != 0
+        
+        # Atualiza o timer de animação
+        current_time = pygame.time.get_ticks()
+        if self.is_moving and current_time - self.animation_timer > self.animation_delay:
+            self.animation_timer = current_time
+            self.animation_frame = (self.animation_frame + 1) % 3  # Ciclo entre 0, 1 e 2
+        
         # == HARD LIMITS == 
         if self.rect.right > LARGURA-30:
             self.rect.right = LARGURA-30
@@ -38,23 +57,66 @@ class Jogador(pygame.sprite.Sprite):
             self.rect.top = 115
         if self.rect.bottom > ALTURA:
             self.rect.bottom = ALTURA
+            
         # == TROCA IMAGEM == 
-        if self.speedy < 0:
-            print('cima', self.image)
-            self.image = self.assets[TRAS1]  
-           # self.image = pygame.Surface((96, 164))
-            #self.image.fill(VERDE)
-        elif self.speedy > 0:
-            print('baixo', self.image)
-            self.image = self.assets[FRENTE1]
-          #  self.image = pygame.Surface((96, 164))
-          #  self.image.fill(VERMELHO)
-        elif self.speedx < 0:
-            print('esquerda')
-            self.image = self.assets[ESQUERD1]
-        elif self.speedx > 0:
-            print('esquerda')
-            self.image = self.assets[DIREITA1]
+        if self.speedy < 0:  # Movendo para cima
+            self.direction = 'up'
+            self.last_direction = 'up'
+            if self.is_moving:
+                if self.animation_frame == 0:
+                    self.image = self.assets[TRAS1]
+                elif self.animation_frame == 1:
+                    self.image = self.assets[TRAS2]
+                else:
+                    self.image = self.assets[TRAS3]
+            else:
+                self.image = self.assets[TRAS1]  # Frame parado
+        elif self.speedy > 0:  # Movendo para baixo
+            self.direction = 'down'
+            self.last_direction = 'down'
+            if self.is_moving:
+                if self.animation_frame == 0:
+                    self.image = self.assets[FRENTE1]
+                elif self.animation_frame == 1:
+                    self.image = self.assets[FRENTE2]
+                else:
+                    self.image = self.assets[FRENTE3]
+            else:
+                self.image = self.assets[FRENTE1]  # Frame parado
+        elif self.speedx < 0:  # Movendo para esquerda
+            self.direction = 'left'
+            self.last_direction = 'left'
+            if self.is_moving:
+                if self.animation_frame == 0:
+                    self.image = self.assets[ESQUERD1]
+                elif self.animation_frame == 1:
+                    self.image = self.assets[ESQUERD2]
+                else:
+                    self.image = self.assets[ESQUERD3]
+            else:
+                self.image = self.assets[ESQUERD1]  # Frame parado
+        elif self.speedx > 0:  # Movendo para direita
+            self.direction = 'right'
+            self.last_direction = 'right'
+            if self.is_moving:
+                if self.animation_frame == 0:
+                    self.image = self.assets[DIREITA1]
+                elif self.animation_frame == 1:
+                    self.image = self.assets[DIREITA2]
+                else:
+                    self.image = self.assets[DIREITA3]
+            else:
+                self.image = self.assets[DIREITA1]  # Frame parado
+        else:
+            # Quando parado, mantém a última direção
+            if self.last_direction == 'up':
+                self.image = self.assets[TRAS1]
+            elif self.last_direction == 'down':
+                self.image = self.assets[FRENTE1]
+            elif self.last_direction == 'left':
+                self.image = self.assets[ESQUERD1]
+            elif self.last_direction == 'right':
+                self.image = self.assets[DIREITA1]
             
         # Gerencia o som de caminhada
         tempo_atual = pygame.time.get_ticks()
