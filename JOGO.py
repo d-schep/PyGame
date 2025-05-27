@@ -76,6 +76,11 @@ while state != QUIT:
         parar_todos_sons()  # Para todos os sons antes de tocar o som de morte
         tocar_som(SOM_MORTE)
         state = tela_morte(window)
+        if state == JOGANDO:  # Se o jogador clicou em reiniciar
+            parar_todos_sons()  # Para o som de morte
+            iniciar_timer()  # Reinicia o timer
+            tocar_som(SOM_ZUMBI, -1)  # Reinicia o som de zumbi
+            som_zumbi_tocando = True
     
     elif state == VENCEDOR:
         # Jogador ganhou, mostra a tela de vitória
