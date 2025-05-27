@@ -32,9 +32,9 @@ def sala_2(screen):
     # Centralizando a mesa na sala
     Mesa_Arma_rect.centerx = LARGURA // 2
     Mesa_Arma_rect.centery = ALTURA // 2
-    # Criar um retângulo de colisão menor que a mesa
+    # Criar um retângulo de colisão menor que a mesa, com espaço menor na parte traseira
     Mesa_colisao = pygame.Rect(Mesa_Arma_rect.left + 20, Mesa_Arma_rect.top + 20, 
-                              int(LARGURA_MESA * 1.5) - 40, int(ALTURA_MESA * 1.5) - 140)
+                              int(LARGURA_MESA * 1.5) - 40, int(ALTURA_MESA * 1.5) - 80)  # Reduzida a redução na altura
 
     # Adicionando Computador
     Computador = assets[COMPUTADOR]
@@ -191,13 +191,13 @@ def sala_2(screen):
     all_interactables.add(granada)
     all_interactables.add(porta)  # Adicionando a porta ao grupo de interativos
 
-    # Posiciona o jogador na entrada da nova sala
+    # Posiciona o jogador na entrada da nova sala, mais para frente
     gab_topa_eu.rect.x = LARGURA // 2
-    gab_topa_eu.rect.y = ALTURA - 100
+    gab_topa_eu.rect.y = ALTURA - 80  # Movido para frente (era -100)
 
     # Adicionando paredes invisíveis para colisão
-    parede_esquerda = pygame.Rect((0,ALTURA-115),(CENTROx-100,ALTURA-115))
-    parede_direita = pygame.Rect((CENTROx+100,ALTURA-115),(LARGURA-(CENTROx+100),ALTURA-115))
+    parede_esquerda = pygame.Rect((0,ALTURA-115),(CENTROx-130,ALTURA-115))  # Ajustado para ficar igual à sala1
+    parede_direita = pygame.Rect((CENTROx+80,ALTURA-115),(LARGURA-(CENTROx+80),ALTURA-115))  # Ajustado para ficar igual à sala1
     
     # Adicionando paredes laterais finas
     parede_lateral_esquerda = pygame.Rect((0,0),(50,ALTURA))
@@ -330,12 +330,33 @@ def sala_2(screen):
                     
                     keys_down.pop(event.key)
 
+        # Verifica colisões com a mesa, computador, granada e paredes
+        colide_mesa = pygame.Rect.colliderect(Mesa_colisao, gab_topa_eu.rect)
+        colide_computador = pygame.Rect.colliderect(Computador_colisao, gab_topa_eu.rect)
+        colide_parede = (
+            pygame.Rect.colliderect(parede_esquerda, gab_topa_eu.rect) or 
+            pygame.Rect.colliderect(parede_direita, gab_topa_eu.rect) or
+            pygame.Rect.colliderect(parede_lateral_esquerda, gab_topa_eu.rect) or
+            pygame.Rect.colliderect(parede_lateral_direita, gab_topa_eu.rect)
+        )
+        colide_caixa = pygame.Rect.colliderect(caixa_colisao, gab_topa_eu.rect)
+        
+        # Verifica colisão antes de atualizar a posição
+        if colide_mesa or colide_computador or colide_parede or colide_caixa:
+            # Restaura a posição anterior
+            gab_topa_eu.rect.x -= gab_topa_eu.speedx
+            gab_topa_eu.rect.y -= gab_topa_eu.speedy
+            # Zera todas as velocidades e limpa as teclas
+            gab_topa_eu.speedy = gab_topa_eu.speedx = 0
+            keys_down.clear()
+
         # Atualiza posição de todos os sprites, exceto o jogador
         for sprite in all_sprites:
-            sprite.update()
+            if sprite != gab_topa_eu:  # Não atualiza o jogador aqui
+                sprite.update()
 
-        # Só atualiza o jogador se não houver pista aberta
-        if not pista_aberta:
+        # Só atualiza o jogador se não houver pista aberta e não houver colisão
+        if not pista_aberta and not (colide_mesa or colide_computador or colide_parede or colide_caixa):
             gab_topa_eu.update()
         else:
             gab_topa_eu.speedx = 0
@@ -349,23 +370,6 @@ def sala_2(screen):
         # Atualiza estado dos objetos interativos
         for obj in all_interactables:
             obj.update(gab_topa_eu)
-
-        # Verifica colisões com a mesa, computador, granada e paredes
-        colide_mesa = pygame.Rect.colliderect(Mesa_colisao, gab_topa_eu.rect)
-        colide_computador = pygame.Rect.colliderect(Computador_colisao, gab_topa_eu.rect)
-        colide_parede = (
-            pygame.Rect.colliderect(parede_esquerda, gab_topa_eu.rect) or 
-            pygame.Rect.colliderect(parede_direita, gab_topa_eu.rect) or
-            pygame.Rect.colliderect(parede_lateral_esquerda, gab_topa_eu.rect) or
-            pygame.Rect.colliderect(parede_lateral_direita, gab_topa_eu.rect)
-        )
-        colide_caixa = pygame.Rect.colliderect(caixa_colisao, gab_topa_eu.rect)
-        
-        if colide_mesa or colide_computador or colide_parede or colide_caixa:
-            gab_topa_eu.rect.x -= gab_topa_eu.speedx
-            gab_topa_eu.rect.y -= gab_topa_eu.speedy
-            gab_topa_eu.speedy = gab_topa_eu.speedx = 0
-            keys_down.clear()
 
         # Atualiza a posição da câmera para seguir o jogador
         camera_x = LARGURA//2 - gab_topa_eu.rect.centerx
