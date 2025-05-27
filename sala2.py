@@ -43,7 +43,7 @@ def sala_2(screen):
     Computador_rect.left = 100
     Computador_rect.top = 40
     # Área de colisão para o computador - justa ao corpo
-    Computador_colisao = pygame.Rect(Computador_rect.left + 40, Computador_rect.top + 40, 170, 120)
+    Computador_colisao = pygame.Rect(Computador_rect.left + 40, Computador_rect.top + 40, 170, 100)
 
     # Adicionando Camera
     Camera_img = assets[CAMERA]
