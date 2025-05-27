@@ -78,4 +78,7 @@ INSPER - P3 - 2025. Um erro fatal foi cometido... Classes nas Provas Finais de D
 ![Exemplo de Pista](ativos/imgs/ReadMe_Exemplo.png)
 *Exemplo de uma pista
 
-#Vídeo
+## 🎥 Vídeo da Gameplay Completa
+
+[Assista ao vídeo final do jogo no Google Drive](https://drive.google.com/file/d/1eFqsF4TfBwFq_6kCZ4KlhbC5sLmM6f2M/view)
+
