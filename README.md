@@ -1,4 +1,4 @@
-## 👥 Desenvolvedores
+## Desenvolvedores
 
 - Gabriel Holzhacker
 - Rodrigo Buniac
