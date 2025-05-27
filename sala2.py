@@ -32,9 +32,9 @@ def sala_2(screen):
     # Centralizando a mesa na sala
     Mesa_Arma_rect.centerx = LARGURA // 2
     Mesa_Arma_rect.centery = ALTURA // 2
-    # Criar um retângulo de colisão menor que a mesa, com espaço menor na parte traseira
-    Mesa_colisao = pygame.Rect(Mesa_Arma_rect.left + 20, Mesa_Arma_rect.top + 20, 
-                              int(LARGURA_MESA * 1.5) - 40, int(ALTURA_MESA * 1.5) - 80)  # Reduzida a redução na altura
+    # Criar um retângulo de colisão menor e centralizado
+    Mesa_colisao = pygame.Rect(Mesa_Arma_rect.centerx - 100, Mesa_Arma_rect.centery - 100, 
+                              200, 100)  # Colisão de 200x100 pixels centralizada na mesa, movida 50 pixels para cima
 
     # Adicionando Computador
     Computador = assets[COMPUTADOR]
