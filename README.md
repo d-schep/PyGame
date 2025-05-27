@@ -4,7 +4,7 @@
 - Rodrigo Buniac
 - Danny Schepselevitz
 
-# Escape Z 🧟‍♂️
+# Escape Z 
 
 Um jogo de terror e sobrevivência desenvolvido em Python usando Pygame, onde você é um professor do INSPER que precisa escapar de seus alunos zumbificados!
 
