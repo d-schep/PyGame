@@ -130,7 +130,6 @@ def load_assets():
         try:
             assets[MONITOR] = pygame.image.load(os.path.join(IMG_DIR, 'MONITOR1.png'))
         except pygame.error:
-            print("Error loading MONITOR1.png - Creating fallback surface")
             assets[MONITOR] = pygame.Surface((700, 500))
             assets[MONITOR].fill((50, 50, 50))
             screen_area = pygame.Surface((600, 400))
