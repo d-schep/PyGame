@@ -180,8 +180,7 @@ def sala_2(screen):
     
     # Criando o jogador
     gab_topa_eu = Jogador(assets)
-    # NÃO adicionar o jogador ao grupo all_sprites!
-    # all_sprites.add(gab_topa_eu)
+    all_sprites.add(gab_topa_eu)  # Adicionando o jogador ao grupo de sprites
 
     # Adiciona objetos interativos ao grupo
     all_interactables.add(arma1)
