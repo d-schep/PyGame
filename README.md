@@ -80,5 +80,5 @@ INSPER - P3 - 2025. Um erro fatal foi cometido... Classes nas Provas Finais de D
 
 ## 🎥 Vídeo da Gameplay Completa
 
-[Assista ao vídeo final do jogo no Google Drive](https://drive.google.com/file/d/1eFqsF4TfBwFq_6kCZ4KlhbC5sLmM6f2M/view)
+[Assista ao vídeo final do jogo no YouTube](https://youtu.be/N63SBwilyMo)
 
