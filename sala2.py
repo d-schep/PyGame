@@ -193,7 +193,7 @@ def sala_2(screen):
 
     # Posiciona o jogador na entrada da nova sala, mais para frente
     gab_topa_eu.rect.x = LARGURA // 2
-    gab_topa_eu.rect.y = ALTURA - 80  # Movido para frente (era -100)
+    gab_topa_eu.rect.y = ALTURA - 300  # Movido para frente (era -100)
 
     # Adicionando paredes invisíveis para colisão
     parede_esquerda = pygame.Rect((0,ALTURA-115),(CENTROx-130,ALTURA-115))  # Ajustado para ficar igual à sala1
